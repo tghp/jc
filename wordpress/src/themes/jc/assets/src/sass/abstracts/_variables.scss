@@ -1,0 +1,34 @@
+// MQ
+$size__xxs: 400px;
+$size__xs: 460px;
+$size__s: 660px;
+$size__m: 720px;
+$size__l: 980px;
+$size__xl: 1024px;
+$size__xxl: 1400px;
+$size__xxxl: 1800px;
+$size__xxxxl: 2100px;
+$size__max-width: $size__xxl;
+
+$mq-breakpoints: (
+  xxs: $size__xxs,
+  xs: $size__xs,
+  s: $size__s,
+  m: $size__m,
+  l: $size__l,
+  xl: $size__xl,
+  xxl: $size__xxl,
+  xxxl: $size__xxxl,
+  max: $size__max-width,
+);
+
+// Other sizes
+$size__main-padding: 60px;
+
+// Paths
+$path__image: '../../images';
+
+// Font
+$font__base-size: 16px;
+$font__body-family: sans-serif;
+$font__heading-family: sans-serif;

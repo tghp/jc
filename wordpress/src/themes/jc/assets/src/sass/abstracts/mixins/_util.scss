@@ -1,0 +1,4 @@
+@mixin pseudo-element-create {
+  content: '';
+  display: block;
+}

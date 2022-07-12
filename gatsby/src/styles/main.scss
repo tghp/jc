@@ -1,0 +1,23 @@
+body {
+    background: rgb(227, 173, 173);
+    color: white;
+
+    // @media print {
+    //     background: transparent;
+    //     color: rgb(195, 244, 195);
+    // }
+}
+
+header {
+    @media print {
+        display: none;
+        border-bottom: 1px solid green;
+    }
+}
+
+footer {
+    @media print {
+        display: none;
+        display: none;
+    }
+}

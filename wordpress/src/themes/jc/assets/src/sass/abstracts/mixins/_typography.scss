@@ -1,0 +1,16 @@
+@use "sass:math";
+
+@mixin font__body {
+  font-family: $font__body-family;
+}
+
+@mixin font__heading {
+  font-family: $font__heading-family;
+}
+
+@mixin font__sizing($font-size-px, $line-height-px) {
+  $font-size: math.div($font-size-px, $font__base-size);
+  font-size: $font-size * 1rem;
+  $line-height: math.div($line-height-px, $font-size-px);
+  line-height: $line-height;
+}
