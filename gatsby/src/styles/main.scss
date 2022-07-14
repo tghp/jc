@@ -1,23 +1,22 @@
-body {
-    background: rgb(227, 173, 173);
-    color: white;
+//  Abstracts
+//  ---------------------------------------------
+@import 'abstracts/abstracts';
 
-    // @media print {
-    //     background: transparent;
-    //     color: rgb(195, 244, 195);
-    // }
-}
+//  Base
+//  ---------------------------------------------
+@import 'base/reset';
+@import 'base/default';
+@import 'base/typography';
 
-header {
-    @media print {
-        display: none;
-        border-bottom: 1px solid green;
-    }
-}
+//  Layouts
+//  ---------------------------------------------
+@import 'layout/main';
+@import 'layout/header';
+@import 'layout/footer';
 
-footer {
-    @media print {
-        display: none;
-        display: none;
-    }
-}
+//  Components
+//  ---------------------------------------------
+
+//  Pages
+//  ---------------------------------------------
+@import 'pages/home';

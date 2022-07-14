@@ -1,0 +1,48 @@
+// MQ
+$size__xxs: 400px;
+$size__xs: 460px;
+$size__s: 660px;
+$size__m: 720px;
+$size__l: 980px;
+$size__xl: 1024px;
+$size__xxl: 1392px;
+$size__xxxl: 1800px;
+$size__xxxxl: 2100px;
+$size__max-width: $size__xxl;
+
+$mq-breakpoints: (
+  xxs: $size__xxs,
+  xs: $size__xs,
+  s: $size__s,
+  m: $size__m,
+  l: $size__l,
+  xl: $size__xl,
+  xxl: $size__xxl,
+  xxxl: $size__xxxl,
+  max: $size__max-width,
+);
+
+// Other sizes
+$size__main-padding: 40px;
+$padding--large: 60px;
+$padding--ml: 50px;
+$padding--medium: 40px;
+$padding--small: 30px;
+$padding--xsmall: 25px;
+$padding--xxsmall: 20px;
+
+// Paths
+$path__image: '../../images';
+
+// Font
+$font__base-size: 16px;
+$font__body-family: sans-serif;
+$font__heading-family: sans-serif;
+
+// Colors
+$color-jc-grey-1: #F1EFEF;
+$color-jc-grey-2: #FAF8F8;
+$color-jc-blue: #6161FF;
+
+$color-black: #000;
+$color-white: #FFF;

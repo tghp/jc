@@ -1,0 +1,30 @@
+.intro-text,
+.featured-essays {
+    &__inner {
+        @include max-width-element;
+        @include main-padding;
+        padding-top: $padding--medium;
+        padding-bottom: $padding--medium;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: $padding--medium;
+    }
+}
+
+.intro-text {
+    background-color: $color-jc-grey-1;
+}
+
+.featured-essays {
+
+}
+
+.essay-categories {
+    @include max-width-element;
+    @include main-padding;
+    padding-top: $padding--medium;
+    padding-bottom: $padding--medium;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $padding--xsmall;
+}

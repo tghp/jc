@@ -1,0 +1,32 @@
+.site-footer {
+    background-color: $color-jc-grey-1;
+
+    &__inner {
+        @include max-width-element;
+        @include main-padding;
+        @include flex-space-between-center;
+        @include font__sizing(10px, 14px);
+        padding-top: $padding--small;
+        padding-bottom: $padding--small;
+        border-top: 1px solid $color-jc-blue;
+    }
+
+    &__nav {
+        @include font__family--inter-light;
+        display: flex;
+        gap: 25px;
+    }
+
+    &__copyright {
+        @include font__family--inter-medium;
+        color: $color-jc-blue;
+    }
+
+    &__built-by {
+        @include font__family--inter-medium;
+    }
+
+    @media print {
+        display: none;
+    }
+}

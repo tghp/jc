@@ -1,0 +1,13 @@
+/**
+ * All abstracts import
+ * (Split out to a dedicated file so that all abstracts can be imported at once in styles:blocks created stylesheets)
+ */
+
+//  Package includes
+//  ---------------------------------------------
+@import 'sass-mq/mq';
+
+//  Abstracts
+//  ---------------------------------------------
+@import 'variables';
+@import 'mixins';

@@ -23,5 +23,15 @@ module.exports = {
       },
       __key: "images"
     },
+    {
+      resolve: "gatsby-source-wordpress-menus",
+      options: {
+        wordpressUrl: "http://jc.test",
+        languages: ["en"],
+        enableWpml: false,
+        allowCache: true,
+        maxCacheDurationSeconds: 60 * 60 * 24
+      },
+    },
   ]
 };

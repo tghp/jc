@@ -1,0 +1,10 @@
+@mixin pseudo-element-create {
+  content: '';
+  display: block;
+}
+
+@mixin flex-space-between-center {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

@@ -1,0 +1,30 @@
+body {
+    @include font__family--newsreader-light;
+    @include font__size-regular;
+    color: $color-black;
+}
+
+p, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: $padding--xxsmall;
+}
+
+h1 {
+    @include h1;
+}
+
+h2 {
+    @include h2;
+}
+
+h3 {
+    @include h3;
+}
+
+h4 {
+    @include h4;
+}
+
+p strong {
+    @include font__family--newsreader-medium;
+}
