@@ -5,6 +5,7 @@ namespace TGHP\Jc;
 use TGHP\Jc\Metabox\MetaboxDefinerInterface;
 use TGHP\Jc\Metabox\MetaboxPreparerInterface;
 use TGHP\Jc\Metabox\Post;
+use TGHP\Jc\Metabox\Page;
 
 class Metabox extends AbstractDefinesMetabox
 {
@@ -32,6 +33,7 @@ class Metabox extends AbstractDefinesMetabox
     {
         return [
             new Post($this->jc),
+            new Page($this->jc),
         ];
     }
 
@@ -124,7 +126,8 @@ class Metabox extends AbstractDefinesMetabox
             'mb-revision',
             'mb-frontend-submission',
             'mb-term-meta',
-            'mb-user-meta'
+            'mb-user-meta',
+            'meta-box-columns'
         ];
 
         return $extensions;
@@ -138,9 +141,9 @@ class Metabox extends AbstractDefinesMetabox
         if (is_admin()) {
             wp_enqueue_style(
                 'meta-box-style',
-                Jc::getPluginUrl() . '/assets/src/css/metabox.css',
+                Jc::getPluginUrl() . '/assets/src/css/admin.css',
                 [],
-                filemtime(Jc::getPluginPath() . '/assets/src/css/metabox.css')
+                filemtime(Jc::getPluginPath() . '/assets/src/css/admin.css')
             );
         }
     }
