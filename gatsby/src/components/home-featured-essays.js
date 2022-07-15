@@ -2,21 +2,19 @@ import React from "react"
 import { Link } from "gatsby"
 import { getPostPath } from "../model/post";
 
-const HomeFeaturedEssays = ({ posts }) => (
+const HomeFeaturedEssays = ({ title,  posts }) => (
 
     <div className="featured-essays__latest">
-        <h2>Featured</h2>
-        <ul>
-            {posts.map(({ id, slug, date, title }) => (
-                <li key={id}>
-                    <Link to={getPostPath(slug, date)}>
-                        {title}
-                    </Link>
-                </li>
-            ))}
-        </ul>
+        <h2>{title}</h2>
+        {posts.map(({ id, slug, date, title, excerpt }) => (
+            <Link to={getPostPath(slug, date)} className="featured-essays__essay" key={id}>
+                <div className="featured-essays__essay-title">
+                    {title}
+                </div>
+                <div className="featured-essays__essay-excerpt" dangerouslySetInnerHTML={{ __html: excerpt }} />
+            </Link>
+        ))}
     </div>
-
 )
 
 export default HomeFeaturedEssays

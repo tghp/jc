@@ -3,11 +3,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&display=swap');
 
-@mixin font__sizing($font-size-px, $line-height-px) {
+@mixin font__sizing($font-size-px, $line-height-px: false) {
   $font-size: math.div($font-size-px, $font__base-size);
   font-size: $font-size * 1rem;
-  $line-height: math.div($line-height-px, $font-size-px);
-  line-height: $line-height;
+
+  @if($line-height-px) {
+    $line-height: math.div($line-height-px, $font-size-px);
+    line-height: $line-height;
+  }
 }
 
 @mixin font__family--inter-regular {
@@ -56,10 +59,14 @@
 }
 
 @mixin h4 {
-  @include font__family--newsreader-light;
-  @include font__sizing(18px, 22px);
+  @include font__family--newsreader-regular;
+  @include font__sizing(18px, 21.6px);
 }
 
 @mixin font__size-regular {
   @include font__sizing(14px, 16.8px);
+}
+
+@mixin font__size-regular-alt {
+  @include font__sizing(14px, 18.9px);
 }

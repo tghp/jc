@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
 import Layout from '../components/layout';
-import HomeLatestEssays from "../components/home-latest-essays";
 import HomeFeaturedEssays from "../components/home-featured-essays";
 import HomeEssayCategory from "../components/home-essay-category";
 
@@ -29,8 +28,8 @@ const IndexPage = (
         </div>
         <div className="featured-essays">
             <div className="featured-essays__inner">
-                <HomeLatestEssays posts={latestPosts} />
-                <HomeFeaturedEssays posts={featuredPosts} />
+                <HomeFeaturedEssays title="Latest" posts={latestPosts} />
+                <HomeFeaturedEssays title="Featured" posts={featuredPosts} />
             </div>
         </div>
         <div className="essay-categories">

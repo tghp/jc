@@ -16,7 +16,28 @@
 }
 
 .featured-essays {
+    &__essay {
+        color: $color-black;
+        display: grid;
+        grid-template-columns: 205px auto;
+        gap: $padding--xsmall;
+        padding-right: $padding--xsmall;
+        padding-bottom: $padding--small;
+        margin-bottom: $padding--small;
+        border-bottom: 1px solid rgba($color-jc-charcoal, 0.1);
 
+        &-title {
+            @include h4;
+        }
+
+        &-excerpt {
+            @include font__size-regular-alt;
+
+            p {
+                margin-bottom: 0;
+            }
+        }
+    }
 }
 
 .essay-categories {
@@ -26,5 +47,29 @@
     padding-bottom: $padding--medium;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: $padding--xsmall;
+    gap: $padding--medium;
+
+    &__essay {
+        display: block;
+        color: $color-black;
+        padding-bottom: $padding--small;
+
+        &-title {
+            @include h4;
+            margin-bottom: 10px;
+        }
+
+        &-excerpt {
+            @include font__size-regular-alt;
+
+            p {
+                margin-bottom: 10px;
+            }
+        }
+
+        &-date {
+            @include font__family--inter-light;
+            color: rgba($color-jc-charcoal, 0.4);
+        }
+    }
 }
