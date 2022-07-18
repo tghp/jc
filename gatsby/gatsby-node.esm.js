@@ -32,7 +32,7 @@ export const createPages = ({ graphql, actions }) => {
             })
         })
     }).then(() => {
-        graphql(`
+        return graphql(`
         {
             allWpPage {
                 nodes {

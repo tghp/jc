@@ -8,8 +8,8 @@ export const getPostPath = (slug, date) => {
 
 export const getPostDate = (date) => {
     const postDate = new Date(date);
-    const dateDay = String(postDate.getDay());
-    const dateMonth = String(postDate.getMonth());
+    const dateDay = String(postDate.getDate());
+    const dateMonth = String(postDate.getMonth() + 1);
 
     return `${dateDay.padStart(2, '0')}.${dateMonth.padStart(2, '0')}.${postDate.getFullYear()}`;
 }

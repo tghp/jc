@@ -1,5 +1,6 @@
 .intro-text,
-.featured-essays {
+.featured-essays,
+.about-text {
     &__inner {
         @include max-width-element;
         @include main-padding;
@@ -71,5 +72,11 @@
             @include font__family--inter-light;
             color: rgba($color-jc-charcoal, 0.4);
         }
+    }
+}
+
+.about-text {
+    &__title {
+        grid-column: 1/-1;
     }
 }

@@ -7,46 +7,71 @@ import HomeEssayCategory from "../components/home-essay-category";
 const IndexPage = (
     {
         data: {
-            homePage: { introText },
+            homePageData,
             latestPosts: { posts: latestPosts },
             featuredPosts: { posts: featuredPosts },
-            termEthics: { name: ethicsTermTitle},
-            postsEthics: { posts: ethicsPosts},
-            termRationality: { name: rationalityTermTitle},
-            postsRationality: { posts: rationalityPosts},
-            termMetaEthics: { name: metaEthicsTermTitle },
-            postsMetaEthics: { posts: metaEthicsPosts }
+            allWpCategory: { categories }
         }
     }
-    ) => (
-    <Layout>
-        <div className="intro-text">
-            <div className="intro-text__inner">
-                <div className="intro-text__column-1" dangerouslySetInnerHTML={{ __html: introText[0].tghpjcIntroColumn1}} />
-                <div className="intro-text__column-2" dangerouslySetInnerHTML={{ __html: introText[0].tghpjcIntroColumn2}} />
+    ) => {
+
+    const chosenCategories = [{slug: 'rationality'}, {slug: "uncategorized"}]
+    const filteredCategories = categories.filter(category => chosenCategories.some(item => item.slug === category.slug))
+
+    console.log(chosenCategories)
+    console.log(categories)
+    console.log(filteredCategories)
+    console.log(homePageData.tghpjcIntroPhoto)
+    console.log(homePageData.tghpjcHomeEssayCategories)
+
+    return (
+        <Layout>
+            <div className="intro-text">
+                <div className="intro-text__inner">
+                    <div className="intro-text__column-1" dangerouslySetInnerHTML={{ __html: homePageData.tghpjcIntroColumn1}} />
+                    <div className="intro-text__column-2" dangerouslySetInnerHTML={{ __html: homePageData.tghpjcIntroColumn2}} />
+                    <div className="intro-text__photo">
+                        <img src=""
+                             srcSet=""
+                             sizes="100vw, (min-width: 660px) 50vw, (min-width: 1440px) 33vw"
+                             alt=""/>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div className="featured-essays">
-            <div className="featured-essays__inner">
-                <HomeFeaturedEssays title="Latest" posts={latestPosts} />
-                <HomeFeaturedEssays title="Featured" posts={featuredPosts} />
+            <div className="featured-essays">
+                <div className="featured-essays__inner">
+                    <HomeFeaturedEssays title="Latest" posts={latestPosts} />
+                    <HomeFeaturedEssays title="Featured" posts={featuredPosts} />
+                </div>
             </div>
-        </div>
-        <div className="essay-categories">
-            <HomeEssayCategory title={ethicsTermTitle} posts={ethicsPosts} />
-            <HomeEssayCategory title={rationalityTermTitle} posts={rationalityPosts} />
-            <HomeEssayCategory title={metaEthicsTermTitle} posts={metaEthicsPosts} />
-        </div>
-    </Layout>
-);
+            <div className="essay-categories">
+                {categories.map(({ name, posts, slug }) => (
+                    <HomeEssayCategory title={name} posts={posts} key={slug} />
+                ))}
+            </div>
+            <div className="about-text">
+                <div className="about-text__inner">
+                    <div className="about-text__title">
+                        <h2>{homePageData.tghpjcAboutTextTitle}</h2>
+                    </div>
+                    <div className="about-text__column-1" dangerouslySetInnerHTML={{ __html: homePageData.tghpjcAboutTextColumn1}} />
+                    <div className="about-text__column-2" dangerouslySetInnerHTML={{ __html: homePageData.tghpjcAboutTextColumn2}} />
+                </div>
+            </div>
+        </Layout>
+    );
+}
 
 export const indexQuery = graphql`
 {
-    homePage: allWpPage(filter: {uri: {eq: "/"}}) {
-        introText: nodes {
-            tghpjcIntroColumn1
-            tghpjcIntroColumn2
-        }
+    homePageData: wpPage(isFrontPage: {eq: true}) {
+        tghpjcIntroColumn1
+        tghpjcIntroColumn2
+        tghpjcIntroPhoto
+        tghpjcHomeEssayCategories
+        tghpjcAboutTextTitle
+        tghpjcAboutTextColumn2
+        tghpjcAboutTextColumn1
     }
   
     latestPosts: allWpPost(sort: {fields: [date]}, limit: 6) {
@@ -72,50 +97,19 @@ export const indexQuery = graphql`
             excerpt
         }
     }
-  
-    termEthics: wpTermNode(slug: {eq: "ethics"}) {
-        name
-    }
-    postsEthics: allWpPost(
-        sort: {fields: [date]}
-        filter: {categories: {nodes: {elemMatch: {slug: {eq: "ethics"}}}}}
-        limit: 3
-    ) {
-        posts: nodes {
-            title
-            excerpt
+    
+    allWpCategory(filter: {slug: {ne: "uncategorized"}}) {
+        categories: nodes {
             slug
-            date
-        }
-    }
-    termRationality: wpTermNode(slug: {eq: "rationality"}) {
-        name
-    }
-    postsRationality: allWpPost(
-        sort: {fields: [date]}
-        filter: {categories: {nodes: {elemMatch: {slug: {eq: "rationality"}}}}}
-        limit: 3
-    ) {
-        posts: nodes {
-            title
-            excerpt
-            slug
-            date
-        }
-    }
-    termMetaEthics: wpTermNode(slug: {eq: "meta-ethics"}) {
-        name
-    }
-    postsMetaEthics: allWpPost(
-        sort: {fields: [date]}
-        filter: {categories: {nodes: {elemMatch: {slug: {eq: "meta-ethics"}}}}}
-        limit: 3
-    ) {
-        posts: nodes {
-            title
-            excerpt
-            slug
-            date
+            name
+            posts {
+                nodes {
+                    slug
+                    title
+                    excerpt
+                    date
+                }
+            }
         }
     }
 }

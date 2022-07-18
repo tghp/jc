@@ -1,12 +1,12 @@
 import React from "react"
 import { Link } from "gatsby"
-import {getPostDate, getPostPath} from "../model/post";
+import { getPostPath, getPostDate } from "../model/post";
 
 const HomeEssayCategory = ({ title, posts }) => (
 
     <div className="essay-categories__category">
         <h2>{title}</h2>
-        {posts.map(({ slug, date, title, excerpt }) => (
+        {posts.nodes.map(({ slug, date, title, excerpt }) => (
             <Link to={getPostPath(slug, date)} className="essay-categories__essay" key={slug}>
                 <div className="essay-categories__essay-title">
                     {title}

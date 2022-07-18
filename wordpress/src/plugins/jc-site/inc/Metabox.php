@@ -5,7 +5,7 @@ namespace TGHP\Jc;
 use TGHP\Jc\Metabox\MetaboxDefinerInterface;
 use TGHP\Jc\Metabox\MetaboxPreparerInterface;
 use TGHP\Jc\Metabox\Post;
-use TGHP\Jc\Metabox\Page;
+use TGHP\Jc\Metabox\Home;
 
 class Metabox extends AbstractDefinesMetabox
 {
@@ -33,7 +33,7 @@ class Metabox extends AbstractDefinesMetabox
     {
         return [
             new Post($this->jc),
-            new Page($this->jc),
+            new Home($this->jc),
         ];
     }
 
