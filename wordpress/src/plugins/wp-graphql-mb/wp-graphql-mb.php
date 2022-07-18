@@ -1,10 +1,9 @@
 <?php
 /**
- * Plugin Name: WP GraphQL Meta Box Custom Fields
+ * Plugin Name: WP GraphQL Meta Box Custom Fields (TGHP Version)
  * Description: Exposes all registered Meta Box Custom Fields to the WPGraphQL EndPoint.
- * Author: Niklas Dahlqvist
- * Author URI: https://www.niklasdahlqvist.com
- * Version: 0.8
+ * Author: TGHP / Niklas Dahlqvist
+ * Version: 0.9
  * License: GPL2+
  */
 
@@ -27,6 +26,7 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
             'file',
             'file_upload',
             'file_advanced',
+            'single_image',
             'image',
             'image_upload',
             'image_advanced',
@@ -37,6 +37,7 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
         public function __construct()
         {
             $this->add_meta_boxes_to_graphQL();
+            $this->add_extra_types();
         }
 
         public function add_meta_boxes_to_graphQL()
@@ -55,6 +56,55 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
             }
         }
 
+        public function add_extra_types()
+        {
+            register_graphql_object_type('Media', [
+                'description' => 'Media object',
+                'fields' => [
+                    'id' => [
+                        'type' => 'ID',
+                        'description' => 'The ID of the media object.',
+                    ],
+                    'url' => [
+                        'type' => 'String',
+                        'description' => 'The URL of the media object.',
+                    ],
+                    'srcset' => [
+                        'type' => 'String',
+                        'description' => 'The srcset of the media object.',
+                    ],
+                    'title' => [
+                        'type' => 'String',
+                        'description' => 'The title of the media object.',
+                    ],
+                    'width' => [
+                        'type' => 'String',
+                        'description' => 'The width of the media object original image.',
+                    ],
+                    'height' => [
+                        'type' => 'String',
+                        'description' => 'The height of the media object original image.',
+                    ],
+                    'description' => [
+                        'type' => 'String',
+                        'description' => 'The description of the media object.',
+                    ],
+                    'caption' => [
+                        'type' => 'String',
+                        'description' => 'The caption of the media object.',
+                    ],
+                    'alt' => [
+                        'type' => 'String',
+                        'description' => 'The alt of the media object.',
+                    ],
+                    'name' => [
+                        'type' => 'String',
+                        'description' => 'The name of the media object.',
+                    ],
+                ],
+            ]);
+        }
+
         public function add_meta_fields($fields, $object_type)
         {
             $boxes = array_merge(
@@ -68,76 +118,88 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
                     foreach ($box->fields as $field) {
                         $field_name = self::_graphql_label($field['id']);
 
-                        if (!in_array($field['type'], $this->media_fields) && $field['clone'] == false && $field['multiple'] == false) {
-                            register_graphql_field(ucfirst($post_type_object->graphql_single_name), $field_name, [
-                                'type' => "string",
-                                'description' => $field['desc'],
-                                'resolve' => function ($object) use ($object_type, $field) {
-                                    if ('post' === $object_type || in_array($object_type, get_post_types(), true)) {
-                                        return rwmb_meta($field['id'], null, $object->ID);
-                                    }
-                                    if ('term' === $object_type || in_array($object_type, get_taxonomies(), true)) {
-                                        return rwmb_meta($field['id'], ['object_type' => 'term'], $object->term_id);
-                                    }
-                                    if ('user' === $object_type) {
-                                        return rwmb_meta($field['id'], ['object_type' => 'user'], $object->ID);
-                                    }
-                                },
+                        if (!in_array($field['type'], $this->media_fields)) {
+                            if ($field['clone'] == false && $field['multiple'] == false) {
+                                register_graphql_field(ucfirst($post_type_object->graphql_single_name), $field_name, [
+                                    'type' => "string",
+                                    'description' => $field['desc'],
+                                    'resolve' => function ($object) use ($object_type, $field) {
+                                        $meta = self::_get_meta_value($field, $object, $object_type);
+                                        $meta = self::_convert_wp_internal($meta);
 
+                                        return $meta;
+                                    },
+                                ]);
+                            }
 
-                            ]);
-                        }
-                        if (!in_array($field['type'], $this->media_fields) && ($field['clone'] == true || $field['multiple'] == true)) {
-                            register_graphql_field(ucfirst($post_type_object->graphql_single_name), $field_name, [
-                                'type' => [ 'list_of' => 'String' ],
-                                'description' => $field['desc'],
-                                'resolve' => function ($object) use ($object_type, $field) {
-                                    if ('post' === $object_type || in_array($object_type, get_post_types(), true)) {
-                                        return rwmb_meta($field['id'], null, $object->ID);
-                                    }
-                                    if ('term' === $object_type || in_array($object_type, get_taxonomies(), true)) {
-                                        return rwmb_meta($field['id'], ['object_type' => 'term'], $object->term_id);
-                                    }
-                                    if ('user' === $object_type) {
-                                        return rwmb_meta($field['id'], ['object_type' => 'user'], $object->ID);
-                                    }
-                                },
+                            if (($field['clone'] == true || $field['multiple'] == true)) {
+                                register_graphql_field(ucfirst($post_type_object->graphql_single_name), $field_name, [
+                                    'type' => ['list_of' => 'String'],
+                                    'description' => $field['desc'],
+                                    'resolve' => function ($object) use ($object_type, $field) {
+                                        $meta = self::_get_meta_value($field, $object, $object_type);
 
-                            ]);
-                        }
-                        if (in_array($field['type'], $this->media_fields)) {
-                            register_graphql_field(ucfirst($post_type_object->graphql_single_name), $field_name, [
-                                'type' => [ 'list_of' => 'String' ],
-                                'description' => $field['desc'],
-                                'resolve' => function ($object) use ($object_type, $field) {
-                                    if ('post' === $object_type || in_array($object_type, get_post_types(), true)) {
-                                        $values = rwmb_meta($field['id'], null, $object->ID);
-                                    }
-                                    if ('term' === $object_type || in_array($object_type, get_taxonomies(), true)) {
-                                        $values = rwmb_meta($field['id'], ['object_type' => 'term'], $object->ID);
-                                    }
-                                    if ('user' === $object_type) {
-                                        $values = rwmb_meta($field['id'], ['object_type' => 'user'], $object->ID);
-                                    }
-
-                                    if ($values != null) {
-                                        $images = [];
-                                        foreach ($values as $value) {
-                                            $images[] = \WP_Post::get_instance($value);
+                                        foreach ($meta as &$metaValue) {
+                                            $metaValue = self::_convert_wp_internal($metaValue);
                                         }
-                                        return $images;
-                                    } else {
-                                        return null;
-                                    }
-                                },
 
-                            ]);
+                                        return $meta;
+                                    },
+
+                                ]);
+                            }
+                        }
+
+                        if (in_array($field['type'], $this->media_fields)) {
+                            // TODO: How do we deal with something like image_advanced with multiple images, or file?
+
+                            if ($field['multiple'] == false) {
+                                register_graphql_field(ucfirst($post_type_object->graphql_single_name), $field_name, [
+                                    'type' => 'Media',
+                                    'description' => $field['desc'],
+                                    'resolve' => function ($object) use ($object_type, $field) {
+                                        $meta = self::_get_meta_value($field, $object, $object_type);
+                                        $meta = self::_convert_wp_internal($meta);
+                                        return $meta;
+                                    },
+
+                                ]);
+                            }
+
+                            if (($field['clone'] == true || $field['multiple'] == true)) {
+                                // TODO: Support this use-case, does it even happen?
+                            }
                         }
                     }
                 }
             }
 
             return $fields;
+        }
+
+        /**
+         * Get the meta value for a field
+         *
+         * @param $field
+         * @param $object
+         * @param $object_type
+         * @return mixed|null
+         */
+        public static function _get_meta_value($field, $object, $object_type)
+        {
+            $meta = null;
+
+            if ('post' === $object_type || in_array($object_type, get_post_types(), true)) {
+                $meta = rwmb_meta($field['id'], null, $object->ID);
+            }
+            if ('term' === $object_type || in_array($object_type, get_taxonomies(), true)) {
+                $meta = rwmb_meta($field['id'], ['object_type' => 'term'], $object->term_id);
+            }
+            if ('user' === $object_type) {
+                $meta = rwmb_meta($field['id'], ['object_type' => 'user'], $object->ID);
+            }
+
+            return $meta;
         }
 
         /**
@@ -211,6 +273,46 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
             $graphql_label = lcfirst($graphql_label);
 
             return $graphql_label;
+        }
+
+        /**
+         * @param $instance
+         * @return string|array
+         */
+        public static function _convert_wp_internal($instance)
+        {
+            if (!is_object($instance) && !is_array($instance)) {
+                return '';
+            }
+
+            if (is_object($instance)) {
+                // The data is a class, so reflect on it and return the appropriate data
+                switch (get_class($instance)) {
+                    case 'WP_Term':
+                        return $instance->term_id;
+                    default:
+                        return '';
+                }
+            } else if (is_array($instance)) {
+                // The data is a class, so try and fingerprint it and return the appropriate data
+                if (isset($instance['image_meta'])) {
+                    // Is an array representing an image
+                    return [
+                        'id' => $instance['ID'],
+                        'url' => $instance['full_url'],
+                        'srcset' => $instance['srcset'],
+                        'title' => $instance['title'],
+                        'width' => $instance['width'],
+                        'height' => $instance['height'],
+                        'description' => $instance['description'],
+                        'caption' => $instance['caption'],
+                        'alt' => $instance['alt'],
+                        'name' => $instance['name'],
+                    ];
+                } else {
+                    return '';
+                }
+            }
         }
     }
 }
