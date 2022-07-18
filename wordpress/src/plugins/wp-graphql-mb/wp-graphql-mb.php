@@ -282,7 +282,7 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
         public static function _convert_wp_internal($instance)
         {
             if (!is_object($instance) && !is_array($instance)) {
-                return '';
+                return $instance;
             }
 
             if (is_object($instance)) {
