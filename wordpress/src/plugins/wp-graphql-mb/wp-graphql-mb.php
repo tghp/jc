@@ -34,6 +34,15 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
             'thickbox_image',
         ];
 
+        /**
+         * List of taxonomy fields to filter
+         *
+         * @var array
+         */
+        protected $taxonomy_fields = [
+            'taxonomy_advanced',
+        ];
+
         public function __construct()
         {
             $this->add_meta_boxes_to_graphQL();
@@ -103,6 +112,32 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
                     ],
                 ],
             ]);
+
+            register_graphql_object_type('Term', [
+                'description' => 'Term object',
+                'fields' => [
+                    'id' => [
+                        'type' => 'ID',
+                        'description' => 'The ID of the term object.',
+                    ],
+                    'name' => [
+                        'type' => 'String',
+                        'description' => 'The name of the term object.',
+                    ],
+                    'slug' => [
+                        'type' => 'String',
+                        'description' => 'The slug of the term object.',
+                    ],
+                    'description' => [
+                        'type' => 'String',
+                        'description' => 'The description of the term object.',
+                    ],
+                    'taxonomy' => [
+                        'type' => 'String',
+                        'description' => 'The taxonomy of the term object.',
+                    ],
+                ],
+            ]);
         }
 
         public function add_meta_fields($fields, $object_type)
@@ -118,7 +153,56 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
                     foreach ($box->fields as $field) {
                         $field_name = self::_graphql_label($field['id']);
 
-                        if (!in_array($field['type'], $this->media_fields)) {
+                        if (in_array($field['type'], $this->media_fields)) {
+                            // TODO: How do we deal with something like image_advanced with multiple images, or file?
+
+                            if ($field['multiple'] == false) {
+                                register_graphql_field(ucfirst($post_type_object->graphql_single_name), $field_name, [
+                                    'type' => 'Media',
+                                    'description' => $field['desc'],
+                                    'resolve' => function ($object) use ($object_type, $field) {
+                                        $meta = self::_get_meta_value($field, $object, $object_type);
+                                        $meta = self::_convert_wp_internal($meta);
+                                        return $meta;
+                                    },
+
+                                ]);
+                            }
+
+                            if (($field['clone'] == true || $field['multiple'] == true)) {
+                                // TODO: Support this use-case, does it even happen?
+                            }
+                        } else if (in_array($field['type'], $this->taxonomy_fields)) {
+                            if ($field['clone'] == false && $field['multiple'] == false) {
+                                register_graphql_field(ucfirst($post_type_object->graphql_single_name), $field_name, [
+                                    'type' => "Term",
+                                    'description' => $field['desc'],
+                                    'resolve' => function ($object) use ($object_type, $field) {
+                                        $meta = self::_get_meta_value($field, $object, $object_type);
+                                        $meta = self::_convert_wp_internal($meta);
+
+                                        return $meta;
+                                    },
+                                ]);
+                            }
+
+                            if (($field['clone'] == true || $field['multiple'] == true)) {
+                                register_graphql_field(ucfirst($post_type_object->graphql_single_name), $field_name, [
+                                    'type' => ['list_of' => 'Term'],
+                                    'description' => $field['desc'],
+                                    'resolve' => function ($object) use ($object_type, $field) {
+                                        $meta = self::_get_meta_value($field, $object, $object_type);
+
+                                        foreach ($meta as &$metaValue) {
+                                            $metaValue = self::_convert_wp_internal($metaValue);
+                                        }
+
+                                        return $meta;
+                                    },
+
+                                ]);
+                            }
+                        } else {
                             if ($field['clone'] == false && $field['multiple'] == false) {
                                 register_graphql_field(ucfirst($post_type_object->graphql_single_name), $field_name, [
                                     'type' => "string",
@@ -147,27 +231,6 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
                                     },
 
                                 ]);
-                            }
-                        }
-
-                        if (in_array($field['type'], $this->media_fields)) {
-                            // TODO: How do we deal with something like image_advanced with multiple images, or file?
-
-                            if ($field['multiple'] == false) {
-                                register_graphql_field(ucfirst($post_type_object->graphql_single_name), $field_name, [
-                                    'type' => 'Media',
-                                    'description' => $field['desc'],
-                                    'resolve' => function ($object) use ($object_type, $field) {
-                                        $meta = self::_get_meta_value($field, $object, $object_type);
-                                        $meta = self::_convert_wp_internal($meta);
-                                        return $meta;
-                                    },
-
-                                ]);
-                            }
-
-                            if (($field['clone'] == true || $field['multiple'] == true)) {
-                                // TODO: Support this use-case, does it even happen?
                             }
                         }
                     }
@@ -289,7 +352,13 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
                 // The data is a class, so reflect on it and return the appropriate data
                 switch (get_class($instance)) {
                     case 'WP_Term':
-                        return $instance->term_id;
+                        return [
+                            'id' => $instance->term_id,
+                            'name' => $instance->name,
+                            'slug' => $instance->slug,
+                            'description' => $instance->description,
+                            'taxonomy' => $instance->taxonomy,
+                        ];
                     default:
                         return '';
                 }
