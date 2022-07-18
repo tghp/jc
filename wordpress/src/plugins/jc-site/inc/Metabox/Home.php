@@ -24,6 +24,8 @@ class Home extends AbstractMetabox implements MetaboxDefinerInterface
                         'type' => 'wysiwyg',
                         'options' => $this->getWysiwygOptionsConfig(),
                         'columns' => 5,
+                        'graphql_name' => Metabox::generateKey('intro_column_1'),
+                        'graphql_mutate' => true
                     ],
                     [
                         'id' => Metabox::generateKey('intro_column_2'),
@@ -31,12 +33,16 @@ class Home extends AbstractMetabox implements MetaboxDefinerInterface
                         'type' => 'wysiwyg',
                         'options' => $this->getWysiwygOptionsConfig(),
                         'columns' => 5,
+                        'graphql_name' => Metabox::generateKey('intro_column_2'),
+                        'graphql_mutate' => true
                     ],
                     [
                         'id' => Metabox::generateKey('intro_photo'),
                         'name' => 'Photo',
                         'type' => 'single_image',
                         'columns' => 2,
+                        'graphql_name' => Metabox::generateKey('intro_photo'),
+                        'graphql_mutate' => true
                     ],
                 ]
             ],
@@ -55,6 +61,8 @@ class Home extends AbstractMetabox implements MetaboxDefinerInterface
                         'clone' => true,
                         'sort_clone' => true,
                         'add_button' => '+ Add Category',
+                        'graphql_name' => Metabox::generateKey('home_essay_categories'),
+                        'graphql_mutate' => true
                     ],
                 ]
             ],
@@ -70,6 +78,8 @@ class Home extends AbstractMetabox implements MetaboxDefinerInterface
                         'id' => Metabox::generateKey('about_text_title'),
                         'name' => 'Title',
                         'type' => 'text',
+                        'graphql_name' => Metabox::generateKey('about_text_title'),
+                        'graphql_mutate' => true
                     ],
                     [
                         'id' => Metabox::generateKey('about_text_column_1'),
@@ -77,6 +87,8 @@ class Home extends AbstractMetabox implements MetaboxDefinerInterface
                         'type' => 'wysiwyg',
                         'options' => $this->getWysiwygOptionsConfig(),
                         'columns' => 6,
+                        'graphql_name' => Metabox::generateKey('about_text_column_1'),
+                        'graphql_mutate' => true
                     ],
                     [
                         'id' => Metabox::generateKey('about_text_column_2'),
@@ -84,6 +96,8 @@ class Home extends AbstractMetabox implements MetaboxDefinerInterface
                         'type' => 'wysiwyg',
                         'options' => $this->getWysiwygOptionsConfig(),
                         'columns' => 6,
+                        'graphql_name' => Metabox::generateKey('about_text_column_2'),
+                        'graphql_mutate' => true
                     ],
                 ]
             ],
