@@ -1,7 +1,7 @@
 import path from 'path'
 import puppeteer from 'puppeteer'
 import fs from 'fs'
-import { getPostPath } from './src/model/post'
+import { categoryPageSlug, getPostPath } from './src/model/post'
 
 export const createPages = ({ graphql, actions }) => {
     const { createPage } = actions
@@ -31,8 +31,7 @@ export const createPages = ({ graphql, actions }) => {
                 },
             })
         })
-    }).then(() => {
-        return graphql(`
+    }).then(() => graphql(`
         {
             allWpPage {
                 nodes {
@@ -53,7 +52,26 @@ export const createPages = ({ graphql, actions }) => {
                 })
             })
         })
-    })
+    ).then(() => graphql(`
+        {
+            allWpCategory {
+                nodes {
+                    id
+                    slug
+                }
+            }
+        }
+        `).then((result) => {
+            result.data.allWpCategory.nodes.forEach(({ id, slug }) => {
+
+                createPage({
+                    path: `/${categoryPageSlug}/${slug}/`,
+                    component: path.resolve(`./src/templates/category-page.js`),
+                    context: { id },
+                })
+            })
+        })
+    )
 }
 
 export const onPostBuild = async ({ graphql }) => {
