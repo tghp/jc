@@ -1,62 +1,64 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
 import Layout from '../components/layout';
-// import HomeFeaturedEssays from "../components/home-featured-essays";
-// import HomeEssayCategory from "../components/home-essay-category";
+import HomeFeaturedEssays from "../components/home-featured-essays";
+import HomeEssayCategory from "../components/home-essay-category";
 
 const IndexPage = (
     {
         data: {
-            homePageMeta,
-            // latestPosts: { posts: latestPosts },
-            // featuredPosts: { posts: featuredPosts },
-            // allWpCategory: { categories }
+            homeMeta,
+            latestPosts: { nodes: latestPosts },
+            featuredPosts: { nodes: featuredPosts },
+            allWpCategory: { nodes: allCategories }
         }
     }
     ) => {
 
-    // const chosenCategories = [{slug: 'rationality'}, {slug: "uncategorized"}]
-    // const filteredCategories = categories.filter(category => chosenCategories.some(item => item.slug === category.slug))
-    //
-    // console.log(chosenCategories)
-    // console.log(categories)
-    // console.log(filteredCategories)
-    // console.log(homePageMeta.tghpjcIntroPhoto)
-    // console.log(homePageMeta.tghpjcIntroPhoto)
-    console.log(homePageMeta.tghpjcHomeEssayCategories)
+    const selectedCategories = homeMeta.tghpjcHomeEssayCategories.map((category, idx) => ({ ...category, menuOrder: idx }))
+    const filteredCategories = allCategories
+        .filter(category => selectedCategories.find(item => parseInt(item.id) === category.databaseId))
+        .map(category => {
+            const item = selectedCategories.find(item => parseInt(item.id) === category.databaseId)
+            return {
+                ...category,
+                menuOrder: item.menuOrder
+            }
+        })
+        .sort((catA, catB) => catA.menuOrder - catB.menuOrder)
 
     return (
         <Layout>
             <div className="intro-text">
                 <div className="intro-text__inner">
-                    <div className="intro-text__column-1" dangerouslySetInnerHTML={{ __html: homePageMeta.tghpjcIntroColumn1}} />
-                    <div className="intro-text__column-2" dangerouslySetInnerHTML={{ __html: homePageMeta.tghpjcIntroColumn2}} />
+                    <div className="intro-text__column-1" dangerouslySetInnerHTML={{ __html: homeMeta.tghpjcIntroColumn1}} />
+                    <div className="intro-text__column-2" dangerouslySetInnerHTML={{ __html: homeMeta.tghpjcIntroColumn2}} />
                     <div className="intro-text__photo">
-                        <img src=""
-                             srcSet=""
+                        <img src={homeMeta.tghpjcIntroPhoto.url}
+                             srcSet={homeMeta.tghpjcIntroPhoto.srcset}
                              sizes="100vw, (min-width: 660px) 50vw, (min-width: 1440px) 33vw"
-                             alt=""/>
+                             alt={homeMeta.tghpjcIntroPhoto.alt} />
                     </div>
                 </div>
             </div>
-            {/*<div className="featured-essays">*/}
-            {/*    <div className="featured-essays__inner">*/}
-            {/*        <HomeFeaturedEssays title="Latest" posts={latestPosts} />*/}
-            {/*        <HomeFeaturedEssays title="Featured" posts={featuredPosts} />*/}
-            {/*    </div>*/}
-            {/*</div>*/}
-            {/*<div className="essay-categories">*/}
-            {/*    {categories.map(({ name, posts, slug }) => (*/}
-            {/*        <HomeEssayCategory title={name} posts={posts} key={slug} />*/}
-            {/*    ))}*/}
-            {/*</div>*/}
+            <div className="featured-essays">
+                <div className="featured-essays__inner">
+                    <HomeFeaturedEssays title="Latest" posts={latestPosts} />
+                    <HomeFeaturedEssays title="Featured" posts={featuredPosts} />
+                </div>
+            </div>
+            <div className="essay-categories">
+                {filteredCategories.map(({ name, posts, slug }) => (
+                    <HomeEssayCategory title={name} posts={posts} key={slug} />
+                ))}
+            </div>
             <div className="about-text">
                 <div className="about-text__inner">
                     <div className="about-text__title">
-                        <h2>{homePageMeta.tghpjcAboutTextTitle}</h2>
+                        <h2>{homeMeta.tghpjcAboutTextTitle}</h2>
                     </div>
-                    <div className="about-text__column-1" dangerouslySetInnerHTML={{ __html: homePageMeta.tghpjcAboutTextColumn1}} />
-                    <div className="about-text__column-2" dangerouslySetInnerHTML={{ __html: homePageMeta.tghpjcAboutTextColumn2}} />
+                    <div className="about-text__column-1" dangerouslySetInnerHTML={{ __html: homeMeta.tghpjcAboutTextColumn1}} />
+                    <div className="about-text__column-2" dangerouslySetInnerHTML={{ __html: homeMeta.tghpjcAboutTextColumn2}} />
                 </div>
             </div>
         </Layout>
@@ -65,53 +67,67 @@ const IndexPage = (
 
 export const indexQuery = graphql`
 {
-  homePageMeta: wpPage(isFrontPage: {eq: true}) {
-    tghpjcIntroColumn1
-    tghpjcIntroColumn2
-    tghpjcAboutTextTitle
-    tghpjcAboutTextColumn2
-    tghpjcAboutTextColumn1
-  }   
+    homeMeta: wpPage(isFrontPage: {eq: true}) {
+        tghpjcIntroColumn1
+        tghpjcIntroColumn2
+        tghpjcIntroPhoto {
+            id
+            alt
+            url
+            srcset
+        }
+        tghpjcHomeEssayCategories {
+            id
+            name
+            taxonomy
+            slug
+        }
+        tghpjcAboutTextTitle
+        tghpjcAboutTextColumn1
+        tghpjcAboutTextColumn2
+    }   
+  
+    latestPosts: allWpPost(sort: {fields: [date]}, limit: 6) {
+        nodes {
+            id
+            title
+            slug
+            date
+            excerpt
+        }
+    }
+    
+    featuredPosts: allWpPost(
+        sort: {fields: [date]}
+        limit: 6
+        filter: {tghpjcFeaturedEssay: {eq: "1"}}
+    ) {
+        nodes {
+            id
+            title
+            slug
+            date
+            excerpt
+        }
+    }
+    
+    allWpCategory(filter: {slug: {ne: "uncategorized"}}) {
+        nodes {
+            databaseId
+            slug
+            name
+            posts {
+                nodes {
+                    slug
+                    title
+                    excerpt
+                    date
+                }
+            }
+        }
+    }
+    
 }
 `
 
 export default IndexPage
-
-// latestPosts: allWpPost(sort: {fields: [date]}, limit: 6) {
-//     posts: nodes {
-//         id
-//         title
-//         slug
-//         date
-//         excerpt
-//     }
-// }
-//
-// featuredPosts: allWpPost(
-//     sort: {fields: [date]}
-// limit: 6
-// filter: {tghpjcFeaturedEssay: {eq: "1"}}
-// ) {
-//     posts: nodes {
-//         id
-//         title
-//         slug
-//         date
-//         excerpt
-//     }
-// }
-//
-// allWpCategory(filter: {slug: {ne: "uncategorized"}}) {
-//     categories: nodes {
-//         slug
-//         name
-//         posts {
-//             nodes {
-//                 slug
-//                 title
-//                 excerpt
-//                 date
-//             }
-//         }
-//     }
-// }

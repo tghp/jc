@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "90b656aec9da2d061e146447ba008b4c",
+    "content-hash": "3ad0e1ab9a07992f3da8a4cc49542284",
     "packages": [
         {
             "name": "composer/installers",
@@ -231,41 +231,6 @@
                 }
             ],
             "time": "2021-11-21T21:41:47+00:00"
-        },
-        {
-            "name": "hsimah-services/wp-graphql-metabox",
-            "version": "0.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hsimah-services/wp-graphql-metabox.git",
-                "reference": "7472d35aab35ed039c8a0a5c966f7b555b40d427"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hsimah-services/wp-graphql-metabox/zipball/7472d35aab35ed039c8a0a5c966f7b555b40d427",
-                "reference": "7472d35aab35ed039c8a0a5c966f7b555b40d427",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.1||^8.0"
-            },
-            "type": "wordpress-plugin",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Hamish Blake",
-                    "email": "hsimah.services@gmail.com"
-                }
-            ],
-            "description": "WPGraphQL integration for Metabox",
-            "support": {
-                "issues": "https://github.com/hsimah-services/wp-graphql-metabox/issues",
-                "source": "https://github.com/hsimah-services/wp-graphql-metabox"
-            },
-            "time": "2021-01-04T21:44:12+00:00"
         },
         {
             "name": "johnpbloch/wordpress",
