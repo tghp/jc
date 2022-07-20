@@ -1,0 +1,12 @@
+.post-essay {
+    display: flex;
+    flex-direction: column;
+    gap: $padding--mini;
+    margin-bottom: $padding--medium;
+
+    &__excerpt {
+        p {
+            margin-bottom: 0;
+        }
+    }
+}

@@ -1,0 +1,21 @@
+.archive-posts {
+    > * {
+        @include max-width-element;
+        @include main-padding;
+        padding-top: $padding--small;
+        padding-bottom: $padding--small;
+    }
+
+    &__header {
+        background-color: $color-jc-blue;
+        color: $color-white;
+
+        &-back-btn {
+            color: $color-white;
+        }
+    }
+
+    &__section-2 {
+        background-color: $color-jc-grey-1;
+    }
+}

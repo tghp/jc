@@ -49,7 +49,7 @@ const IndexPage = (
             </div>
             <div className="essay-categories">
                 {filteredCategories.map(({ name, posts, slug }) => (
-                    <HomeEssayCategory title={name} posts={posts} key={slug} />
+                    <HomeEssayCategory title={name} posts={posts} slug={slug} key={slug} />
                 ))}
             </div>
             <div className="about-text">
@@ -89,7 +89,6 @@ export const indexQuery = graphql`
   
     latestPosts: allWpPost(sort: {fields: [date]}, limit: 6) {
         nodes {
-            id
             title
             slug
             date
@@ -103,7 +102,6 @@ export const indexQuery = graphql`
         filter: {tghpjcFeaturedEssay: {eq: "1"}}
     ) {
         nodes {
-            id
             title
             slug
             date

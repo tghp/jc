@@ -1,8 +1,8 @@
 import React from "react"
 import { Link } from "gatsby"
-import { getPostPath, getPostDate } from "../model/post";
+import {categoryPageSlug, getPostPath, getPostDate} from "../model/post";
 
-const HomeEssayCategory = ({ title, posts: { nodes: posts  } }) => {
+const HomeEssayCategory = ({ title, slug, posts: { nodes: posts  } }) => {
 
     const sortedPosts = posts.sort((postA, postB) => new Date(postB.date) - new Date(postA.date)).slice(0, 3)
 
@@ -20,6 +20,9 @@ const HomeEssayCategory = ({ title, posts: { nodes: posts  } }) => {
                     </div>
                 </Link>
             ))}
+            <Link to={`${categoryPageSlug}/${slug}`} className="essay-categories__category-link">
+                View all {title} essays
+            </Link>
         </div>
     )
 }

@@ -1,17 +1,26 @@
 export const categoryPageSlug = 'category'
 
 export const getPostPath = (slug, date) => {
-    const postDate = new Date(date);
-    const postMonth = String(postDate.getMonth() + 1);
-    const postDay = String(postDate.getDate());
-
-    return `/${postDate.getFullYear()}/${postMonth.padStart(2, '0')}/${postDay.padStart(2, '0')}/${slug}`;
+    const postDate = getDates(date)
+    return `/${getPostDateFullYear(postDate.newDate)}/${postDate.month.padStart(2, '0')}/${postDate.day.padStart(2, '0')}/${slug}`;
 }
 
 export const getPostDate = (date) => {
-    const postDate = new Date(date);
-    const dateDay = String(postDate.getDate());
-    const dateMonth = String(postDate.getMonth() + 1);
+    const postDate = getDates(date)
+    return `${postDate.day.padStart(2, '0')}.${postDate.month.padStart(2, '0')}.${getPostDateFullYear(postDate.newDate)}`;
+}
 
-    return `${dateDay.padStart(2, '0')}.${dateMonth.padStart(2, '0')}.${postDate.getFullYear()}`;
+export const getPostDateMonthDay = (date) => {
+    const postDate = getDates(date)
+    return `${postDate.day.padStart(2, '0')}/${postDate.month.padStart(2, '0')}`;
+}
+
+export const getPostDateFullYear = (date) => new Date(date).getFullYear()
+
+function getDates(date) {
+    const newDate = new Date(date);
+    const postDay = String(newDate.getDate());
+    const postMonth = String(newDate.getMonth() + 1);
+
+    return { day: postDay, month: postMonth, newDate: newDate }
 }

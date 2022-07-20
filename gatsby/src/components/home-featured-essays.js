@@ -6,8 +6,8 @@ const HomeFeaturedEssays = ({ title,  posts }) => (
 
     <div className="featured-essays__latest">
         <h2>{title}</h2>
-        {posts.map(({ id, slug, date, title, excerpt }) => (
-            <Link to={getPostPath(slug, date)} className="featured-essays__essay" key={id}>
+        {posts.map(({ slug, date, title, excerpt }) => (
+            <Link to={getPostPath(slug, date)} className="featured-essays__essay" key={slug}>
                 <div className="featured-essays__essay-title">
                     {title}
                 </div>

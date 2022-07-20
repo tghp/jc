@@ -57,7 +57,7 @@
     &__essay {
         display: block;
         color: $color-black;
-        padding-bottom: $padding--small;
+        margin-bottom: $padding--small;
 
         &-title {
             @include h4;
@@ -76,6 +76,10 @@
             @include font__family--inter-light;
             color: rgba($color-jc-charcoal, 0.4);
         }
+    }
+
+    &__category-link {
+        @include font__family--inter-regular;
     }
 }
 

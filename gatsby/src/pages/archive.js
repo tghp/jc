@@ -2,10 +2,11 @@ import React from 'react'
 import Layout from '../components/layout';
 import { graphql, Link } from 'gatsby'
 import EssayLink from "../components/essay-link";
+import PostArchive from "../components/post-archive";
 
-export default function CategoryPage({ data }) {
-    const { name, description } = data.allWpCategory.nodes[0];
+export default function ArchivePage({ data }) {
     const posts = data.allWpPost.nodes;
+    const latestPosts = posts.slice(0, 6); // TODO: Add Pagination?
 
     return (
         <Layout>
@@ -15,35 +16,28 @@ export default function CategoryPage({ data }) {
                         Back to homepage
                     </Link>
                     <div className="archive-posts__header-title">
-                        {name}
+                        All Writing
                     </div>
                 </div>
                 <div className="archive-posts__section-1">
-                    {description}
-                </div>
-                <div className="archive-posts__section-2">
-                    {posts.map(post => (
+                    {latestPosts.map(post => (
                         <EssayLink post={post} key={post.slug} />
                     ))}
                 </div>
+                <div className="archive-posts__section-2">
+                    <PostArchive posts={posts} />
+                </div>
             </div>
         </Layout>
-    );
+    )
 }
 
 export const query = graphql`
-    query($id: String!) {
-        allWpCategory(filter: { id: { eq: $id } }) {
+    {
+        allWpPost(sort: {fields: [date], order: DESC}) {
             nodes {
-                name
-                description
-            }
-        }
-        
-        allWpPost(filter: {categories: {nodes: {elemMatch: {id: {eq: $id}}}}}) {
-            nodes {
-                slug
                 title
+                slug
                 date
                 excerpt
             }
