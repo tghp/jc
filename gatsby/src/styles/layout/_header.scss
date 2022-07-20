@@ -1,16 +1,19 @@
 .site-header {
     background-color: $color-jc-grey-1;
-    border-bottom: 1px solid $color-black;
 
     &__inner {
         @include max-width-element;
         @include main-padding;
-        @include flex-space-between-center;
-        height: 87px;
+
+        &-content {
+            @include flex-space-between-center;
+            height: 87px;
+            border-bottom: 1px solid $color-black;
+        }
     }
 
     &__logo {
-        @include font__sizing(26px);
+        @include font__sizing(26px, 28px);
 
         a {
             color: $color-black;

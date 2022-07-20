@@ -10,6 +10,8 @@ class Essay extends AbstractJc
         parent::__construct($ftx);
 
         add_filter('the_content', [$this, 'addHeaderSections']);
+        add_filter('rwmb_get_value', [$this, 'applyShortcodeToWysiwygMetabox'], 10, 4 );
+        add_shortcode('text_with_button', [$this, 'textWithButtonShortcode']);
     }
 
     public function addHeaderSections($content)
@@ -92,6 +94,28 @@ class Essay extends AbstractJc
         $sectionName = strtolower($sectionName);
 
         return $sectionName;
+    }
+
+    /**
+     * Text with button shortcode
+     */
+    public function textWithButtonShortcode($attributes) {
+        $input = shortcode_atts([
+            'text' => 'Add text',
+            'button_text' => 'Add button text',
+        ], $attributes);
+
+        return "<span class='shortcode-text-button'>{$input['text']} <a href='#' class='shortcode-text-button__button'>{$input['button_text']}</a></span>";
+    }
+
+    /**
+     * Enable shortcodes on metabox wysiwyg field
+     */
+    public function applyShortcodeToWysiwygMetabox($value, $field) {
+        if ('wysiwyg' === $field['type']) {
+            $value = do_shortcode($value);
+        }
+        return $value;
     }
 
 }

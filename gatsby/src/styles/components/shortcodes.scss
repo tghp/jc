@@ -1,0 +1,13 @@
+.shortcode-text-button {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+
+    &__button {
+        @include font__family--inter-light;
+        @include font__sizing(12px, 15px);
+        border: 1px solid $color-jc-charcoal;
+        color: $color-jc-charcoal;
+        padding: 4px 9px;
+    }
+}

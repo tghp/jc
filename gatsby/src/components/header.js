@@ -23,21 +23,23 @@ const Header = ({ title }) => {
     return (
         <header className="site-header">
             <div className="site-header__inner">
-                <div className="site-header__logo">
-                    <Link to={'/'}>
-                        {title}
-                    </Link>
-                </div>
+                <div className="site-header__inner-content">
+                    <div className="site-header__logo">
+                        <Link to={'/'}>
+                            {title}
+                        </Link>
+                    </div>
 
-                <ul className="site-header__nav">
-                    {items.map(({ ID, title, url }) => (
-                        <li key={ID}>
-                            <Link to={url}>
-                                {title}
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
+                    <ul className="site-header__nav">
+                        {items.map(({ ID, title, url }) => (
+                            <li key={ID}>
+                                <Link to={url}>
+                                    {title}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
         </header>
     )

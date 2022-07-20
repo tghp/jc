@@ -4,11 +4,11 @@
     &__inner {
         @include max-width-element;
         @include main-padding;
-        padding-top: $padding--medium;
-        padding-bottom: $padding--medium;
+        padding-top: $padding--xsmall;
+        padding-bottom: $padding--xsmall;
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: $padding--medium;
+        gap: $padding--xxxsmall;
     }
 }
 
@@ -16,7 +16,17 @@
     background-color: $color-jc-grey-1;
 
     &__inner {
-        grid-template-columns: 4fr 4fr 2fr;
+        grid-template-columns: 50% auto 200px;
+    }
+
+    &__column-1 {
+        p:first-child {
+            max-width: 547px;
+        }
+    }
+
+    &__photo {
+        mix-blend-mode: luminosity;
     }
 }
 

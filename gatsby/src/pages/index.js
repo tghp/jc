@@ -15,6 +15,7 @@ const IndexPage = (
     }
     ) => {
 
+    // Essay categories
     const selectedCategories = homeMeta.tghpjcHomeEssayCategories.map((category, idx) => ({ ...category, menuOrder: idx }))
     const filteredCategories = allCategories
         .filter(category => selectedCategories.find(item => parseInt(item.id) === category.databaseId))
