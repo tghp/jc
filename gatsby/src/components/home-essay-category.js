@@ -2,6 +2,8 @@ import React from "react"
 import { Link } from "gatsby"
 import {categoryPageSlug, getPostPath, getPostDate} from "../model/post";
 
+import Arrow from "../assets/link-arrow.svg";
+
 const HomeEssayCategory = ({ title, slug, posts: { nodes: posts  } }) => {
 
     const sortedPosts = posts.sort((postA, postB) => new Date(postB.date) - new Date(postA.date)).slice(0, 3)
@@ -19,7 +21,7 @@ const HomeEssayCategory = ({ title, slug, posts: { nodes: posts  } }) => {
                         {getPostDate(date)}
                     </div>
                     <div className="essay-categories__essay-action">
-                        Continue reading
+                        Continue reading <Arrow />
                     </div>
                 </Link>
             ))}
