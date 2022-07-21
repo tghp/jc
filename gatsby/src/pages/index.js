@@ -44,14 +44,16 @@ const IndexPage = (
             </div>
             <div className="featured-essays">
                 <div className="featured-essays__inner">
-                    <HomeFeaturedEssays title="Latest" posts={latestPosts} />
-                    <HomeFeaturedEssays title="Featured" posts={featuredPosts} />
+                    <HomeFeaturedEssays title="Latest" posts={latestPosts} titleLink={true} />
+                    <HomeFeaturedEssays title="Featured" posts={featuredPosts} titleLink={false} />
                 </div>
             </div>
             <div className="essay-categories">
-                {filteredCategories.map(({ name, posts, slug }) => (
-                    <HomeEssayCategory title={name} posts={posts} slug={slug} key={slug} />
-                ))}
+                <div className="essay-categories__inner">
+                    {filteredCategories.map(({ name, posts, slug }) => (
+                        <HomeEssayCategory title={name} posts={posts} slug={slug} key={slug} />
+                    ))}
+                </div>
             </div>
             <div className="about-text">
                 <div className="about-text__inner">

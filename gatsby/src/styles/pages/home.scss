@@ -1,14 +1,11 @@
 .intro-text,
 .featured-essays,
+.essay-categories,
 .about-text {
     &__inner {
         @include max-width-element;
         @include main-padding;
-        padding-top: $padding--xsmall;
-        padding-bottom: $padding--xsmall;
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: $padding--xxxsmall;
     }
 }
 
@@ -16,30 +13,98 @@
     background-color: $color-jc-grey-1;
 
     &__inner {
-        grid-template-columns: 50% auto 200px;
+        padding-top: $padding--xsmall;
+        padding-bottom: $padding--xsmall;
+
+        @include mq($from: s) {
+            grid-template-columns: repeat(2, 1fr);
+            column-gap: $padding--xxxsmall;
+        }
+
+        @include mq($from: s, $until: xl) {
+            grid-template-columns: auto;
+            grid-template-rows: repeat(2, auto);
+        }
+
+        @include mq($from: xl) {
+            grid-template-columns: 50% auto 200px;
+        }
     }
 
     &__column-1 {
+        @include mq($from: s, $until: xl) {
+            grid-row: 1;
+        }
+
         p:first-child {
             max-width: 547px;
         }
     }
 
+    &__column-2 {
+        @include mq($from: s, $until: xl) {
+            grid-area: 2/1/-1/2;
+        }
+    }
+
     &__photo {
         mix-blend-mode: luminosity;
+
+        @include mq($from: s, $until: xl) {
+            grid-area: 1/2/-1/2;
+        }
     }
 }
 
 .featured-essays {
+    background-color: $color-jc-grey-2;
+
+    &__inner {
+        padding-top: $padding--large;
+
+        @include mq($from: s) {
+            grid-template-columns: repeat(2, 1fr);
+            column-gap: $padding--xsmall;
+        }
+    }
+
+    &__header {
+        display: grid;
+        grid-template-columns: max-content auto;
+        gap: $padding--small;
+        align-items: end;
+        padding-bottom: $padding--xsmall;
+        margin-bottom: $padding--xxxsmall;
+        border-bottom: 1px solid rgba($color-jc-charcoal, 0.5);
+
+        &-title {
+            @include h2;
+        }
+
+        &-view-all {
+            @include font__family--inter-regular;
+            line-height: 43px;
+        }
+    }
+
     &__essay {
         color: $color-black;
         display: grid;
-        grid-template-columns: 205px auto;
         gap: $padding--xsmall;
-        padding-right: $padding--xsmall;
         padding-bottom: $padding--small;
         margin-bottom: $padding--small;
-        border-bottom: 1px solid rgba($color-jc-charcoal, 0.1);
+
+        @include mq($from: l) {
+            grid-template-columns: 200px auto;
+        }
+
+        @include mq($from: xxl) {
+            padding-right: $padding--xsmall;
+        }
+
+        &:not(:last-child) {
+            border-bottom: 1px solid rgba($color-jc-charcoal, 0.1);
+        }
 
         &-title {
             @include h4;
@@ -56,26 +121,53 @@
 }
 
 .essay-categories {
-    @include max-width-element;
-    @include main-padding;
-    padding-top: $padding--medium;
+    padding-top: $padding--ml;
     padding-bottom: $padding--medium;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: $padding--medium;
+    background-color: $color-jc-grey-3;
+
+    &__inner {
+        @include mq($until: s) {
+            gap: $padding--large;
+        }
+
+        @include mq($from: s) {
+            grid-template-columns: repeat(2, 1fr);
+            column-gap: $padding--medium;
+            row-gap: $padding--xlarge;
+        }
+
+        @include mq($from: l) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @include mq($from: s, $until: l) {
+        &__category {
+            &:last-child {
+                grid-column: 1/-1;
+
+                h2 {
+                    max-width: 70%;
+                }
+            }
+        }
+    }
 
     &__essay {
-        display: block;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
         color: $color-black;
         margin-bottom: $padding--small;
 
         &-title {
             @include h4;
+            grid-column: 1/3;
             margin-bottom: 10px;
         }
 
         &-excerpt {
             @include font__size-regular-alt;
+            grid-column: 1/3;
 
             p {
                 margin-bottom: 10px;
@@ -84,7 +176,21 @@
 
         &-date {
             @include font__family--inter-light;
+            grid-column: 1;
             color: rgba($color-jc-charcoal, 0.4);
+        }
+
+        &-action {
+            @include font__family--inter-light;
+            grid-column: 2;
+            color: $color-jc-blue;
+            text-align: right;
+            opacity: 0;
+            transition: opacity .2s ease;
+        }
+
+        &:hover &-action {
+                opacity: 1;
         }
     }
 
@@ -94,7 +200,24 @@
 }
 
 .about-text {
+    background-color: $color-jc-grey-1;
+    border-top: 1px solid $color-jc-blue;
+
+    &__inner {
+        padding-top: $padding--medium;
+        padding-bottom: $padding--medium;
+
+        @include mq($from: s) {
+            grid-template-columns: repeat(2, 1fr);
+            column-gap: $padding--medium;
+        }
+    }
+
     &__title {
         grid-column: 1/-1;
+
+        h2 {
+            border-color: $color-jc-blue;
+        }
     }
 }

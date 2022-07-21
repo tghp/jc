@@ -15,9 +15,14 @@ h1 {
 
 h2 {
     @include h2;
-    border-bottom: 1px solid $color-jc-charcoal;
+    border-bottom: 1px solid rgba($color-jc-charcoal, 0.5);
     padding-bottom: $padding--xsmall;
-    margin-bottom: $padding--xxsmall;
+    margin-bottom: $padding--xxxsmall;
+
+    @include mq($until: s) {
+        @include font__sizing(40px, 42px);
+        gap: $padding--large;
+    }
 }
 
 h3 {

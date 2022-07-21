@@ -18,6 +18,9 @@ const HomeEssayCategory = ({ title, slug, posts: { nodes: posts  } }) => {
                     <div className="essay-categories__essay-date">
                         {getPostDate(date)}
                     </div>
+                    <div className="essay-categories__essay-action">
+                        Continue reading
+                    </div>
                 </Link>
             ))}
             <Link to={`${categoryPageSlug}/${slug}`} className="essay-categories__category-link">

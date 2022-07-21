@@ -4,11 +4,23 @@
     &__inner {
         @include max-width-element;
         @include main-padding;
-        @include flex-space-between-center;
         @include font__sizing(10px, 14px);
-        padding-top: $padding--small;
-        padding-bottom: $padding--small;
-        border-top: 1px solid $color-jc-blue;
+
+        &-content {
+            padding-top: $padding--small;
+            padding-bottom: $padding--small;
+            border-top: 1px solid $color-jc-blue;
+
+            @include mq($until: s) {
+                display: flex;
+                flex-direction: column;
+                gap: $padding--xxsmall;
+            }
+
+            @include mq($from: s) {
+                @include flex-space-between-center;
+            }
+        }
     }
 
     &__nav {
