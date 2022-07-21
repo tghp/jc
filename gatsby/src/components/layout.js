@@ -5,7 +5,7 @@ import Footer from "./footer";
 
 import '../styles/main.scss';
 
-const Layout = ({ isHomePage, children }) => {
+const Layout = ({ isHomePage, children, location }) => {
     const {
         wp: {
             generalSettings: { title },
@@ -21,8 +21,13 @@ const Layout = ({ isHomePage, children }) => {
         }
     `)
 
+    const globalWrapperClasses = [
+        "global-wrapper",
+    ]
+    location && globalWrapperClasses.push(location)
+
     return (
-        <div className="global-wrapper" data-is-root-path={isHomePage}>
+        <div className={globalWrapperClasses.join(' ')} data-is-root-path={isHomePage}>
             <Header title={title} />
             <main className="site-main">
                 {children}

@@ -45,7 +45,7 @@
 
 @mixin h1 {
   @include font__family--newsreader-light;
-  @include font__sizing(36px, 50px);
+  @include font__sizing(64px, 70.4px);
 }
 
 @mixin h2 {

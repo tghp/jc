@@ -11,6 +11,10 @@ p, h3, h4, h5, h6 {
 
 h1 {
     @include h1;
+
+    @include mq($until: s) {
+        @include h2;
+    }
 }
 
 h2 {
@@ -21,7 +25,6 @@ h2 {
 
     @include mq($until: s) {
         @include font__sizing(40px, 42px);
-        gap: $padding--large;
     }
 }
 

@@ -1,30 +1,37 @@
 import React from 'react'
 import Layout from '../components/layout';
 import { graphql, Link } from 'gatsby'
-import EssayLink from "../components/essay-link";
+import EssayLink from '../components/essay-link';
+import LinkArrow from "../assets/link-arrow.svg";
 
 export default function CategoryPage({ data }) {
     const { name, description } = data.allWpCategory.nodes[0];
     const posts = data.allWpPost.nodes;
 
     return (
-        <Layout>
+        <Layout location={'category'}>
             <div className="archive-posts">
                 <div className="archive-posts__header">
-                    <Link to={'/'} className="archive-posts__header-back-btn">
-                        Back to homepage
-                    </Link>
-                    <div className="archive-posts__header-title">
-                        {name}
+                    <div className="archive-posts__header-inner">
+                        <Link to={'/'} className="archive-posts__header-back-btn">
+                            <LinkArrow /> Back to homepage
+                        </Link>
+                        <h1 className="archive-posts__header-title">
+                            {name}
+                        </h1>
                     </div>
                 </div>
                 <div className="archive-posts__section-1">
-                    {description}
+                    <div className="archive-posts__section-1-inner">
+                        {description}
+                    </div>
                 </div>
                 <div className="archive-posts__section-2">
-                    {posts.map(post => (
-                        <EssayLink post={post} key={post.slug} />
-                    ))}
+                    <div className="archive-posts__section-2-inner">
+                        {posts.map(post => (
+                            <EssayLink post={post} key={post.slug} />
+                        ))}
+                    </div>
                 </div>
             </div>
         </Layout>

@@ -1,21 +1,48 @@
 .archive-posts {
-    > * {
+
+    &__header-inner,
+    &__section-1-inner,
+    &__section-2-inner {
         @include max-width-element;
         @include main-padding;
-        padding-top: $padding--small;
-        padding-bottom: $padding--small;
     }
 
     &__header {
         background-color: $color-jc-blue;
         color: $color-white;
 
-        &-back-btn {
-            color: $color-white;
+        &-inner {
+            padding-top: $padding--small;
+            padding-bottom: $padding--xxxsmall;
         }
+
+        &-back-btn {
+            @include font__family--inter-regular;
+            color: $color-white;
+            padding-bottom: $padding--mini;
+            margin-bottom: $padding--small;
+            border-bottom: 1px solid $color-white;
+            display: block;
+            max-width: 336px;
+
+            .link-arrow {
+                @include link-arrow-rotate-white;
+            }
+        }
+
+        &-title {
+
+        }
+    }
+
+    &__section-1 {
+        padding-top: $padding--small;
+        padding-bottom: $padding--small;
     }
 
     &__section-2 {
         background-color: $color-jc-grey-1;
+        padding-top: $padding--small;
+        padding-bottom: $padding--small;
     }
 }

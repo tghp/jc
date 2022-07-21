@@ -30,6 +30,22 @@
         }
     }
 
+    /*
+     * Archive & Category pages
+     */
+    .archive &,
+    .category & {
+        background-color: $color-jc-blue;
+
+        a {
+            color: $color-white;
+        }
+
+        &__inner-content {
+            border-color: $color-white;
+        }
+    }
+
     @media print {
         display: none;
         border-bottom: 1px solid green;

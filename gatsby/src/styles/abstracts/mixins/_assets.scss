@@ -1,0 +1,12 @@
+@mixin link-arrow-rotate {
+    transform: rotate(180deg);
+}
+
+@mixin link-arrow-rotate-white {
+    transform: rotate(180deg);
+    margin-right: 5px;
+
+    path {
+        fill: $color-white;
+    }
+}
