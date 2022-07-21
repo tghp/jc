@@ -54,13 +54,13 @@
 }
 
 @mixin h3 {
-  @include font__family--newsreader-light;
-  @include font__sizing(20px, 27.34px);
+  @include font__family--newsreader-regular;
+  @include font__sizing(24px, 28.8px);
 }
 
 @mixin h4 {
   @include font__family--newsreader-regular;
-  @include font__sizing(18px, 21.6px);
+  @include font__sizing(20px, 27px);
 }
 
 @mixin font__size-regular {

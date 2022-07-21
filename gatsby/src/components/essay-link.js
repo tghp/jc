@@ -1,19 +1,20 @@
 import React from "react"
 import { Link } from "gatsby"
 import { getPostPath, getPostDate } from "../model/post";
+import LinkArrow from "../assets/link-arrow.svg";
 
 const EssayLink = ({ post: { slug, date, title, excerpt } }) => (
 
-    <Link to={getPostPath(slug, date)} className="post-essay">
-        <div className="post-essay__date">
+    <Link to={getPostPath(slug, date)} className="post-essays__essay">
+        <div className="post-essays__essay-date">
             {getPostDate(date)}
         </div>
-        <div className="post-essay__title">
+        <div className="post-essays__essay-title">
             {title}
         </div>
-        <div className="post-essay__excerpt" dangerouslySetInnerHTML={{ __html: excerpt }} />
-        <div className="post-essay__action">
-            Continue reading
+        {excerpt && <div className="post-essays__essay-excerpt" dangerouslySetInnerHTML={{ __html: excerpt }} />}
+        <div className="post-essays__essay-action">
+            Continue reading <LinkArrow />
         </div>
     </Link>
 )

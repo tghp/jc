@@ -1,0 +1,39 @@
+.post-essays {
+    &__essay {
+        grid-column: 2;
+        display: flex;
+        flex-direction: column;
+        gap: $padding--mini;
+
+        @include mq($until: l) {
+            max-width: 647px;
+        }
+
+        &:not(:last-child) {
+            margin-bottom: $padding--medium;
+        }
+
+        &-date {
+            @include font__family--inter-light;
+            color: rgba($color-jc-charcoal, 0.4);
+        }
+
+        &-title {
+            @include h3;
+            color: $color-jc-charcoal;
+        }
+
+        &-excerpt {
+            color: $color-jc-charcoal;
+
+            p {
+                margin-bottom: 0;
+            }
+        }
+
+        &-action {
+            @include font__family--inter-light;
+            color: $color-jc-blue;
+        }
+    }
+}

@@ -21,13 +21,14 @@ export default function CategoryPage({ data }) {
                         </h1>
                     </div>
                 </div>
-                <div className="archive-posts__section-1">
-                    <div className="archive-posts__section-1-inner">
+                <div className="archive-posts__posts">
+                    <div className="archive-posts__posts-sidebar">
+
+                    </div>
+                    <div className="archive-posts__posts-cat-excerpt">
                         {description}
                     </div>
-                </div>
-                <div className="archive-posts__section-2">
-                    <div className="archive-posts__section-2-inner">
+                    <div className="archive-posts__posts-category post-essays">
                         {posts.map(post => (
                             <EssayLink post={post} key={post.slug} />
                         ))}

@@ -1,0 +1,149 @@
+@mixin small-sidebar {
+    grid-template-columns: 180px auto;
+    column-gap: 50px;
+}
+
+@mixin large-sidebar {
+    grid-template-columns: 336px auto;
+    column-gap: 115px;
+}
+
+.archive-posts {
+    &__header {
+        background-color: $color-jc-blue;
+        color: $color-white;
+
+        &-inner {
+            @include max-width-element;
+            @include main-padding;
+            padding-top: $padding--small;
+            padding-bottom: $padding--xxxsmall;
+        }
+
+        &-back-btn {
+            @include font__family--inter-regular;
+            color: $color-white;
+            padding-bottom: $padding--mini;
+            margin-bottom: $padding--small;
+            border-bottom: 1px solid $color-white;
+            display: block;
+            max-width: 336px;
+
+            .link-arrow {
+                @include link-arrow-rotate-white;
+            }
+        }
+    }
+
+    &__posts {
+        $top-padding: $padding--ml;
+        @include max-width-element;
+        @include main-padding;
+        padding-top: $top-padding;
+        display: grid;
+        row-gap: $padding--large;
+
+        @include mq($from: s) {
+            @include small-sidebar;
+
+            &-latest {
+                grid-column: 2;
+            }
+        }
+
+        @include mq($from: l) {
+            @include large-sidebar;
+        }
+
+        &-sidebar {
+            z-index: 1;
+
+            @include mq($from: s) {
+                grid-column: 1/-3;
+                position: sticky;
+                top: $top-padding;
+                height: max-content;
+            }
+
+            &-link {
+                @include h2;
+                display: flex;
+                color: $color-jc-charcoal;
+
+                @include mq($until: l) {
+                    @include font__sizing(30px, 35px);
+                }
+
+                &:first-child {
+                    padding-bottom: $padding--xxxsmall;
+                    border-bottom: 1px solid rgba($color-jc-charcoal, 0.5);
+
+                    @include mq($from: m) {
+                        padding-bottom: $padding--xxsmall;
+                    }
+                }
+
+                &:last-child {
+                    padding-top: $padding--xxxsmall;
+
+                    @include mq($from: m) {
+                        padding-top: $padding--xxsmall;
+                    }
+                }
+            }
+
+            .category & {
+                @include mq($until: xxl) {
+                    display: none;
+                }
+            }
+        }
+
+        &-cat-excerpt {
+            @include font__sizing(18px, 24.3px);
+            grid-column: 1/3;
+
+            @include mq($from: xxl) {
+                grid-column: 2;
+            }
+        }
+
+        &-archive {
+            @include full-bleed-background($color-jc-grey-1);
+            background-color: $color-jc-grey-1;
+            padding-top: $padding--large;
+            padding-bottom: $padding--large;
+
+            @include mq($from: s) {
+                grid-column: 1/3;
+                display: grid;
+                @include small-sidebar;
+            }
+
+            @include mq($from: l) {
+                @include large-sidebar;
+            }
+        }
+
+        &-category {
+            @include full-bleed-background($color-jc-grey-1);
+            background-color: $color-jc-grey-1;
+            padding-top: $padding--large;
+            padding-bottom: $padding--large;
+            grid-column: 1/-1;
+
+            @include mq($from: m) {
+                grid-column: 1/3;
+            }
+
+            @include mq($from: l) {
+                display: grid;
+                grid-template-columns: 336px minmax(auto, 647px);
+            }
+
+            @include mq($from: xl) {
+                column-gap: 115px;
+            }
+        }
+    }
+}

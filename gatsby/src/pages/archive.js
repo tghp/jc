@@ -23,15 +23,21 @@ export default function ArchivePage({ data }) {
                         </h1>
                     </div>
                 </div>
-                <div className="archive-posts__section-1">
-                    <div className="archive-posts__section-1-inner">
+                <div className="archive-posts__posts">
+                    <div className="archive-posts__posts-sidebar">
+                        <Link to={'#'} className="archive-posts__posts-sidebar-link">
+                            Most recent
+                        </Link>
+                        <Link to={'#'} className="archive-posts__posts-sidebar-link">
+                            Archive
+                        </Link>
+                    </div>
+                    <div className="archive-posts__posts-latest">
                         {latestPosts.map(post => (
                             <EssayLink post={post} key={post.slug} />
                         ))}
                     </div>
-                </div>
-                <div className="archive-posts__section-2">
-                    <div className="archive-posts__section-2-inner">
+                    <div className="archive-posts__posts-archive">
                         <PostArchive posts={archivedPosts} />
                     </div>
                 </div>
