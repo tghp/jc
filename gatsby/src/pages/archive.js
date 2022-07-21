@@ -6,7 +6,8 @@ import PostArchive from "../components/post-archive";
 
 export default function ArchivePage({ data }) {
     const posts = data.allWpPost.nodes;
-    const latestPosts = posts.slice(0, 6); // TODO: Add Pagination?
+    const latestPosts = posts.slice(0, 6);
+    // TODO: Show beyond the 6th in PostArchive
 
     return (
         <Layout>
