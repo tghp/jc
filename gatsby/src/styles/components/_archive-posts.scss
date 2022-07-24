@@ -8,6 +8,8 @@
     column-gap: 115px;
 }
 
+$top-padding: $padding--ml;
+
 .archive-posts {
     &__header {
         background-color: $color-jc-blue;
@@ -36,10 +38,8 @@
     }
 
     &__posts {
-        $top-padding: $padding--ml;
         @include max-width-element;
         @include main-padding;
-        padding-top: $top-padding;
         display: grid;
         row-gap: $padding--large;
 
@@ -56,12 +56,13 @@
         }
 
         &-sidebar {
+            padding-top: $top-padding;
             z-index: 1;
 
             @include mq($from: s) {
                 grid-column: 1/-3;
                 position: sticky;
-                top: $top-padding;
+                top: 0;
                 height: max-content;
             }
 
@@ -93,14 +94,21 @@
             }
 
             .category & {
-                @include mq($until: xxl) {
-                    display: none;
-                }
+                display: none;
+            }
+        }
+
+        &-latest {
+            padding-top: $top-padding;
+
+            @include mq($from: s) {
+                grid-column: 2;
             }
         }
 
         &-cat-excerpt {
             @include font__sizing(18px, 24.3px);
+            padding-top: $top-padding;
             grid-column: 1/3;
 
             @include mq($from: xxl) {

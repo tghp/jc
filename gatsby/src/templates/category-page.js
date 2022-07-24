@@ -25,9 +25,11 @@ export default function CategoryPage({ data }) {
                     <div className="archive-posts__posts-sidebar">
 
                     </div>
-                    <div className="archive-posts__posts-cat-excerpt">
-                        {description}
-                    </div>
+                    {description &&
+                        <div className="archive-posts__posts-cat-excerpt">
+                            {description}
+                        </div>
+                    }
                     <div className="archive-posts__posts-category post-essays">
                         {posts.map(post => (
                             <EssayLink post={post} key={post.slug} />
