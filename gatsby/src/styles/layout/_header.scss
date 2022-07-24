@@ -46,6 +46,13 @@
         }
     }
 
+    /*
+     * Single pages
+     */
+    .single-post & {
+        background-color: $color-jc-grey-2;
+    }
+
     @media print {
         display: none;
         border-bottom: 1px solid green;
