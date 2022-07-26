@@ -5,7 +5,7 @@ import EssayLink from '../components/essay-link';
 import LinkArrow from "../assets/link-arrow.svg";
 
 export default function CategoryPage({ data }) {
-    const { name, description } = data.allWpCategory.nodes[0];
+    const { name, description } = data.wpCategory;
     const posts = data.allWpPost.nodes;
 
     return (
@@ -43,11 +43,9 @@ export default function CategoryPage({ data }) {
 
 export const query = graphql`
     query($id: String!) {
-        allWpCategory(filter: { id: { eq: $id } }) {
-            nodes {
-                name
-                description
-            }
+        wpCategory(id: {eq: $id}) {
+            name
+            description
         }
         
         allWpPost(filter: {categories: {nodes: {elemMatch: {id: {eq: $id}}}}}) {

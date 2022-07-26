@@ -153,47 +153,6 @@
         }
     }
 
-    &__essay {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        color: $color-black;
-        margin-bottom: $padding--small;
-
-        &-title {
-            @include h4;
-            grid-column: 1/3;
-            margin-bottom: 10px;
-        }
-
-        &-excerpt {
-            @include font__size-regular-alt;
-            grid-column: 1/3;
-
-            p {
-                margin-bottom: 10px;
-            }
-        }
-
-        &-date {
-            @include font__family--inter-light;
-            grid-column: 1;
-            color: rgba($color-jc-charcoal, 0.4);
-        }
-
-        &-action {
-            @include font__family--inter-light;
-            grid-column: 2;
-            color: $color-jc-blue;
-            text-align: right;
-            opacity: 0;
-            transition: opacity .2s ease;
-        }
-
-        &:hover &-action {
-            opacity: 1;
-        }
-    }
-
     &__category-link {
         @include font__family--inter-regular;
     }

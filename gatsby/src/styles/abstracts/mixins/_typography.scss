@@ -70,3 +70,13 @@
 @mixin font__size-regular-alt {
   @include font__sizing(14px, 18.9px);
 }
+
+@mixin font__size-regular-title {
+  @include font__family--newsreader-regular;
+  @include font__sizing(18px, 21.6px);
+}
+
+@mixin font__size-regular-subtitle {
+  @include font__family--newsreader-regular;
+  @include font__sizing(16px, 19.2px);
+}

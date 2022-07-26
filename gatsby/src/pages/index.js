@@ -2,31 +2,17 @@ import * as React from 'react'
 import { graphql } from 'gatsby'
 import Layout from '../components/layout';
 import HomeFeaturedEssays from "../components/home-featured-essays";
-import HomeEssayCategory from "../components/home-essay-category";
+import HomeEssayCategories from "../components/home-essay-categories";
 
 const IndexPage = (
     {
         data: {
             homeMeta,
             latestPosts: { nodes: latestPosts },
-            featuredPosts: { nodes: featuredPosts },
-            allWpCategory: { nodes: allCategories }
+            featuredPosts: { nodes: featuredPosts }
         }
     }
     ) => {
-
-    // Essay categories
-    const selectedCategories = homeMeta.tghpjcHomeEssayCategories.map((category, idx) => ({ ...category, menuOrder: idx }))
-    const filteredCategories = allCategories
-        .filter(category => selectedCategories.find(item => parseInt(item.id) === category.databaseId))
-        .map(category => {
-            const item = selectedCategories.find(item => parseInt(item.id) === category.databaseId)
-            return {
-                ...category,
-                menuOrder: item.menuOrder
-            }
-        })
-        .sort((catA, catB) => catA.menuOrder - catB.menuOrder)
 
     return (
         <Layout>
@@ -37,7 +23,7 @@ const IndexPage = (
                     <div className="intro-text__photo">
                         <img src={homeMeta.tghpjcIntroPhoto.url}
                              srcSet={homeMeta.tghpjcIntroPhoto.srcset}
-                             sizes="100vw, (min-width: 660px) 50vw, (min-width: 1440px) 33vw"
+                             sizes="200px"
                              alt={homeMeta.tghpjcIntroPhoto.alt} />
                     </div>
                 </div>
@@ -50,9 +36,7 @@ const IndexPage = (
             </div>
             <div className="essay-categories">
                 <div className="essay-categories__inner">
-                    {filteredCategories.map(({ name, posts, slug }) => (
-                        <HomeEssayCategory title={name} posts={posts} slug={slug} key={slug} />
-                    ))}
+                    <HomeEssayCategories selectedCategories={homeMeta.tghpjcHomeEssayCategories} />
                 </div>
             </div>
             <div className="about-text">
@@ -109,22 +93,6 @@ export const indexQuery = graphql`
             slug
             date
             excerpt
-        }
-    }
-    
-    allWpCategory(filter: {slug: {ne: "uncategorized"}}) {
-        nodes {
-            databaseId
-            slug
-            name
-            posts {
-                nodes {
-                    slug
-                    title
-                    excerpt
-                    date
-                }
-            }
         }
     }
     
