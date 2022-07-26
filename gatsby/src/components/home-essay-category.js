@@ -46,15 +46,16 @@ const HomeEssayCategory = ({ title, slug, posts: { nodes: essays } }) => {
                 return (
                     <div className="essay-categories__category-essays category-essays" key={slug}>
 
-                        {type === 'series'
-
-                            ?
+                        {type === 'series' ?
 
                             <div className="category-essays__series">
                                 <div className="category-essays__series-title">
                                     [Series] {seriesTitle}
                                 </div>
-                                <div className="category-essays__series-excerpt" dangerouslySetInnerHTML={{__html: seriesDescription}}/>
+                                {
+                                    seriesDescription &&
+                                    <div className="category-essays__series-excerpt" dangerouslySetInnerHTML={{__html: seriesDescription}} />
+                                }
                                 <div className="category-essays__series-date">
                                     {getPostDate(data[0].date)}
                                 </div>

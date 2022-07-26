@@ -48,12 +48,20 @@ export const query = graphql`
             description
         }
         
-        allWpPost(filter: {categories: {nodes: {elemMatch: {id: {eq: $id}}}}}) {
+        allWpPost(
+            filter: {categories: {nodes: {elemMatch: {id: {eq: $id}}}}}, 
+            sort: {fields: [date], order: DESC}
+        ) {
             nodes {
                 slug
                 title
                 date
                 excerpt
+                tghpTaxonomySeries {
+                    nodes {
+                        name
+                    }
+                }
             }
         }
     }
