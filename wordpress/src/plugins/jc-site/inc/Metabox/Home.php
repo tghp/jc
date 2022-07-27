@@ -11,11 +11,12 @@ class Home extends AbstractMetabox implements MetaboxDefinerInterface
     {
         return [
             [
+                'id' => Metabox::generateKey('home_intro_text'),
                 'title' => 'Intro Text',
                 'post_types' => 'page',
                 'revision' => true,
                 'include' => [
-                    'ID' => 2,
+                    'template' => ['templates/template-home.php'],
                 ],
                 'fields' => [
                     [
@@ -42,6 +43,7 @@ class Home extends AbstractMetabox implements MetaboxDefinerInterface
                 ]
             ],
             [
+                'id' => Metabox::generateKey('home_essay_categories'),
                 'title' => 'Essay Categories',
                 'post_types' => 'page',
                 'revision' => true,
@@ -60,6 +62,7 @@ class Home extends AbstractMetabox implements MetaboxDefinerInterface
                 ]
             ],
             [
+                'id' => Metabox::generateKey('home_about_text'),
                 'title' => 'About Text',
                 'post_types' => 'page',
                 'revision' => true,

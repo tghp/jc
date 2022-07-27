@@ -11,6 +11,7 @@ class Post extends AbstractMetabox implements MetaboxDefinerInterface
     {
         return [
             [
+                'id' => Metabox::generateKey('posts_general_meta'),
                 'title' => 'General',
                 'post_types' => 'post',
                 'context' => 'side',
@@ -24,6 +25,7 @@ class Post extends AbstractMetabox implements MetaboxDefinerInterface
                 ]
             ],
             [
+                'id' => Metabox::generateKey('posts_media'),
                 'title' => 'Media',
                 'post_types' => 'post',
                 'context' => 'side',

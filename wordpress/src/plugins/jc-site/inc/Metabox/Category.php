@@ -11,13 +11,14 @@ class Category extends AbstractMetabox implements MetaboxDefinerInterface
     {
         return [
             [
-                'title' => 'General',
+                'id' => Metabox::generateKey('category_general_meta'),
+                'title' => 'Category Page',
                 'post_types' => 'post',
                 'taxonomies' => 'category',
                 'fields' => [
                     [
-                        'id' => Metabox::generateKey('category_description'),
-                        'name' => 'Category page content',
+                        'id' => Metabox::generateKey('category_content'),
+                        'name' => 'Content',
                         'type' => 'wysiwyg',
                     ],
                 ]

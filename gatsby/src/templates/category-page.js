@@ -5,7 +5,10 @@ import EssayLink from '../components/essay-link';
 import LinkArrow from "../assets/link-arrow.svg";
 
 export default function CategoryPage({ data }) {
-    const { name, description } = data.wpCategory;
+    const {
+        name,
+        tghpjcCategoryContent: content
+    } = data.wpCategory;
     const posts = data.allWpPost.nodes;
 
     return (
@@ -25,10 +28,8 @@ export default function CategoryPage({ data }) {
                     <div className="archive-posts__posts-sidebar">
 
                     </div>
-                    {description &&
-                        <div className="archive-posts__posts-cat-excerpt">
-                            {description}
-                        </div>
+                    {content &&
+                        <div className="archive-posts__posts-cat-excerpt" dangerouslySetInnerHTML={{ __html: content }} />
                     }
                     <div className="archive-posts__posts-category post-essays">
                         {posts.map(post => (
@@ -45,7 +46,7 @@ export const query = graphql`
     query($id: String!) {
         wpCategory(id: {eq: $id}) {
             name
-            description
+            tghpjcCategoryContent
         }
         
         allWpPost(
