@@ -51,15 +51,30 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
 
         public function add_meta_boxes_to_graphQL()
         {
-            $types = array_merge(
-                $this->get_types(),
-                $this->get_types('taxonomy')
-            );
-
-            foreach ($types as $type => $object) {
+            // Add fields for meta boxes relating to posts
+            foreach ($this->get_types() as $type => $object) {
                 if (isset($object->graphql_single_name)) {
-                    add_action('graphql_register_types', function ($fields) use ($type) {
-                        return $this->add_meta_fields($fields, $type);
+                    add_action('graphql_register_types', function ($fields) use ($type, $object) {
+                        return $this->add_meta_fields(
+                            $this->get_post_type_meta_boxes($type),
+                            $fields,
+                            $type,
+                            $object->graphql_single_name
+                        );
+                    });
+                }
+            }
+
+            // Add fields for meta boxes relating to taxonomies
+            foreach ($this->get_types('taxonomy') as $type => $object) {
+                if (isset($object->graphql_single_name)) {
+                    add_action('graphql_register_types', function ($fields) use ($type, $object) {
+                        return $this->add_meta_fields(
+                            $this->get_term_meta_boxes($type),
+                            $fields,
+                            $type,
+                            $object->graphql_single_name
+                        );
                     });
                 }
             }
@@ -140,16 +155,12 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
             ]);
         }
 
-        public function add_meta_fields($fields, $object_type)
+        public function add_meta_fields($boxes, $fields, $object_type, $graphql_single_name)
         {
-            $boxes = array_merge(
-                $this->get_post_type_meta_boxes($object_type),
-                $this->get_term_meta_boxes($object_type)
-            );
+            $graphql_single_name = ucfirst($graphql_single_name);
 
             foreach ($boxes as $box) {
                 foreach ($box->post_types as $type) {
-                    $post_type_object = get_post_type_object($type);
                     foreach ($box->fields as $field) {
                         $field_name = self::_graphql_label($field['id']);
 
@@ -157,7 +168,7 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
                             // TODO: How do we deal with something like image_advanced with multiple images, or file?
 
                             if ($field['multiple'] == false) {
-                                register_graphql_field(ucfirst($post_type_object->graphql_single_name), $field_name, [
+                                register_graphql_field($graphql_single_name, $field_name, [
                                     'type' => 'Media',
                                     'description' => $field['desc'],
                                     'resolve' => function ($object) use ($object_type, $field) {
@@ -174,7 +185,7 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
                             }
                         } else if (in_array($field['type'], $this->taxonomy_fields)) {
                             if ($field['clone'] == false && $field['multiple'] == false) {
-                                register_graphql_field(ucfirst($post_type_object->graphql_single_name), $field_name, [
+                                register_graphql_field($graphql_single_name, $field_name, [
                                     'type' => "Term",
                                     'description' => $field['desc'],
                                     'resolve' => function ($object) use ($object_type, $field) {
@@ -187,7 +198,7 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
                             }
 
                             if (($field['clone'] == true || $field['multiple'] == true)) {
-                                register_graphql_field(ucfirst($post_type_object->graphql_single_name), $field_name, [
+                                register_graphql_field($graphql_single_name, $field_name, [
                                     'type' => ['list_of' => 'Term'],
                                     'description' => $field['desc'],
                                     'resolve' => function ($object) use ($object_type, $field) {
@@ -204,7 +215,7 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
                             }
                         } else {
                             if ($field['clone'] == false && $field['multiple'] == false) {
-                                register_graphql_field(ucfirst($post_type_object->graphql_single_name), $field_name, [
+                                register_graphql_field($graphql_single_name, $field_name, [
                                     'type' => "string",
                                     'description' => $field['desc'],
                                     'resolve' => function ($object) use ($object_type, $field) {
@@ -217,7 +228,7 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
                             }
 
                             if (($field['clone'] == true || $field['multiple'] == true)) {
-                                register_graphql_field(ucfirst($post_type_object->graphql_single_name), $field_name, [
+                                register_graphql_field($graphql_single_name, $field_name, [
                                     'type' => ['list_of' => 'String'],
                                     'description' => $field['desc'],
                                     'resolve' => function ($object) use ($object_type, $field) {
@@ -293,7 +304,7 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
         public function get_term_meta_boxes($type)
         {
             $output = [];
-            if (!class_exists('MB_Term_Meta_Box')) {
+            if (!class_exists('MB_Term_Meta_Box') && !class_exists('\MBTM\MetaBox')) {
                 return $output;
             }
 
@@ -313,12 +324,14 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
          */
         protected function get_types($type = 'post')
         {
-            $types = get_post_types([], 'objects');
-            if ('taxonomy' === $type) {
-                $types = get_taxonomies([], 'objects');
+            switch ($type) {
+                case 'post':
+                    return get_post_types([], 'objects');
+                case 'taxonomy':
+                    return get_taxonomies([], 'objects');
             }
 
-            return $types;
+            return [];
         }
 
         /**
