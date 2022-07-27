@@ -17,6 +17,13 @@ export const getPostDateMonthDay = (date) => {
 
 export const getPostDateFullYear = (date) => new Date(date).getFullYear()
 
+export const getSinglePostDateFormat = (date) => {
+    const newDate = new Date(date);
+    const postDay = String(newDate.getDate());
+    const postMonth = newDate.toLocaleString('default', { month: 'long' });
+    return `${postMonth} ${postDay.padStart(2, '0')}, ${getPostDateFullYear(newDate)}`;
+}
+
 function getDates(date) {
     const newDate = new Date(date);
     const postDay = String(newDate.getDate());

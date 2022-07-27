@@ -3,7 +3,7 @@ import Layout from '../components/layout';
 import { graphql, Link } from 'gatsby'
 import EssayLink from "../components/essay-link";
 import PostArchive from "../components/post-archive";
-import LinkArrow from "../assets/link-arrow.svg";
+import ImageLinkArrow from "../assets/link-arrow.svg";
 
 export default function ArchivePage({ data }) {
     const posts = data.allWpPost.nodes;
@@ -16,7 +16,7 @@ export default function ArchivePage({ data }) {
                 <div className="archive-posts__header">
                     <div className="archive-posts__header-inner">
                         <Link to={'/'} className="archive-posts__header-back-btn">
-                            <LinkArrow /> Back to homepage
+                            <ImageLinkArrow /> Back to homepage
                         </Link>
                         <h1 className="archive-posts__header-title">
                             All Writing

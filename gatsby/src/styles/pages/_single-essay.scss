@@ -1,21 +1,60 @@
 .single-essay {
     @include max-width-element;
     @include main-padding;
-    padding-top: $padding--large;
+    padding-top: $padding--xsmall;
     padding-bottom: $padding--xsmall;
 
     &__grid {
         display: grid;
         grid-template-columns: 315px minmax(auto, 650px) auto;
+        grid-template-rows: 42px min-content auto;
         gap: $padding--medium;
     }
 
-    &__sidebar {
+    &__header {
+        grid-area: 2/2;
 
+        &-update-date,
+        &-publish-date {
+            @include font__family--inter-light;
+            @include font__sizing(12px, 19.2px);
+            color: rgba($color-jc-charcoal, 0.4);
+        }
+    }
+
+    &__sidebar {
+        grid-area: 2/1/-1/2;
+
+        &-media-links {
+            display: flex;
+            gap: $padding--mini;
+        }
+
+        &-menu {
+            padding-top: $padding--medium;
+
+            &-title {
+                @include font__family--inter-regular;
+                @include font__size-regular-alt;
+                margin-bottom: 20px;
+            }
+
+            &-nav {
+                @include font__sizing(15px, 22.5px);
+
+                li {
+                    margin-bottom: 10px;
+
+                    a {
+                        //color: rgba($color-jc-charcoal, 0.5);
+                    }
+                }
+            }
+        }
     }
 
     &__main {
-        grid-column: 2;
+        grid-area: 3/2/-1/3;
 
         &-title {
             @include font__sizing(44px, 57.2px);

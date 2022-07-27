@@ -3,7 +3,7 @@
         grid-column: 2;
         display: flex;
         flex-direction: column;
-        gap: $padding--mini;
+        gap: 8px;
 
         @include mq($until: l) {
             max-width: 647px;
@@ -24,6 +24,7 @@
         }
 
         &-excerpt {
+            @include font__size-regular-alt;
             color: $color-jc-charcoal;
 
             p {
