@@ -4,7 +4,7 @@ import { getPostPath, getPostDate } from "../model/post";
 import LinkArrow from "../assets/link-arrow.svg";
 
 const EssayLink = ({ post: { slug, date, title, excerpt, tghpTaxonomySeries } }) => {
-    const seriesTitle = tghpTaxonomySeries.nodes[0]?.name
+    const seriesTitle = tghpTaxonomySeries?.nodes[0]?.name
 
     return (
         <Link to={getPostPath(slug, date)} className="post-essays__essay">
