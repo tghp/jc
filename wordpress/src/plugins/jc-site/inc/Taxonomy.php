@@ -3,7 +3,7 @@
 namespace TGHP\Jc;
 
 use TGHP\Jc\Taxonomy\TaxonomyDefinerInterface;
-use TGHP\Jc\Taxonomy\Team;
+use TGHP\Jc\Taxonomy\Series;
 
 class Taxonomy extends AbstractDefines
 {
@@ -22,7 +22,9 @@ class Taxonomy extends AbstractDefines
 
     protected function _getDefiners()
     {
-        return [];
+        return [
+            new Series($this->jc),
+        ];
     }
 
     protected function _processDefiner(DefinerInterface $definer)

@@ -4,8 +4,9 @@ namespace TGHP\Jc;
 
 use TGHP\Jc\Metabox\MetaboxDefinerInterface;
 use TGHP\Jc\Metabox\MetaboxPreparerInterface;
-use TGHP\Jc\Metabox\Post;
 use TGHP\Jc\Metabox\Home;
+use TGHP\Jc\Metabox\Category;
+use TGHP\Jc\Metabox\Post;
 
 class Metabox extends AbstractDefinesMetabox
 {
@@ -32,8 +33,9 @@ class Metabox extends AbstractDefinesMetabox
     public function _getDefiners()
     {
         return [
-            new Post($this->jc),
             new Home($this->jc),
+            new Category($this->jc),
+            new Post($this->jc),
         ];
     }
 
