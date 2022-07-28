@@ -1,13 +1,13 @@
 import React from "react"
-import Layout from "../components/layout"
 import { graphql, Link } from "gatsby"
 import { getPostPath, getSinglePostDateFormat } from "../model/post";
+import Layout from "../components/layout"
+import TableOfContentNav from "../components/table-of-content-nav"
 import ImagePDFLink from "../assets/download-pdf.svg";
 import ImageAudioLink from "../assets/audio-link.svg";
 import ImageVideoLink from "../assets/video-link.svg";
 
-export default function Essay({ data }) {
-    const post = data.allWpPost.nodes[0];
+export default function Essay({ data: { wpPost  } }) {
     const {
         title,
         content,
@@ -16,7 +16,8 @@ export default function Essay({ data }) {
         modified,
         tghpjcAudioUrl: audioUrl,
         tghpjcVideoUrl: videoUrl,
-    } = post;
+        toc
+    } = wpPost;
 
     return (
         <Layout location={'single-post'}>
@@ -25,16 +26,12 @@ export default function Essay({ data }) {
                     <div className="single-essay__sidebar">
                         <div className="single-essay__sidebar-media-links">
                             <Link to={`/${getPostPath(slug, date)}.pdf`}><ImagePDFLink /></Link>
-                            {audioUrl && <Link to={audioUrl}><ImageAudioLink /></Link>}
-                            {videoUrl && <Link to={videoUrl}><ImageVideoLink /></Link>}
+                            {audioUrl && <a href={audioUrl} target="_blank" rel="noreferrer" aria-label="Audio link"><ImageAudioLink /></a>}
+                            {videoUrl && <a href={videoUrl} target="_blank" rel="noreferrer" aria-label="Video link"><ImageVideoLink /></a>}
                         </div>
                         <div className="single-essay__sidebar-menu">
                             <div className="single-essay__sidebar-menu-title">Contents</div>
-                            <ul className="single-essay__sidebar-menu-nav">
-                                <li>Introduction</li>
-                                <li>The mechanistic method</li>
-                                <li>The functional method</li>
-                            </ul>
+                            {toc?.items && <TableOfContentNav hTags={toc.items}/>}
                         </div>
                     </div>
                     <div className="single-essay__header">
@@ -53,16 +50,15 @@ export default function Essay({ data }) {
 
 export const query = graphql`
     query($slug: String!) {
-        allWpPost(filter: { slug: { eq: $slug } }) {
-            nodes {
-                title
-                slug
-                date
-                modified
-                content
-                tghpjcAudioUrl
-                tghpjcVideoUrl
-            }
+        wpPost(slug: {eq: $slug}) {
+            title
+            slug
+            date
+            modified
+            content
+            tghpjcAudioUrl
+            tghpjcVideoUrl
+            toc
         }
     }
 `

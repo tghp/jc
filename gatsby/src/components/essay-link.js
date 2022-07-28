@@ -7,7 +7,7 @@ const EssayLink = ({ post: { slug, date, title, excerpt, tghpTaxonomySeries } })
     const seriesTitle = tghpTaxonomySeries?.nodes[0]?.name
 
     return (
-        <Link to={getPostPath(slug, date)} className="post-essays__essay">
+        <Link to={`/${getPostPath(slug, date)}`} className="post-essays__essay">
             <div className="post-essays__essay-date">
                 {getPostDate(date)}
             </div>
