@@ -1,8 +1,9 @@
-import React from "react"
+import React, { useState } from "react"
 import { useStaticQuery, graphql } from "gatsby"
 import Header from "./header";
 import Footer from "./footer";
 import SubscribeButton from "./subscribe-button";
+import SubscribeModal from "./subscribe-modal";
 
 import '../styles/main.scss';
 
@@ -22,10 +23,20 @@ const Layout = ({ isHomePage, children, location }) => {
         }
     `)
 
+    /**
+     * Add location classes to wrapper
+     */
     const globalWrapperClasses = [
         "global-wrapper",
     ]
     location && globalWrapperClasses.push(location)
+
+    /**
+     * Modal state
+     */
+    const [modalState, setModalState] = useState(false);
+    const showModal = () => setModalState(true)
+    const closeModal = () => setModalState(false)
 
     return (
         <div className={globalWrapperClasses.join(' ')} data-is-root-path={isHomePage}>
@@ -34,7 +45,8 @@ const Layout = ({ isHomePage, children, location }) => {
                 {children}
             </main>
             <Footer siteTitle={title} />
-            <SubscribeButton />
+            <SubscribeButton show={showModal} />
+            <SubscribeModal show={modalState} hide={closeModal} />
         </div>
     )
 }
