@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
 import Layout from '../components/layout';
-import HomeFeaturedEssays from "../components/home-featured-essays";
-import HomeEssayCategories from "../components/home-essay-categories";
+import HomeFeaturedEssays from '../components/home-featured-essays';
+import HomeEssayCategories from '../components/home-essay-categories';
+import FenceIllustration from "../assets/footer-fence.svg";
 
 const IndexPage = (
     {
@@ -41,11 +42,16 @@ const IndexPage = (
             </div>
             <div className="about-text">
                 <div className="about-text__inner">
-                    <div className="about-text__title">
-                        <h2>{homeMeta.tghpjcAboutTextTitle}</h2>
+                    <div className="about-text__header">
+                        <h2 className="about-text__header-title">{homeMeta.tghpjcAboutTextTitle}</h2>
+                        <div className="about-text__header-illustration">
+                            <FenceIllustration />
+                        </div>
                     </div>
-                    <div className="about-text__column-1" dangerouslySetInnerHTML={{ __html: homeMeta.tghpjcAboutTextColumn1}} />
-                    <div className="about-text__column-2" dangerouslySetInnerHTML={{ __html: homeMeta.tghpjcAboutTextColumn2}} />
+                    <div className="about-text__columns">
+                        <div className="about-text__columns-1" dangerouslySetInnerHTML={{ __html: homeMeta.tghpjcAboutTextColumn1}} />
+                        <div className="about-text__columns-2" dangerouslySetInnerHTML={{ __html: homeMeta.tghpjcAboutTextColumn2}} />
+                    </div>
                 </div>
             </div>
         </Layout>
@@ -74,7 +80,10 @@ export const indexQuery = graphql`
         tghpjcAboutTextColumn2
     }   
   
-    latestPosts: allWpPost(sort: {fields: [date]}, limit: 6) {
+    latestPosts: allWpPost(
+        sort: {fields: [date]}, 
+        limit: 6
+    ) {
         nodes {
             title
             slug
@@ -84,8 +93,8 @@ export const indexQuery = graphql`
     }
     
     featuredPosts: allWpPost(
-        sort: {fields: [date]}
-        limit: 6
+        sort: {fields: [date]},
+        limit: 6,
         filter: {tghpjcFeaturedEssay: {eq: "1"}}
     ) {
         nodes {

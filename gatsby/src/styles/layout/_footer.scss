@@ -9,7 +9,6 @@
         &-content {
             padding-top: $padding--small;
             padding-bottom: $padding--small;
-            border-top: 1px solid $color-jc-blue;
 
             @include mq($until: s) {
                 display: flex;
@@ -20,6 +19,10 @@
             @include mq($from: s) {
                 @include flex-space-between-center;
             }
+        }
+
+        &-boat-illustration {
+            overflow: hidden;
         }
     }
 

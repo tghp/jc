@@ -122,7 +122,7 @@
 
 .essay-categories {
     padding-top: $padding--ml;
-    padding-bottom: $padding--medium;
+    padding-bottom: $padding--large;
     background-color: $color-jc-grey-3;
 
     &__inner {
@@ -163,20 +163,59 @@
     border-top: 1px solid $color-jc-blue;
 
     &__inner {
-        padding-top: $padding--medium;
+        padding-top: $padding--xxsmall;
         padding-bottom: $padding--medium;
+    }
 
-        @include mq($from: s) {
-            grid-template-columns: repeat(2, 1fr);
-            column-gap: $padding--medium;
+    &__header {
+        display: grid;
+        grid-template-columns: auto min-content;
+        overflow: hidden;
+
+        &-title {
+            border-color: $color-jc-blue;
+            margin-bottom: 0;
+            padding-bottom: $padding--xxsmall;
+            align-self: flex-end;
+        }
+
+        &-illustration {
+            display: flex;
+            justify-self: end;
+
+            @include mq($until: s) {
+                display: none;
+            }
         }
     }
 
-    &__title {
-        grid-column: 1/-1;
+    &__columns {
+        padding-top: $padding--xsmall;
 
-        h2 {
-            border-color: $color-jc-blue;
+        @include mq($from: s) {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            column-gap: $padding--medium;
+            padding-top: $padding--xxxsmall;
+        }
+
+        ul {
+            margin-bottom: 20px;
+            list-style: disc;
+            padding-left: $padding--xxxsmall;
+        }
+
+        h5 {
+            @include font__family--newsreader-regular;
+            margin-bottom: 2px;
+        }
+
+        blockquote {
+            padding-left: $padding--xxsmall;
+
+            + p {
+                padding-left: $padding--medium;
+            }
         }
     }
 }

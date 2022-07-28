@@ -13,7 +13,8 @@ abstract class AbstractMetabox extends AbstractJc
             'textarea_rows' => 10,
             'media_buttons' => false,
             'tinymce' => [
-                'toolbar1' => 'bold, bullist, link, unlink',
+                'block_formats' => 'Paragraph=p; Heading=h5',
+                'toolbar1' => 'formatselect, bold, bullist, link, unlink, blockquote',
                 'toolbar2' => '',
                 'toolbar3' => '',
             ],
