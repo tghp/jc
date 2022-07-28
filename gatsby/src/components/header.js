@@ -1,22 +1,22 @@
 import React from "react"
 import { graphql, useStaticQuery, Link } from "gatsby";
 
-const Header = ({ title }) => {
+const Header = ({ siteTitle }) => {
     const {
         menu: {
             menuData: { items },
         },
     } = useStaticQuery(graphql`
         query HeaderNav {
-          menu: wordpressMenuLocation(slug: {eq: "header-nav"}) {
-            menuData {
-              items {
-                title
-                url
-                ID
-              }
+            menu: wordpressMenuLocation(slug: {eq: "header-nav"}) {
+                menuData {
+                    items {
+                        title
+                        url
+                        ID
+                    }
+                }
             }
-          }
         }
     `)
 
@@ -26,7 +26,7 @@ const Header = ({ title }) => {
                 <div className="site-header__inner-content">
                     <div className="site-header__logo">
                         <Link to={'/'}>
-                            {title}
+                            {siteTitle}
                         </Link>
                     </div>
 

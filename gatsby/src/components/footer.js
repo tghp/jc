@@ -2,7 +2,7 @@ import React from "react"
 import { graphql, useStaticQuery, Link } from "gatsby";
 import BoatIllustration from "../assets/footer-boat.svg";
 
-const Footer = ({ title }) => {
+const Footer = ({ siteTitle }) => {
     const {
         menu: {
             menuData: { items },
@@ -29,7 +29,7 @@ const Footer = ({ title }) => {
                 </div>
                 <div className="site-footer__inner-content">
                     <div className="site-footer__copyright">
-                        @ { title }, { new Date().getFullYear() }
+                        @ { siteTitle }, { new Date().getFullYear() }
                     </div>
                     <ul className="site-footer__nav">
                         {items.map(({ ID, title, url }) => (

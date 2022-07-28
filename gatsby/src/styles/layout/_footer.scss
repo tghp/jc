@@ -8,7 +8,7 @@
 
         &-content {
             padding-top: $padding--small;
-            padding-bottom: $padding--small;
+            padding-bottom: $padding--medium;
 
             @include mq($until: s) {
                 display: flex;

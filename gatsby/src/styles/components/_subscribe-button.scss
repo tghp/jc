@@ -1,0 +1,11 @@
+.subscribe-button {
+    @include font__family--inter-regular;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background-color: $color-jc-blue;
+    color: $color-white;
+    padding: 5px 12px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
