@@ -80,3 +80,13 @@
   @include font__family--newsreader-regular;
   @include font__sizing(16px, 19.2px);
 }
+
+@mixin font__size-single-essay-h2 {
+  @include font__family--newsreader-light;
+  @include font__sizing(26px, 46.8px);
+}
+
+@mixin font__size-single-essay-h3 {
+  @include font__family--inter-medium;
+  @include font__sizing(14px, 25.2px);
+}

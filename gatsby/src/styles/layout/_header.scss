@@ -7,8 +7,8 @@
 
         &-content {
             @include flex-space-between-center;
-            height: 87px;
             border-bottom: 1px solid $color-black;
+            height: $header--height;
         }
     }
 
@@ -50,7 +50,9 @@
      * Single pages
      */
     .single-post & {
-        background-color: $color-jc-grey-2;
+        background-color: $color-white;
+        position: sticky;
+        top: 0;
     }
 
     @media print {

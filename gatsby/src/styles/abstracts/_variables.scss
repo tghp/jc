@@ -22,7 +22,7 @@ $mq-breakpoints: (
   max: $size__max-width,
 );
 
-// Other sizes
+// Padding sizes
 $size__main-padding: 40px;
 $padding--xlarge: 70px;
 $padding--large: 60px;
@@ -33,6 +33,9 @@ $padding--xsmall: 25px;
 $padding--xxsmall: 20px;
 $padding--xxxsmall: 15px;
 $padding--mini: 10px;
+
+// Other sizes
+$header--height: 87px;
 
 // Paths
 $path__image: '../../images';
@@ -51,3 +54,5 @@ $color-jc-charcoal: #232221;
 
 $color-black: #000;
 $color-white: #FFF;
+
+$color-jc-charcoal-grey: rgba($color-jc-charcoal, 0.5);

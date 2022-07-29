@@ -1,14 +1,16 @@
 .single-essay {
+    $main-padding--top: $padding--xsmall;
+
     @include max-width-element;
     @include main-padding;
-    padding-top: $padding--xsmall;
+    padding-top: $main-padding--top;
     padding-bottom: $padding--xsmall;
 
     &__grid {
         display: grid;
-        grid-template-columns: 315px minmax(auto, 650px) auto;
-        grid-template-rows: 42px min-content auto;
-        gap: $padding--medium;
+        grid-template-columns: 305px minmax(auto, 650px) auto;
+        grid-template-rows: minmax(85px, auto) min-content auto;
+        column-gap: $padding--medium;
     }
 
     &__header {
@@ -18,36 +20,78 @@
         &-publish-date {
             @include font__family--inter-light;
             @include font__sizing(12px, 19.2px);
+        }
+
+        &-update-date {
             color: rgba($color-jc-charcoal, 0.4);
+        }
+
+        &-publish-date {
+            color: rgba($color-jc-charcoal, 0.3);
         }
     }
 
     &__sidebar {
-        grid-area: 2/1/-1/2;
+        grid-row: 1/-1;
+        height: max-content;
+        position: sticky;
+        top: $header--height + $main-padding--top;
+
+        &-title {
+            @include font__family--newsreader-medium;
+            @include h4;
+            color: $color-jc-blue;
+            min-height: 85px;
+            margin-bottom: $padding--medium;
+            //opacity: 0;
+        }
 
         &-media-links {
             display: flex;
             gap: $padding--mini;
+            margin-bottom: $padding--medium;
         }
 
         &-menu {
-            padding-top: $padding--medium;
-
             &-title {
                 @include font__family--inter-regular;
                 @include font__size-regular-alt;
-                margin-bottom: 20px;
+                margin-bottom: $padding--xsmall;
+            }
+
+            &-toggle {
+                @include font__family--inter-light;
+                color: $color-jc-blue;
+                margin-left: 5px;
+                cursor: pointer;
             }
 
             &-nav {
+                @include font__family--newsreader-medium;
                 @include font__sizing(15px, 22.5px);
 
                 li {
-                    margin-bottom: 10px;
+                    margin-bottom: $padding--xxxsmall;
 
                     a {
-                        //color: rgba($color-jc-charcoal, 0.5);
+                        color: $color-jc-charcoal-grey;
+
+                        .arrow-right {
+                            @include pseudo-element-create;
+                            display: inline-block;
+                            border: solid $color-jc-charcoal-grey;
+                            border-width: 0 1px 1px 0;
+                            padding: 3px;
+                            transform: rotate(-45deg);
+                            margin: 0 0 1px 3px;
+                        }
                     }
+                }
+
+                .subnav {
+                    padding-top: $padding--xxxsmall;
+                    padding-left: $padding--xxsmall;
+                    //display: none;
                 }
             }
         }
@@ -58,12 +102,29 @@
 
         &-title {
             @include font__sizing(44px, 57.2px);
+            margin-top: $padding--small;
             margin-bottom: $padding--medium;
         }
 
         &-content {
-            @include font__family--newsreader-regular;
+            @include font__family--newsreader-medium;
             @include font__sizing(16px, 25.6px);
+
+            h2, h3 {
+                color: $color-jc-blue;
+            }
+
+            h2 {
+                @include font__size-single-essay-h2;
+                border: none;
+                padding-bottom: 0;
+                margin-bottom: 5px;
+            }
+
+            h3 {
+                @include font__size-single-essay-h3;
+                margin-bottom: 10px;
+            }
 
             p:first-child {
                 @include font__sizing(20px, 32px);
