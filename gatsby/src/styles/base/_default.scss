@@ -1,3 +1,15 @@
+:root {
+    --padding--xlarge: #{$padding--xlarge};
+    --padding--large: #{$padding--large};
+    --padding--ml: #{$padding--ml};
+    --padding--medium: #{$padding--medium};
+    --padding--small: #{$padding--small};
+    --padding--xsmall: #{$padding--xsmall};
+    --padding--xxsmall: #{$padding--xxsmall};
+    --padding--xxxsmall: #{$padding--xxxsmall};
+    --padding--mini: #{$padding--mini};
+}
+
 * {
     box-sizing: border-box;
 }
