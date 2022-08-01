@@ -15,8 +15,6 @@ const IndexPage = (
     }
     ) => {
 
-    console.log(homeMeta);
-
     return (
         <Layout>
             <div className="intro-text">
