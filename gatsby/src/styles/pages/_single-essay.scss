@@ -139,6 +139,13 @@
             p:first-child {
                 @include font__sizing(20px, 32px);
             }
+
+            sup {
+                vertical-align: super;
+                color: $color-jc-blue;
+                font-size: 0.8em;
+                font-weight: 400;
+            }
         }
 
         .post-comments {
@@ -205,6 +212,17 @@
 
         &-further-reading {
             padding-top: $padding--medium;
+        }
+    }
+
+    &__references {
+        grid-area: 3/3/4/4;
+
+        .reference {
+            @include font__sizing(12px, 24px);
+            display: grid;
+            grid-template-columns: 1.4em 1fr;
+            font-weight: 400;
         }
     }
 }
