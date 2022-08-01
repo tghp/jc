@@ -12,7 +12,7 @@ const SubscribeModal = ({ show, hide }) => {
         <div className={modalClasses.join(' ')}>
             <div className="subscribe-modal__content">
                 <div className="subscribe-modal__content-body">
-                    <iframe src="https://jdprts.substack.com/embed" width="480" height="320" frameBorder="0" scrolling="no" title="jc-subscribe-form" />
+                    <iframe src="https://joecarlsmith.substack.com/embed" width="480" height="320" frameBorder="0" scrolling="no" title="jc-subscribe-form" />
                 </div>
                 <button className="subscribe-modal__content-close">
                     <ModalCloseButton onClick={hide} />
