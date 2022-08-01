@@ -1,6 +1,10 @@
 .site-footer {
     background-color: $color-jc-grey-1;
 
+    .single-post & {
+        background-color: $color-white
+    }
+
     &__inner {
         @include max-width-element;
         @include main-padding;
