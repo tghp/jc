@@ -153,32 +153,36 @@ exports.createResolvers = ({ createResolvers, schema }) => {
 }
 
 async function createTableOfContents(source, args, context, info) {
-    const $ = cheerio.load(source.content)
-    const titles = $('h2 ,h3')
-    const getUniqueId = UniqueId()
+    if (source.content) {
+        const $ = cheerio.load(source.content)
+        const titles = $('h2 ,h3')
+        const getUniqueId = UniqueId()
 
-    const headings = Array.from(titles).map(title => {
-        const depth = parseInt($(title).prop('tagName').substr(1), 10)
-        const id = createId($, title)
-        return { url: `#${getUniqueId(id)}`, title: $(title).text(), depth }
-    })
+        const headings = Array.from(titles).map(title => {
+            const depth = parseInt($(title).prop('tagName').substr(1), 10)
+            const id = createId($, title)
+            return {url: `#${getUniqueId(id)}`, title: $(title).text(), depth}
+        })
 
-    const reduced = groupHeadings(0, [], headings)
-    return { items: reduced }
+        const reduced = groupHeadings(0, [], headings)
+        return {items: reduced}
+    }
 }
 
 function extendContentField(options, prevFieldConfig) {
     return {
         resolve(source) {
-            const $ = cheerio.load(source.content)
-            const titles = $('h2,h3,h4,h5')
-            const getUniqueId = UniqueId()
-            Array.from(titles).forEach(title => {
-                const id = createId($, title)
-                $(title).attr('id', getUniqueId(id))
-            })
+            if (source.content) {
+                const $ = cheerio.load(source.content)
+                const titles = $('h2,h3,h4,h5')
+                const getUniqueId = UniqueId()
+                Array.from(titles).forEach(title => {
+                    const id = createId($, title)
+                    $(title).attr('id', getUniqueId(id))
+                })
 
-            return $('body').html()
+                return $('body').html()
+            }
         },
     }
 }
