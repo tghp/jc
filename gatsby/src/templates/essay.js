@@ -17,6 +17,9 @@ export default function Essay({ data: { wpPost  } }) {
         modified,
         tghpjcAudioUrl: audioUrl,
         tghpjcVideoUrl: videoUrl,
+        tghpjcSubstackUrl: subtackUrl,
+        tghpjcLesswrongUrl: lessWrongUrl,
+        tghpjcEaforumUrl: eaForumUrl,
         toc
     } = wpPost;
 
@@ -59,26 +62,32 @@ export default function Essay({ data: { wpPost  } }) {
                     <div className="single-essay__main" ref={mainContent}>
                         <h1 className="single-essay__main-title">{title}</h1>
                         <div className="single-essay__main-content" dangerouslySetInnerHTML={{ __html: content }} />
-                        <div className="single-essay__main-comments post-comments">
-                            <div className="post-comments__separator">
-                                <CommentsIcon />
-                            </div>
-                            <div className="post-comments__options">
-                                <div className="post-comments__options-text">
-                                    Leave a comment
+                        {subtackUrl || lessWrongUrl || eaForumUrl ?
+                            <div className="single-essay__main-comments post-comments">
+                                <div className="post-comments__separator">
+                                    <CommentsIcon />
                                 </div>
-                                <div className="post-comments__options-separator" />
-                                <a href="https://www.google.co.uk/" className="post-comments__options-system" target="_blank" rel="noreferrer">
-                                    Substack
-                                </a>
-                                <a href="https://www.google.co.uk/" className="post-comments__options-system" target="_blank" rel="noreferrer">
-                                    LessWrong
-                                </a>
-                                <a href="https://www.google.co.uk/" className="post-comments__options-system" target="_blank" rel="noreferrer">
-                                    EA Forum
-                                </a>
-                            </div>
-                        </div>
+                                <div className="post-comments__options">
+                                    <div className="post-comments__options-text">Leave a comment</div>
+                                    <div className="post-comments__options-separator" />
+                                    {subtackUrl &&
+                                        <a href={subtackUrl} className="post-comments__options-system" target="_blank" rel="noreferrer">
+                                            Substack
+                                        </a>
+                                    }
+                                    {lessWrongUrl &&
+                                        <a href="https://www.google.co.uk/" className="post-comments__options-system" target="_blank" rel="noreferrer">
+                                            LessWrong
+                                        </a>
+                                    }
+                                    {eaForumUrl &&
+                                        <a href="https://www.google.co.uk/" className="post-comments__options-system" target="_blank" rel="noreferrer">
+                                            EA Forum
+                                        </a>
+                                    }
+                                </div>
+                            </div> : ''
+                        }
                         <div className="single-essay__main-further-reading">
                             <h2>Further reading</h2>
 
@@ -100,6 +109,9 @@ export const query = graphql`
             content
             tghpjcAudioUrl
             tghpjcVideoUrl
+            tghpjcSubstackUrl
+            tghpjcLesswrongUrl
+            tghpjcEaforumUrl
             toc
         }
     }

@@ -42,6 +42,34 @@ class Post extends AbstractMetabox implements MetaboxDefinerInterface
                     ],
                 ]
             ],
+            [
+                'id' => Metabox::generateKey('post_comments'),
+                'title' => 'Post Comments',
+                'post_types' => 'post',
+                'context' => 'side',
+                'fields' => [
+                    [
+                        'type' => 'heading',
+                        'name' => 'Forums',
+                        'desc' => 'Add the URLs to your forums here',
+                    ],
+                    [
+                        'id' => Metabox::generateKey('substack_url'),
+                        'name' => 'Substack URL',
+                        'type' => 'url',
+                    ],
+                    [
+                        'id' => Metabox::generateKey('lesswrong_url'),
+                        'name' => 'LessWrong URL',
+                        'type' => 'url',
+                    ],
+                    [
+                        'id' => Metabox::generateKey('eaforum_url'),
+                        'name' => 'EA Forum URL',
+                        'type' => 'url',
+                    ],
+                ]
+            ],
         ];
     }
 
