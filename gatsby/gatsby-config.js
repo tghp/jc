@@ -1,13 +1,17 @@
+require("dotenv").config({
+    path: '.env',
+})
+
 module.exports = {
     siteMetadata: {
         title: `JC`,
-        siteUrl: `http://jc.test`
+        siteUrl: process.env.GATSBY_SITE_URL
     },
     plugins: [
         {
             resolve: 'gatsby-source-wordpress',
             options: {
-                "url": "http://jc.test/wp/graphql"
+                "url": process.env.WP_GRAPHQL_URL
             }
         },
         "gatsby-plugin-sass",
@@ -26,7 +30,7 @@ module.exports = {
         {
             resolve: "gatsby-source-wordpress-menus",
             options: {
-                wordpressUrl: "http://jc.test",
+                wordpressUrl: process.env.WP_URL,
                 languages: ["en"],
                 enableWpml: false,
                 allowCache: true,
