@@ -10,10 +10,15 @@ class Essay extends AbstractJc
         parent::__construct($ftx);
 
         add_filter('the_content', [$this, 'addHeaderSections']);
+        add_filter('the_content', [$this, 'addReferenceSups']);
         add_filter('rwmb_get_value', [$this, 'applyShortcodeToWysiwygMetabox'], 10, 4 );
         add_shortcode('text_with_button', [$this, 'textWithButtonShortcode']);
     }
 
+    /**
+     * @param $content
+     * @return string
+     */
     public function addHeaderSections($content)
     {
         /**
@@ -67,6 +72,21 @@ class Essay extends AbstractJc
                 $this->slugifySectionName($matches[2]),
             );
         }, $content);
+
+        return $content;
+    }
+
+    /**
+     * @param $content
+     * @return string
+     */
+    public function addReferenceSups($content): string
+    {
+        $content = preg_replace(
+            '/\[ref (\d*)\]/',
+            '<sup class="article-reference" data-reference-number="$1">$1</sup>',
+            $content
+        );
 
         return $content;
     }
