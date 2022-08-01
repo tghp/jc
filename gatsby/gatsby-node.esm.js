@@ -77,6 +77,8 @@ export const createPages = ({ graphql, actions }) => {
 }
 
 export const onPostBuild = async ({ graphql }) => {
+    console.log(process.env);
+
     const { data: { posts } } = await graphql(`
     query {
       posts: allWpPost(sort: { fields: [date] }) {
