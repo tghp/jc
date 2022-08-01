@@ -1,3 +1,4 @@
+import { createRemoteFileNode } from 'gatsby-source-filesystem';
 import path from 'path'
 import puppeteer from 'puppeteer'
 import fs from 'fs'
@@ -138,6 +139,10 @@ exports.createSchemaCustomization = ({ actions }) => {
       toc: JSON
       content: String @content
     }
+    
+    type WpPage implements Node {
+      introPhoto: File @link(from: "fields.localFile")
+    }
   `;
     createTypes(typeDefs);
 }
@@ -248,4 +253,28 @@ function groupHeadings(index, grouping, headings) {
     }
 
     return grouping
+}
+
+exports.onCreateNode = async ({
+    node,
+    actions: { createNode, createNodeField },
+    createNodeId,
+    getCache,
+}) => {
+    if (node.internal.type === 'WpPage') {
+        if (node.tghpjcIntroPhoto.url !== null) {
+            const fileNode = await createRemoteFileNode({
+                url: node.tghpjcIntroPhoto.url,
+                parentNodeId: node.id,
+                createNode,
+                createNodeId,
+                getCache,
+            })
+
+            // If the file was created, extend the node with "localFile"
+            if (fileNode) {
+                createNodeField({ node, name: "localFile", value: fileNode.id })
+            }
+        }
+    }
 }

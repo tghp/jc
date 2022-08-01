@@ -15,6 +15,8 @@ const IndexPage = (
     }
     ) => {
 
+    console.log(homeMeta);
+
     return (
         <Layout>
             <div className="intro-text">
@@ -22,8 +24,8 @@ const IndexPage = (
                     <div className="intro-text__column-1" dangerouslySetInnerHTML={{ __html: homeMeta.tghpjcIntroColumn1}} />
                     <div className="intro-text__column-2" dangerouslySetInnerHTML={{ __html: homeMeta.tghpjcIntroColumn2}} />
                     <div className="intro-text__photo">
-                        <img src={homeMeta.tghpjcIntroPhoto.url}
-                             srcSet={homeMeta.tghpjcIntroPhoto.srcset}
+                        {/* TODO: Work out how to get this image into Gatsby itself, rather than loading the WP image URL */}
+                        <img src={homeMeta.introPhoto.publicURL}
                              sizes="200px"
                              alt={homeMeta.tghpjcIntroPhoto.alt} />
                     </div>
@@ -64,10 +66,10 @@ export const indexQuery = graphql`
         tghpjcIntroColumn1
         tghpjcIntroColumn2
         tghpjcIntroPhoto {
-            id
             alt
-            url
-            srcset
+        }
+        introPhoto {
+            publicURL
         }
         tghpjcHomeEssayCategories {
             id
