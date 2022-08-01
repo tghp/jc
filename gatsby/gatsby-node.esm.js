@@ -88,11 +88,13 @@ export const onPostBuild = async ({ graphql }) => {
     }
   `);
 
-    await Promise.all(
-        posts.nodes.map(
-            ({ slug, date }) => printPDF(getPostPath(slug, date)),
-        )
-    );
+    for (const post of posts.nodes) {
+        const { slug, date } = post
+
+        console.log(`🥃🏠️ Creating PDF for post ${slug}`)
+        await printPDF(getPostPath(slug, date))
+        console.log('🥃🏠️ ✅')
+    }
 };
 
 const printPDF = async (pageName) => {
