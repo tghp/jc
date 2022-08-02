@@ -43,6 +43,36 @@ class Post extends AbstractMetabox implements MetaboxDefinerInterface
                 ]
             ],
             [
+                'id' => Metabox::generateKey('posts_references'),
+                'title' => 'References',
+                'post_types' => 'post',
+                'priority' => 'high',
+                'fields' => [
+                    [
+                        'id' => Metabox::generateKey('references'),
+                        'name' => 'References',
+                        'type' => 'group',
+                        'clone' => true,
+                        'sort_clone' => true,
+                        'fields' => [
+                            [
+                                'id' => 'text',
+                                'name' => 'Text',
+                                'type' => 'textarea',
+                                'attributes' => [
+                                    'rows' => 2,
+                                ],
+                            ],
+                            [
+                                'id' => 'url',
+                                'name' => 'URL',
+                                'type' => 'url',
+                            ],
+                        ],
+                    ],
+                ]
+            ],
+            [
                 'id' => Metabox::generateKey('post_comments'),
                 'title' => 'Post Comments',
                 'post_types' => 'post',

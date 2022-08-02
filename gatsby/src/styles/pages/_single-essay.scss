@@ -107,6 +107,7 @@
 
     &__main {
         grid-area: 3/2/-1/3;
+        position: relative;
 
         &-title {
             @include font__sizing(44px, 57.2px);
@@ -138,6 +139,13 @@
 
             p:first-child {
                 @include font__sizing(20px, 32px);
+            }
+
+            sup {
+                vertical-align: super;
+                color: $color-jc-blue;
+                font-size: 0.8em;
+                font-weight: 400;
             }
         }
 
@@ -205,6 +213,33 @@
 
         &-further-reading {
             padding-top: $padding--medium;
+        }
+    }
+
+    &__references {
+        grid-area: 3/3/4/4;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-auto-rows: auto;
+        transition: opacity 150ms ease;
+        align-self: start;
+
+        /*
+        TODO: Apply this when the references are below the main content. i.e. Change the $until value to match when that happens
+        */
+        @include mq($until: l) {
+            grid-template-rows: var(--reference-row-sizes-mobile) !important;
+        }
+
+        &:not(&--visible) {
+            opacity: 0;
+        }
+
+        .reference {
+            @include font__sizing(12px, 24px);
+            display: grid;
+            grid-template-columns: 1.4em 1fr;
+            font-weight: 400;
         }
     }
 }

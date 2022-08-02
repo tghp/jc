@@ -1,14 +1,17 @@
-import React, { useRef, useEffect } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import { graphql, Link } from "gatsby"
 import { getPostPath, getSinglePostDateFormat } from "../model/post";
+import { useMeasure } from 'react-use';
 import Layout from "../components/layout"
 import TableOfContents from "../components/single-essay/table-of-contents"
+import Content from "../components/single-essay/content";
+import References from "../components/single-essay/references";
 import ImagePDFLink from "../assets/download-pdf.svg";
 import ImageAudioLink from "../assets/audio-link.svg";
 import ImageVideoLink from "../assets/video-link.svg";
 import CommentsIcon from "../assets/comments-icon.svg";
 
-export default function Essay({ data: { wpPost  } }) {
+export default function Essay({ data: { wpPost }, pageContext: { referenceCount } }) {
     const {
         title,
         content,
@@ -20,10 +23,17 @@ export default function Essay({ data: { wpPost  } }) {
         tghpjcSubstackUrl: subtackUrl,
         tghpjcLesswrongUrl: lessWrongUrl,
         tghpjcEaforumUrl: eaForumUrl,
+        tghpjcReferences: references,
         toc
     } = wpPost;
 
-    const mainContent = useRef()
+    let mainContent = useRef()
+    const referenceContentRefs = useRef({})
+    const referenceSidebarRefs = useRef({})
+    const [mainContentMeasureRef, { width: mainContentAreaWidth }] = useMeasure()
+    const [referencesAreaMeasureRef, { width: referencesAreaWidth }] = useMeasure()
+    const [referenceRowSizesDesktop, setReferenceRowSizesDesktop] = useState([]);
+    const [referenceRowSizesMobile, setReferenceRowSizesMobile] = useState([]);
 
     const onScroll = () => {
         const mainContentWindowTop = mainContent.current.getBoundingClientRect().top
@@ -39,6 +49,37 @@ export default function Essay({ data: { wpPost  } }) {
         window.addEventListener('scroll', onScroll)
         return () => window.removeEventListener('scroll', onScroll)
     }, [])
+
+    useEffect(() => {
+        if (Object.keys(referenceContentRefs.current).length === 0 && Object.keys(referenceSidebarRefs.current).length === 0) {
+            return;
+        }
+
+        let articleReferenceListItemOffsets = 0;
+
+        const gridRowsDesktop = Object.values(referenceContentRefs.current)
+            .filter(ref => !!ref)
+            .map((articleReferenceInline, i) => {
+                if (!referenceSidebarRefs.current[i]) {
+                    return '';
+                }
+
+                const articleReferenceListItem = referenceSidebarRefs.current[i]
+                const articleReferenceListItemHeight = articleReferenceListItem.clientHeight
+                const inlineReferenceOffset = Math.max(
+                    20,
+                    (articleReferenceInline.offsetTop - articleReferenceListItemOffsets)
+                );
+                articleReferenceListItemOffsets += inlineReferenceOffset + articleReferenceListItemHeight
+
+                return `${inlineReferenceOffset}px auto`
+            });
+
+        const gridRowsMobile = gridRowsDesktop.map((prevRow, i) => i === 0 ? '0 auto' : 'var(--padding--small) auto');
+
+        setReferenceRowSizesDesktop(gridRowsDesktop);
+        setReferenceRowSizesMobile(gridRowsMobile);
+    }, [referenceContentRefs, referenceSidebarRefs, mainContentAreaWidth, referencesAreaWidth])
 
     return (
         <Layout location={'single-post'}>
@@ -61,7 +102,11 @@ export default function Essay({ data: { wpPost  } }) {
                     </div>
                     <div className="single-essay__main" ref={mainContent}>
                         <h1 className="single-essay__main-title">{title}</h1>
-                        <div className="single-essay__main-content" dangerouslySetInnerHTML={{ __html: content }} />
+                        <Content
+                            content={content}
+                            mainContentMeasureRef={mainContentMeasureRef}
+                            referenceContentRefs={referenceContentRefs}
+                        />
                         {subtackUrl || lessWrongUrl || eaForumUrl ?
                             <div className="single-essay__main-comments post-comments">
                                 <div className="post-comments__separator">
@@ -93,6 +138,14 @@ export default function Essay({ data: { wpPost  } }) {
 
                         </div>
                     </div>
+                    {!!referenceCount &&
+                        <References
+                            references={references}
+                            referenceRowSizes={[referenceRowSizesDesktop, referenceRowSizesMobile]}
+                            referencesAreaMeasureRef={referencesAreaMeasureRef}
+                            referenceSidebarRefs={referenceSidebarRefs}
+                        />
+                    }
                 </div>
             </div>
         </Layout>
@@ -113,6 +166,10 @@ export const query = graphql`
             tghpjcLesswrongUrl
             tghpjcEaforumUrl
             toc
+            tghpjcReferences {
+                url
+                text
+            }
         }
     }
 `

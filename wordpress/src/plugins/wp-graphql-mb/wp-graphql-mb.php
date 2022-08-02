@@ -43,6 +43,15 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
             'taxonomy_advanced',
         ];
 
+        /**
+         * List of group fields to filter
+         *
+         * @var array
+         */
+        protected $group_fields = [
+            'group',
+        ];
+
         public function __construct()
         {
             $this->add_meta_boxes_to_graphQL();
@@ -164,7 +173,42 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
                     foreach ($box->fields as $field) {
                         $field_name = self::_graphql_label($field['id']);
 
-                        if (in_array($field['type'], $this->media_fields)) {
+                        if (in_array($field['type'], $this->group_fields)) {
+                            $group_type_name = ucfirst(self::_graphql_label($field['id']));
+                            $group_fields = [];
+                            foreach ($field['fields'] as $group_sub_field) {
+                                $group_fields[self::_graphql_label($group_sub_field['id'])] = [
+                                    'type' => 'String',
+                                    'description' => "Group field - {$group_sub_field['name']}",
+                                ];
+                            }
+
+                            register_graphql_object_type($group_type_name, [
+                                'description' => "Metabox Group {$group_type_name} object",
+                                'fields' => $group_fields
+                            ]);
+
+
+                            if (($field['clone'] == true || $field['multiple'] == true)) {
+                                register_graphql_field($graphql_single_name, $field_name, [
+                                    'type' => ['list_of' => $group_type_name],
+                                    'description' => $field['desc'],
+                                    'resolve' => function ($object) use ($object_type, $field) {
+                                        $meta = self::_get_meta_value($field, $object, $object_type);
+                                        return $meta;
+                                    },
+                                ]);
+                            } else {
+                                register_graphql_field($graphql_single_name, $field_name, [
+                                    'type' => $group_type_name,
+                                    'description' => $field['desc'],
+                                    'resolve' => function ($object) use ($object_type, $field) {
+                                        $meta = self::_get_meta_value($field, $object, $object_type);
+                                        return $meta;
+                                    },
+                                ]);
+                            }
+                        } else if (in_array($field['type'], $this->media_fields)) {
                             // TODO: How do we deal with something like image_advanced with multiple images, or file?
 
                             if ($field['multiple'] == false) {
@@ -176,7 +220,6 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
                                         $meta = self::_convert_wp_internal($meta);
                                         return $meta;
                                     },
-
                                 ]);
                             }
 

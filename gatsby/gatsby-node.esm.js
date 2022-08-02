@@ -21,8 +21,12 @@ export const createPages = ({ graphql, actions }) => {
         }
     }
     `).then((result) => {
-        result.data.allWpPost.nodes.forEach(({ slug, date }) => {
+        result.data.allWpPost.nodes.forEach(({ slug, date, content }) => {
             const postPath = getPostPath(slug, date);
+            const references = (content || '').match(/class="article-reference"/g) || [];
+
+            console.log(`🥃🏠️ Creating post gatsby page for ${slug}`);
+            console.log(`🥃🏠️ References found: ${references.length}`);
 
             createPage({
                 path: postPath,
@@ -30,8 +34,11 @@ export const createPages = ({ graphql, actions }) => {
                 context: {
                     slug,
                     downloadFile: `${postPath}.pdf`,
+                    referenceCount: references.length,
                 },
-            })
+            });
+
+            console.log('🥃🏠️ ✅');
         })
     }).then(() => graphql(`
         {
@@ -46,12 +53,15 @@ export const createPages = ({ graphql, actions }) => {
         }
         `).then((result) => {
             result.data.allWpPage.nodes.forEach(({ slug }) => {
+                console.log(`🥃🏠️ Creating page gatsby page for ${slug}`);
 
                 createPage({
                     path: `/${slug}/`,
                     component: path.resolve(`./src/templates/page.js`),
                     context: { slug },
-                })
+                });
+
+                console.log('🥃🏠️ ✅');
             })
         })
     ).then(() => graphql(`
