@@ -9,5 +9,10 @@
         border: 1px solid $color-jc-charcoal;
         color: $color-jc-charcoal;
         padding: 4px 9px;
+
+        &:hover {
+            color: $color-jc-blue;
+            border-color: $color-jc-blue;
+        }
     }
 }

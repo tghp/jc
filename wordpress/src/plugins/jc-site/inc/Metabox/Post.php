@@ -11,6 +11,37 @@ class Post extends AbstractMetabox implements MetaboxDefinerInterface
     {
         return [
             [
+                'id' => Metabox::generateKey('post_series_parts'),
+                'title' => 'Series Part',
+                'post_types' => 'post',
+                'context' => 'side',
+                'priority' => 'high',
+                'fields' => [
+                    [
+                        'type' => 'heading',
+                        'desc' => 'If this post is part of a Series of essays, the Series Part number is required.',
+                    ],
+                    [
+                        'id' => Metabox::generateKey('post_series_part_number'),
+                        'name' => 'Part number',
+                        'type' => 'select',
+                        'placeholder' => 'Select part number',
+                        'options' => [
+                            '1' => '1',
+                            '2' => '2',
+                            '3' => '3',
+                            '4' => '4',
+                            '5' => '5',
+                            '6' => '6',
+                            '7' => '7',
+                            '8' => '8',
+                            '9' => '9',
+                            '10' => '10',
+                        ],
+                    ],
+                ]
+            ],
+            [
                 'id' => Metabox::generateKey('posts_general_meta'),
                 'title' => 'Featured post',
                 'post_types' => 'post',

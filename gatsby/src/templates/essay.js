@@ -19,6 +19,7 @@ export default function Essay({ data: { wpPost, furtherReadingPostsDefault, furt
         slug,
         date,
         modified,
+        toc,
         essayPdf: { publicURL: essayPdfPublicURL },
         tghpjcAudioUrl: audioUrl,
         tghpjcVideoUrl: videoUrl,
@@ -26,8 +27,11 @@ export default function Essay({ data: { wpPost, furtherReadingPostsDefault, furt
         tghpjcLesswrongUrl: lessWrongUrl,
         tghpjcEaforumUrl: eaForumUrl,
         tghpjcReferences: references,
-        toc
+        tghpjcPostSeriesPartNumber: partNumber,
+        tghpTaxonomySeries: series,
     } = wpPost;
+
+    console.log(partNumber,series)
 
     let mainContent = useRef()
     const referenceContentRefs = useRef({})
@@ -176,6 +180,7 @@ export const query = graphql`
             date
             modified
             content
+            toc
             tghpjcAudioUrl
             tghpjcVideoUrl
             essayPdf {
@@ -184,7 +189,12 @@ export const query = graphql`
             tghpjcSubstackUrl
             tghpjcLesswrongUrl
             tghpjcEaforumUrl
-            toc
+            tghpjcPostSeriesPartNumber
+            tghpTaxonomySeries {
+                nodes {
+                    name
+                }
+            }
             tghpjcReferences {
                 url
                 text
