@@ -1,8 +1,9 @@
 import React from "react"
 import { Link } from "gatsby"
-import { categoryPageSlug, getPostPath, getPostDate } from "../model/post";
+import { categoryPageSlug } from "../model/post";
 
-import Arrow from "../assets/link-arrow.svg";
+import Series from './home-essay-category/series';
+import Essay from './home-essay-category/essay';
 
 const HomeEssayCategory = ({ title, slug, posts: { nodes: essays } }) => {
     const essaysBySeries = {}
@@ -22,6 +23,7 @@ const HomeEssayCategory = ({ title, slug, posts: { nodes: essays } }) => {
         if(essaysBySeries[slug] === undefined) {
             essaysBySeries[slug] = {
                 type,
+                slug,
                 position: index,
             }
             essaysBySeries[slug].data = []
@@ -32,61 +34,35 @@ const HomeEssayCategory = ({ title, slug, posts: { nodes: essays } }) => {
 
     const sortedEssaysBySeries = Object.values(essaysBySeries).sort((postA, postB) => postA.position - postB.position)
 
+    const maxSlots = 3
+    let slotsUsed = 0
+
     return (
         <div className="essay-categories__category">
             <h2 className="essay-categories__category-title">{title}</h2>
-            {sortedEssaysBySeries
-            .slice(0, 3)
-            .map(({ type, data }) => {
-                const [{ slug, date, title, excerpt }] = data
+            {sortedEssaysBySeries.map(({ type, data, slug }) => {
+                if (slotsUsed > maxSlots) {
+                    return null
+                }
 
-                const seriesTitle = data[0].tghpTaxonomySeries.nodes[0]?.name
-                const seriesDescription = data[0].tghpTaxonomySeries.nodes[0]?.description
+                if (data.length <= 2) {
+                    slotsUsed = slotsUsed + 1
+                } else if (data.length > 2 && data.length <= 6) {
+                    slotsUsed = slotsUsed + 2
+                } else if (data.length > 6) {
+                    slotsUsed = slotsUsed + 3
+                }
 
                 return (
                     <div className="essay-categories__category-essays category-essays" key={slug}>
-
-                        {type === 'series' ?
-
-                            <div className="category-essays__series">
-                                <div className="category-essays__series-title">
-                                    [Series] {seriesTitle}
-                                </div>
-                                {
-                                    seriesDescription &&
-                                    <div className="category-essays__series-excerpt" dangerouslySetInnerHTML={{__html: seriesDescription}} />
-                                }
-                                <div className="category-essays__series-date">
-                                    {getPostDate(data[0].date)}
-                                </div>
-                                <div className="category-essays__series-essays">
-                                    {data
-                                    .sort((postA, postB) => new Date(postA.date) - new Date(postB.date))
-                                    .map(({slug, title, date}, index) => (
-                                        <Link to={getPostPath(slug, date)} className="category-essays__series-essay" key={slug}>
-                                            <div className="category-essays__series-essay-title">
-                                                Part {++index}: {title}
-                                            </div>
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-
-                        :
-
-                            <Link to={getPostPath(slug, date)} className="category-essays__essay">
-                                <div className="category-essays__essay-title">
-                                    {title}
-                                </div>
-                                <div className="category-essays__essay-excerpt" dangerouslySetInnerHTML={{__html: excerpt}}/>
-                                <div className="category-essays__essay-date">
-                                    {getPostDate(date)}
-                                </div>
-                                <div className="category-essays__essay-action">
-                                    Continue reading <Arrow/>
-                                </div>
-                            </Link>
-                        }
+                        {type === 'series' &&
+                            <Series
+                                title={data[0].tghpTaxonomySeries.nodes[0]?.name}
+                                description={data[0].tghpTaxonomySeries.nodes[0]?.description}
+                                posts={data}
+                            />}
+                        {type === 'post' &&
+                            <Essay post={data[0]} />}
                     </div>
                 )
             })}
