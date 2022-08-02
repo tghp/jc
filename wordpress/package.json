@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "JC WordPress Project",
   "author": "TGHP",
-  "scripts": {
-    "generate-pdf": "node ./script/pdf/generate.mjs"
-  },
   "devDependencies": {
     "@babel/plugin-transform-react-jsx": "^7.14.5",
     "@babel/plugin-transform-runtime": "~7.11.5",
@@ -14,14 +11,12 @@
   },
   "dependencies": {
     "@tghp/groundwork.js": "^2.0.0",
-    "dotenv": "^16.0.1",
     "easings-css": "^2.0.3",
     "family.scss": "^1.0.8",
     "graphql-request": "^4.3.0",
     "jquery": "^3.6.0",
     "lodash": "^4.17.21",
     "normalize.css": "^8.0.1",
-    "puppeteer": "^15.5.0",
     "sass-mq": "^6.0.0",
     "the-new-css-reset": "^1.4.1"
   }

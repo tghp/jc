@@ -1,0 +1,15 @@
+{
+  "name": "script",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "generate-pdf": "node ./script/pdf/generate.mjs"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "puppeteer": "^15.5.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
