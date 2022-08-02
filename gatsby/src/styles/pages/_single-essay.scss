@@ -79,6 +79,7 @@
 
                     a {
                         color: $color-jc-charcoal-grey;
+                        display: block;
 
                         .arrow-right {
                             @include pseudo-element-create;
@@ -88,6 +89,10 @@
                             padding: 3px;
                             transform: rotate(-45deg);
                             margin: 0 0 1px 3px;
+                        }
+
+                        &:hover {
+                            color: $color-jc-charcoal;
                         }
                     }
                 }

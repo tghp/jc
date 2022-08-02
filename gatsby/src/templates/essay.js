@@ -100,7 +100,7 @@ export default function Essay({ data: { wpPost, furtherReadingPostsDefault, furt
                             {audioUrl && <a href={audioUrl} target="_blank" rel="noreferrer" aria-label="Audio link"><ImageAudioLink /></a>}
                             {videoUrl && <a href={videoUrl} target="_blank" rel="noreferrer" aria-label="Video link"><ImageVideoLink /></a>}
                         </div>
-                        <TableOfContents hTags={toc?.items} />
+                        <TableOfContents navItems={toc?.items} />
                     </div>
                     <div className="single-essay__header">
                         {modified && <div className="single-essay__header-update-date">Last updated: {getSinglePostDateFormat(modified)}</div>}

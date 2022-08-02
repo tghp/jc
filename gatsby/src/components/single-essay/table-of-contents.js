@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import TocNav from "./table-of-contents-items";
 
-const TableOfContents = ({ hTags }) => {
+const TableOfContents = ({ navItems }) => {
     const [toggleNav, setToggleNav] = useState(true)
     const handleToggle = () => setToggleNav(!toggleNav)
     const buttonText = toggleNav ? 'hide' : 'show'
@@ -16,7 +16,7 @@ const TableOfContents = ({ hTags }) => {
                     {buttonText}
                 </button>
             </div>
-            {hTags && toggleNav && <TocNav hTags={hTags} />}
+            {navItems && toggleNav && <TocNav navItems={navItems} />}
         </div>
     )
 }
