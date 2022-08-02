@@ -10,8 +10,9 @@ import ImagePDFLink from "../assets/download-pdf.svg";
 import ImageAudioLink from "../assets/audio-link.svg";
 import ImageVideoLink from "../assets/video-link.svg";
 import CommentsIcon from "../assets/comments-icon.svg";
+import EssayLink from "../components/essay-link";
 
-export default function Essay({ data: { wpPost }, pageContext: { referenceCount } }) {
+export default function Essay({ data: { wpPost, furtherReadingPostsDefault, furtherReadingPostsOverride }, pageContext: { referenceCount } }) {
     const {
         title,
         content,
@@ -20,7 +21,7 @@ export default function Essay({ data: { wpPost }, pageContext: { referenceCount 
         modified,
         tghpjcAudioUrl: audioUrl,
         tghpjcVideoUrl: videoUrl,
-        tghpjcSubstackUrl: subtackUrl,
+        tghpjcSubstackUrl: substackUrl,
         tghpjcLesswrongUrl: lessWrongUrl,
         tghpjcEaforumUrl: eaForumUrl,
         tghpjcReferences: references,
@@ -49,6 +50,10 @@ export default function Essay({ data: { wpPost }, pageContext: { referenceCount 
         window.addEventListener('scroll', onScroll)
         return () => window.removeEventListener('scroll', onScroll)
     }, [])
+
+    const furtherReadingPosts = furtherReadingPostsOverride.posts.length === 0
+        ? furtherReadingPostsDefault.posts
+        : furtherReadingPostsOverride.posts
 
     useEffect(() => {
         if (Object.keys(referenceContentRefs.current).length === 0 && Object.keys(referenceSidebarRefs.current).length === 0) {
@@ -90,7 +95,7 @@ export default function Essay({ data: { wpPost }, pageContext: { referenceCount 
                             {title}
                         </div>
                         <div className="single-essay__sidebar-media-links">
-                            <Link to={`/${getPostPath(slug, date)}.pdf`}><ImagePDFLink /></Link>
+                            <Link to={`${getPostPath(slug, date)}.pdf`}><ImagePDFLink /></Link>
                             {audioUrl && <a href={audioUrl} target="_blank" rel="noreferrer" aria-label="Audio link"><ImageAudioLink /></a>}
                             {videoUrl && <a href={videoUrl} target="_blank" rel="noreferrer" aria-label="Video link"><ImageVideoLink /></a>}
                         </div>
@@ -107,7 +112,8 @@ export default function Essay({ data: { wpPost }, pageContext: { referenceCount 
                             mainContentMeasureRef={mainContentMeasureRef}
                             referenceContentRefs={referenceContentRefs}
                         />
-                        {subtackUrl || lessWrongUrl || eaForumUrl ?
+                        {substackUrl || lessWrongUrl || eaForumUrl
+                            ?
                             <div className="single-essay__main-comments post-comments">
                                 <div className="post-comments__separator">
                                     <CommentsIcon />
@@ -115,27 +121,32 @@ export default function Essay({ data: { wpPost }, pageContext: { referenceCount 
                                 <div className="post-comments__options">
                                     <div className="post-comments__options-text">Leave a comment</div>
                                     <div className="post-comments__options-separator" />
-                                    {subtackUrl &&
-                                        <a href={subtackUrl} className="post-comments__options-system" target="_blank" rel="noreferrer">
+                                    {substackUrl &&
+                                        <a href={substackUrl} className="post-comments__options-system" target="_blank" rel="noreferrer">
                                             Substack
                                         </a>
                                     }
                                     {lessWrongUrl &&
-                                        <a href="https://www.google.co.uk/" className="post-comments__options-system" target="_blank" rel="noreferrer">
+                                        <a href={lessWrongUrl} className="post-comments__options-system" target="_blank" rel="noreferrer">
                                             LessWrong
                                         </a>
                                     }
                                     {eaForumUrl &&
-                                        <a href="https://www.google.co.uk/" className="post-comments__options-system" target="_blank" rel="noreferrer">
+                                        <a href={eaForumUrl} className="post-comments__options-system" target="_blank" rel="noreferrer">
                                             EA Forum
                                         </a>
                                     }
                                 </div>
-                            </div> : ''
+                            </div>
+                            : ''
                         }
                         <div className="single-essay__main-further-reading">
                             <h2>Further reading</h2>
-
+                            {furtherReadingPosts
+                                .sort((postA, postB) => new Date(postB.date) - new Date(postA.date))
+                                .slice(0, 3)
+                                .map(post => <EssayLink post={post} key={post.slug} /> )
+                            }
                         </div>
                     </div>
                     {!!referenceCount &&
@@ -153,7 +164,11 @@ export default function Essay({ data: { wpPost }, pageContext: { referenceCount 
 }
 
 export const query = graphql`
-    query($slug: String!) {
+    query(
+        $slug: String!, 
+        $postCategories: [String!], 
+        $furtherReadingPosts: [Int!]
+    ) {
         wpPost(slug: {eq: $slug}) {
             title
             slug
@@ -169,6 +184,24 @@ export const query = graphql`
             tghpjcReferences {
                 url
                 text
+            }
+        } 
+        
+        furtherReadingPostsDefault: allWpPost(filter: {categories: {nodes: {elemMatch: {slug: {in: $postCategories}}}}}) {
+            posts: nodes {
+                slug
+                title
+                excerpt
+                date
+            }
+        } 
+        
+        furtherReadingPostsOverride: allWpPost(filter: {databaseId: {in: $furtherReadingPosts}}) {
+            posts: nodes {
+                slug
+                title
+                excerpt
+                date
             }
         }
     }

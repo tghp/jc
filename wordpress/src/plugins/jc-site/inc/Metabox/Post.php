@@ -100,6 +100,27 @@ class Post extends AbstractMetabox implements MetaboxDefinerInterface
                     ],
                 ]
             ],
+            [
+                'id' => Metabox::generateKey('post_further_reading_override'),
+                'title' => 'Further reading',
+                'post_types' => 'post',
+                'context' => 'side',
+                'fields' => [
+                    [
+                        'type' => 'heading',
+                        'name' => 'Override',
+                        'desc' => 'Posts within the same category will be displayed by default. Select posts here to override the default.',
+                    ],
+                    [
+                        'id' => Metabox::generateKey('further_reading_posts'),
+                        'name' => 'Select posts',
+                        'type' => 'post',
+                        'post_type' => 'post',
+                        'clone' => true,
+                        'max_clone' => 3,
+                    ],
+                ]
+            ],
         ];
     }
 

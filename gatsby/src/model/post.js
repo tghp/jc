@@ -2,7 +2,7 @@ export const categoryPageSlug = 'category'
 
 export const getPostPath = (slug, date) => {
     const postDate = getDates(date)
-    return `${getPostDateFullYear(postDate.newDate)}/${postDate.month.padStart(2, '0')}/${postDate.day.padStart(2, '0')}/${slug}`;
+    return `/${getPostDateFullYear(postDate.newDate)}/${postDate.month.padStart(2, '0')}/${postDate.day.padStart(2, '0')}/${slug}`;
 }
 
 export const getPostDate = (date) => {

@@ -81,7 +81,7 @@ export const indexQuery = graphql`
     }   
   
     latestPosts: allWpPost(
-        sort: {fields: [date]}, 
+        sort: {fields: [date], order: DESC}, 
         limit: 6
     ) {
         nodes {

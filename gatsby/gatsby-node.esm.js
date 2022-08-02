@@ -12,17 +12,22 @@ export const createPages = ({ graphql, actions }) => {
     {
         allWpPost(sort: { fields: [date] }) {
             nodes {
-                title
-                excerpt
-                content
                 slug
                 date
+                categories {
+                    nodes {
+                        slug
+                    }
+                }
+                tghpjcFurtherReadingPosts
             }
         }
     }
     `).then((result) => {
-        result.data.allWpPost.nodes.forEach(({ slug, date, content }) => {
+        result.data.allWpPost.nodes.forEach(({ slug, date, content, categories, tghpjcFurtherReadingPosts }) => {
             const postPath = getPostPath(slug, date);
+            const postCategories = categories.nodes.map(item => item.slug)
+            const furtherReadingPosts = tghpjcFurtherReadingPosts.map(item => Number(item))
             const references = (content || '').match(/class="article-reference"/g) || [];
 
             console.log(`🥃🏠️ Creating post gatsby page for ${slug}`);
@@ -33,6 +38,8 @@ export const createPages = ({ graphql, actions }) => {
                 component: path.resolve(`./src/templates/essay.js`),
                 context: {
                     slug,
+                    postCategories,
+                    furtherReadingPosts,
                     downloadFile: `${postPath}.pdf`,
                     referenceCount: references.length,
                 },
@@ -44,10 +51,7 @@ export const createPages = ({ graphql, actions }) => {
         {
             allWpPage {
                 nodes {
-                    title
-                    content
                     slug
-                    date
                 }
             }
         }
