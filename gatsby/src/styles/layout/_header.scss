@@ -34,7 +34,8 @@
      * Archive & Category pages
      */
     .archive &,
-    .category & {
+    .category &,
+    .default-page & {
         background-color: $color-jc-blue;
 
         a {

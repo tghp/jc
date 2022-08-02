@@ -34,7 +34,7 @@ const Footer = ({ siteTitle }) => {
                     <ul className="site-footer__nav">
                         {items.map(({ ID, title, url }) => (
                             <li key={ID}>
-                                <Link to={url}>
+                                <Link to={`/${url}`}>
                                     {title}
                                 </Link>
                             </li>

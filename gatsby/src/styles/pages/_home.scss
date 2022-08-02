@@ -123,7 +123,7 @@
 .essay-categories {
     padding-top: $padding--ml;
     padding-bottom: $padding--large;
-    background-color: $color-jc-grey-3;
+    background-color: $color-white;
 
     &__inner {
         @include mq($until: s) {

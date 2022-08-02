@@ -2,7 +2,11 @@
     background-color: $color-jc-grey-1;
 
     .single-post & {
-        background-color: $color-white
+        background-color: $color-white;
+    }
+
+    .default-page & {
+        background-color: $color-jc-grey-2;
     }
 
     &__inner {
