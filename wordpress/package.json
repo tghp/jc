@@ -13,7 +13,6 @@
     "@tghp/groundwork.js": "^2.0.0",
     "easings-css": "^2.0.3",
     "family.scss": "^1.0.8",
-    "graphql-request": "^4.3.0",
     "jquery": "^3.6.0",
     "lodash": "^4.17.21",
     "normalize.css": "^8.0.1",
