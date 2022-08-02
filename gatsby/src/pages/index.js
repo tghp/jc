@@ -4,6 +4,7 @@ import Layout from '../components/layout';
 import HomeFeaturedEssays from '../components/home-featured-essays';
 import HomeEssayCategories from '../components/home-essay-categories';
 import FenceIllustration from "../assets/footer-fence.svg";
+import WalkerIllustration from "../assets/footer-walker.svg";
 
 const IndexPage = (
     {
@@ -42,6 +43,9 @@ const IndexPage = (
             </div>
             <div className="about-text">
                 <div className="about-text__inner">
+                    <div className="about-text__pre-illustration">
+                        <WalkerIllustration />
+                    </div>
                     <div className="about-text__header">
                         <h2 className="about-text__header-title">{homeMeta.tghpjcAboutTextTitle}</h2>
                         <div className="about-text__header-illustration">

@@ -161,10 +161,31 @@
 .about-text {
     background-color: $color-jc-grey-1;
     border-top: 1px solid $color-jc-blue;
+    position: relative;
+    margin-top: 100px;
+
+    &:before {
+        @include pseudo-element-create;
+        position: absolute;
+        left: 50%;
+        top: $padding--xxsmall + 1px;
+        height: 1px;
+        width: 50%;
+        background: $color-jc-blue;
+    }
 
     &__inner {
         padding-top: $padding--xxsmall;
         padding-bottom: $padding--medium;
+        position: relative;
+    }
+
+    &__pre-illustration {
+        @include main-padding-value('right');
+        position: absolute;
+        bottom: 100%;
+        width: 377px;
+        height: 101px;
     }
 
     &__header {
@@ -173,15 +194,23 @@
         overflow: hidden;
 
         &-title {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
             border-color: $color-jc-blue;
+            margin-top: -2px;
             margin-bottom: 0;
             padding-bottom: $padding--xxsmall;
-            align-self: flex-end;
+            background: $color-jc-grey-1;
+            z-index: 1;
         }
 
         &-illustration {
             display: flex;
             justify-self: end;
+            width: 388px;
+            height: 89px;
+            z-index: 2;
 
             @include mq($until: s) {
                 display: none;
