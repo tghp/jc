@@ -13,6 +13,7 @@ class Essay extends AbstractJc
         add_filter('the_content', [$this, 'addReferenceSups']);
         add_filter('rwmb_get_value', [$this, 'applyShortcodeToWysiwygMetabox'], 10, 4 );
         add_shortcode('text_with_button', [$this, 'textWithButtonShortcode']);
+        add_action('save_post', [$this, 'generatePdf']);
     }
 
     /**
@@ -136,6 +137,25 @@ class Essay extends AbstractJc
             $value = do_shortcode($value);
         }
         return $value;
+    }
+
+    /*
+     * @return void
+     */
+    public function generatePdf($postId)
+    {
+        if (get_post_type($postId) === 'post') {
+            $post = get_post($postId);
+
+            if ($post->post_status === 'publish') {
+                $path = get_stylesheet_directory() . '/../../';
+                shell_exec("cd {$path}; npm run generate-pdf -- {$postId}");
+
+                if (isset($_ENV['GATSBY_CLOUD_BUILD_WEBHOOK_URL'])) {
+                    wp_remote_post($_ENV['GATSBY_CLOUD_BUILD_WEBHOOK_URL']);
+                }
+            }
+        }
     }
 
 }

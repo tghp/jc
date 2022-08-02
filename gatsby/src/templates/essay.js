@@ -19,6 +19,7 @@ export default function Essay({ data: { wpPost, furtherReadingPostsDefault, furt
         slug,
         date,
         modified,
+        essayPdf: { publicURL: essayPdfPublicURL },
         tghpjcAudioUrl: audioUrl,
         tghpjcVideoUrl: videoUrl,
         tghpjcSubstackUrl: substackUrl,
@@ -95,7 +96,7 @@ export default function Essay({ data: { wpPost, furtherReadingPostsDefault, furt
                             {title}
                         </div>
                         <div className="single-essay__sidebar-media-links">
-                            <Link to={`${getPostPath(slug, date)}.pdf`}><ImagePDFLink /></Link>
+                            {essayPdfPublicURL && <a href={essayPdfPublicURL}><ImagePDFLink /></a>}
                             {audioUrl && <a href={audioUrl} target="_blank" rel="noreferrer" aria-label="Audio link"><ImageAudioLink /></a>}
                             {videoUrl && <a href={videoUrl} target="_blank" rel="noreferrer" aria-label="Video link"><ImageVideoLink /></a>}
                         </div>
@@ -177,6 +178,9 @@ export const query = graphql`
             content
             tghpjcAudioUrl
             tghpjcVideoUrl
+            essayPdf {
+                publicURL
+            }
             tghpjcSubstackUrl
             tghpjcLesswrongUrl
             tghpjcEaforumUrl

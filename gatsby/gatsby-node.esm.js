@@ -1,7 +1,5 @@
 import { createRemoteFileNode } from 'gatsby-source-filesystem';
 import path from 'path'
-import puppeteer from 'puppeteer'
-import fs from 'fs'
 import { categoryPageSlug, getPostPath } from './src/model/post'
 const cheerio = require('cheerio');
 
@@ -90,61 +88,6 @@ export const createPages = ({ graphql, actions }) => {
     )
 }
 
-export const onPostBuild = async ({ graphql }) => {
-    console.log(process.env);
-
-    const { data: { posts } } = await graphql(`
-    query {
-      posts: allWpPost(sort: { fields: [date] }) {
-        nodes {
-          slug
-          date
-        }
-      }
-    }
-  `);
-
-    for (const post of posts.nodes) {
-        const { slug, date } = post
-
-        console.log(`🥃🏠️ Creating PDF for post ${slug}`)
-        await printPDF(getPostPath(slug, date))
-        console.log('🥃🏠️ ✅')
-    }
-};
-
-const printPDF = async (pageName) => {
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
-
-    const htmlPath = path.join(
-        __dirname,
-        'public',
-        pageName,
-        'index.html',
-    );
-    const contentHtml = fs.readFileSync(htmlPath, 'utf8');
-
-    await page.setContent(contentHtml);
-
-    await page.pdf({
-        format: 'A4',
-        margin: {
-            top: '1.5cm',
-            left: '1.2cm',
-            right: '1.2cm',
-            bottom: '1.5cm',
-        },
-        path: path.join(
-            __dirname,
-            'public',
-            `${pageName}.pdf`,
-        ),
-    });
-
-    await browser.close();
-}
-
 exports.createSchemaCustomization = ({ actions }) => {
     const { createTypes, createFieldExtension } = actions;
     createFieldExtension({
@@ -156,10 +99,11 @@ exports.createSchemaCustomization = ({ actions }) => {
     type WpPost implements Node {
       toc: JSON
       content: String @content
+      essayPdf: File @link(from: "fields.essayPdfLocalFile")
     }
     
     type WpPage implements Node {
-      introPhoto: File @link(from: "fields.localFile")
+      introPhoto: File @link(from: "fields.pageIntroPhotoLocalFile")
     }
   `;
     createTypes(typeDefs);
@@ -291,8 +235,25 @@ exports.onCreateNode = async ({
 
             // If the file was created, extend the node with "localFile"
             if (fileNode) {
-                createNodeField({ node, name: "localFile", value: fileNode.id })
+                createNodeField({ node, name: "pageIntroPhotoLocalFile", value: fileNode.id })
             }
+        }
+    }
+
+    if (node.internal.type === 'WpPost' && process.env.WP_URL) {
+        const pdfUrl = `${process.env.WP_URL.trim('/')}/wp-content/uploads/pdf/${node.slug}.pdf`
+
+        const fileNode = await createRemoteFileNode({
+            url: pdfUrl,
+            parentNodeId: node.id,
+            createNode,
+            createNodeId,
+            getCache,
+        })
+
+        // If the file was created, extend the node with "localFile"
+        if (fileNode) {
+            createNodeField({ node, name: "essayPdfLocalFile", value: fileNode.id })
         }
     }
 }
