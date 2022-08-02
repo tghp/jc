@@ -5,7 +5,8 @@
         background-color: $color-white;
     }
 
-    .default-page & {
+    .default-page &,
+    .error-404 & {
         background-color: $color-jc-grey-2;
     }
 

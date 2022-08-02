@@ -31,11 +31,12 @@
     }
 
     /*
-     * Archive & Category pages
+     * Archive/Category pages
      */
     .archive &,
     .category &,
-    .default-page & {
+    .default-page &,
+    .error-404 & {
         background-color: $color-jc-blue;
 
         a {

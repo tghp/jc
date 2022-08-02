@@ -1,0 +1,7 @@
+.error-404 {
+    .default-page-content {
+        .link-arrow {
+            @include link-arrow-rotate;
+        }
+    }
+}
