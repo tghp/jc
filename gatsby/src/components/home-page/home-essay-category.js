@@ -1,8 +1,8 @@
 import React from "react"
 import { Link } from "gatsby"
-import { categoryPageSlug, getPostPath, getPostDate } from "../model/post";
+import { categoryPageSlug, getPostPath, getPostDate } from "../../model/post";
 
-import Arrow from "../assets/link-arrow.svg";
+import Arrow from "../../assets/link-arrow.svg";
 
 const HomeEssayCategory = ({ title, slug, posts: { nodes: essays } }) => {
     const essaysBySeries = {}

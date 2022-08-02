@@ -1,6 +1,6 @@
 import React from "react"
 import { useStaticQuery, graphql } from "gatsby"
-import HomeEssayCategory from "../components/home-essay-category";
+import HomeEssayCategory from "./home-essay-category";
 
 const HomeEssayCategories = ({ selectedCategories }) => {
 

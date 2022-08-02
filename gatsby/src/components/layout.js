@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { useStaticQuery, graphql } from "gatsby"
+import ModalContext from "../context/modal-context"
 import Header from "./header";
 import Footer from "./footer";
 import SubscribeButton from "./subscribe-button";
@@ -39,15 +40,21 @@ const Layout = ({ isHomePage, children, location }) => {
     const closeModal = () => setModalState(false)
 
     return (
-        <div className={globalWrapperClasses.join(' ')} data-is-root-path={isHomePage}>
-            <Header siteTitle={title} />
-            <main className="site-main">
-                {children}
-            </main>
-            <Footer siteTitle={title} />
-            <SubscribeButton show={showModal} />
-            <SubscribeModal show={modalState} hide={closeModal} />
-        </div>
+        <ModalContext.Provider value={{
+            modalState,
+            showModal,
+            closeModal,
+        }}>
+            <div className={globalWrapperClasses.join(' ')} data-is-root-path={isHomePage}>
+                <Header siteTitle={title} />
+                <main className="site-main">
+                    {children}
+                </main>
+                <Footer siteTitle={title} />
+                <SubscribeButton />
+                <SubscribeModal />
+            </div>
+        </ModalContext.Provider>
     )
 }
 

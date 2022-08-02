@@ -1,6 +1,6 @@
 import React from "react"
 import { Link } from "gatsby"
-import { getPostPath } from "../model/post";
+import { getPostPath } from "../../model/post";
 
 const HomeFeaturedEssays = ({ title, posts, titleLink }) => (
 
