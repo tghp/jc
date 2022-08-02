@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "generate-pdf": "node ./script/pdf/generate.mjs"
+    "generate-pdf": "node ./pdf/generate.mjs"
   },
   "dependencies": {
     "dotenv": "^16.0.1",
