@@ -15,11 +15,12 @@ const Series = ({ title, description, posts }) =>
         </div>
         <div className="category-essays__series-essays">
             {posts
-                .sort((postA, postB) => new Date(postA.date) - new Date(postB.date))
-                .map(({slug, title, date}, index) => (
+                .sort((postA, postB) =>
+                    Number(postA.tghpjcPostSeriesPartNumber) - Number(postB.tghpjcPostSeriesPartNumber))
+                .map(({slug, title, date, tghpjcPostSeriesPartNumber: partNumber}) => (
                     <Link to={getPostPath(slug, date)} className="category-essays__series-essay" key={slug}>
                         <div className="category-essays__series-essay-title">
-                            Part {++index}: {title}
+                            Part {partNumber}: {title}
                         </div>
                     </Link>
                 ))}
