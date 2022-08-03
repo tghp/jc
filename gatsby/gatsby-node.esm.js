@@ -224,6 +224,8 @@ exports.onCreateNode = async ({
     getCache,
 }) => {
     if (node.internal.type === 'WpPage') {
+        console.log(`🥃🏠️ Adding file node for tghpjcIntroPhoto for ${node.internal.slug}`)
+
         if (node.tghpjcIntroPhoto.url !== null) {
             const fileNode = await createRemoteFileNode({
                 url: node.tghpjcIntroPhoto.url,
@@ -241,19 +243,25 @@ exports.onCreateNode = async ({
     }
 
     if (node.internal.type === 'WpPost' && process.env.WP_URL) {
+        console.log(`🥃🏠️ Adding file node for PDF for ${node.slug}`)
+
         const pdfUrl = `${process.env.WP_URL.trim('/')}/wp-content/uploads/pdf/${node.slug}.pdf`
 
-        const fileNode = await createRemoteFileNode({
-            url: pdfUrl,
-            parentNodeId: node.id,
-            createNode,
-            createNodeId,
-            getCache,
-        })
+        try {
+            const fileNode = await createRemoteFileNode({
+                url: pdfUrl,
+                parentNodeId: node.id,
+                createNode,
+                createNodeId,
+                getCache,
+            })
 
-        // If the file was created, extend the node with "localFile"
-        if (fileNode) {
-            createNodeField({ node, name: "essayPdfLocalFile", value: fileNode.id })
+            // If the file was created, extend the node with "localFile"
+            if (fileNode) {
+                createNodeField({node, name: "essayPdfLocalFile", value: fileNode.id})
+            }
+        } catch (e) {
+            console.log(`🥃🏠️⚠️  No PDF found for ${node.slug}. If some have been generated this probably isn't a problem`)
         }
     }
 }
