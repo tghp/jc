@@ -3,7 +3,7 @@ import { Link } from "gatsby"
 import { getPostPath, getPostDate } from "../model/post";
 import LinkArrow from "../assets/link-arrow.svg";
 
-const EssayLink = ({ post: { slug, date, title, excerpt, tghpTaxonomySeries } }) => {
+const EssayLink = ({ post: { slug, date, title, excerpt, tghpTaxonomySeries, tghpjcPostSeriesPartNumber: seriesPart } }) => {
     const seriesTitle = tghpTaxonomySeries?.nodes[0]?.name
 
     return (
@@ -12,7 +12,10 @@ const EssayLink = ({ post: { slug, date, title, excerpt, tghpTaxonomySeries } })
                 {getPostDate(date)}
             </div>
             <div className="post-essays__essay-title">
-                {seriesTitle && `${seriesTitle}: `}{title}
+                <div className="post-essays__essay-title-series">
+                    {seriesTitle && `${seriesTitle} / Part ${seriesPart}: `}
+                </div>
+                {title}
             </div>
             {excerpt && <div className="post-essays__essay-excerpt" dangerouslySetInnerHTML={{ __html: excerpt }} />}
             <div className="post-essays__essay-action">

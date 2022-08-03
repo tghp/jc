@@ -121,12 +121,15 @@ $top-padding: $padding--ml;
             }
         }
 
-        &-archive {
+        &-archive,
+        &-category {
             @include full-bleed-background($color-white);
             background-color: $color-white;
             padding-top: $padding--large;
             padding-bottom: $padding--large;
+        }
 
+        &-archive {
             @include mq($from: s) {
                 grid-column: 1/3;
                 display: grid;
@@ -139,10 +142,6 @@ $top-padding: $padding--ml;
         }
 
         &-category {
-            @include full-bleed-background($color-jc-grey-1);
-            background-color: $color-jc-grey-1;
-            padding-top: $padding--large;
-            padding-bottom: $padding--large;
             grid-column: 1/-1;
 
             @include mq($from: m) {

@@ -54,6 +54,12 @@ export const query = graphql`
                 slug
                 date
                 excerpt
+                tghpjcPostSeriesPartNumber
+                tghpTaxonomySeries {
+                    nodes {
+                        name
+                    }
+                }
             }
         }
     }

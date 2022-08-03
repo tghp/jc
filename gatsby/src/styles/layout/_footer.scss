@@ -2,7 +2,8 @@
     background-color: $color-jc-grey-1;
 
     .single-post &,
-    .archive & {
+    .archive &,
+    .category & {
         background-color: $color-white;
     }
 
