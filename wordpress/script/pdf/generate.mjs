@@ -27,7 +27,7 @@ const printPDF = async (slug, url) => {
             puppeteerOptions.executablePath = process.env.CHROME_PATH
         }
 
-        browser = await puppeteer.launch()
+        browser = await puppeteer.launch(puppeteerOptions)
     }
 
     const page = await browser.newPage()
