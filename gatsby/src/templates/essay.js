@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react"
 import { graphql } from "gatsby"
-import { getSinglePostDateFormat } from "../model/post";
+import { getPostPath, getSinglePostDateFormat } from "../model/post";
 import { useMeasure } from 'react-use';
 import Layout from "../components/layout"
 import TableOfContents from "../components/single-essay/table-of-contents"
@@ -11,12 +11,22 @@ import ImageAudioLink from "../assets/audio-link.svg";
 import ImageVideoLink from "../assets/video-link.svg";
 import CommentsIcon from "../assets/comments-icon.svg";
 import EssayLink from "../components/essay-link";
+import HeadingWithLink from "../components/heading-with-link";
 
-export default function Essay({ data: { wpPost, furtherReadingPostsDefault, furtherReadingPostsOverride }, pageContext: { referenceCount } }) {
+export default function Essay(
+    {
+        data: {
+            wpPost,
+            furtherReadingPostsDefault,
+            furtherReadingPostsOverride },
+        pageContext: {
+            referenceCount
+        }
+    }
+) {
     const {
         title,
         content,
-        slug,
         date,
         modified,
         toc,
@@ -30,8 +40,6 @@ export default function Essay({ data: { wpPost, furtherReadingPostsDefault, furt
         tghpjcPostSeriesPartNumber: partNumber,
         tghpTaxonomySeries: series,
     } = wpPost;
-
-    console.log(partNumber,series)
 
     let mainContent = useRef()
     const referenceContentRefs = useRef({})
@@ -55,10 +63,6 @@ export default function Essay({ data: { wpPost, furtherReadingPostsDefault, furt
         window.addEventListener('scroll', onScroll)
         return () => window.removeEventListener('scroll', onScroll)
     }, [])
-
-    const furtherReadingPosts = furtherReadingPostsOverride.posts.length === 0
-        ? furtherReadingPostsDefault.posts
-        : furtherReadingPostsOverride.posts
 
     useEffect(() => {
         if (Object.keys(referenceContentRefs.current).length === 0 && Object.keys(referenceSidebarRefs.current).length === 0) {
@@ -91,16 +95,39 @@ export default function Essay({ data: { wpPost, furtherReadingPostsDefault, furt
         setReferenceRowSizesMobile(gridRowsMobile);
     }, [referenceContentRefs, referenceSidebarRefs, mainContentAreaWidth, referencesAreaWidth])
 
+    /**
+     * Post Series data
+     */
+    const seriesName = series.nodes[0]?.name
+
+    /**
+     * Next Part in Series data
+     */
+    const nextSeriesPartIndex = series.nodes[0]?.posts.nodes.findIndex(item => {
+        return Number(item.tghpjcPostSeriesPartNumber) === Number(partNumber)+1
+    })
+    const nextSeriesPartObj = series.nodes[0]?.posts.nodes[nextSeriesPartIndex]
+
+    /**
+     * Further reading data
+     */
+    const furtherReadingPosts = furtherReadingPostsOverride.posts.length === 0
+        ? furtherReadingPostsDefault.posts
+        : furtherReadingPostsOverride.posts
+
     return (
         <Layout location={'single-post'}>
             <div className="single-essay">
                 <div className="single-essay__grid">
                     <div className="single-essay__sidebar">
                         <div className="single-essay__sidebar-title">
+                            {seriesName &&
+                                <div>{`${seriesName} / Part ${partNumber}`}</div>
+                            }
                             {title}
                         </div>
                         <div className="single-essay__sidebar-media-links">
-                            {essayPdf && essayPdf.publicURL && <a href={essayPdf.publicURL}><ImagePDFLink /></a>}
+                            {essayPdf && essayPdf.publicURL && <a href={essayPdf.publicURL} aria-label="Download PDF"><ImagePDFLink /></a>}
                             {audioUrl && <a href={audioUrl} target="_blank" rel="noreferrer" aria-label="Audio link"><ImageAudioLink /></a>}
                             {videoUrl && <a href={videoUrl} target="_blank" rel="noreferrer" aria-label="Video link"><ImageVideoLink /></a>}
                         </div>
@@ -111,6 +138,16 @@ export default function Essay({ data: { wpPost, furtherReadingPostsDefault, furt
                         {date && <div className="single-essay__header-publish-date">Published: {getSinglePostDateFormat(date)}</div>}
                     </div>
                     <div className="single-essay__main" ref={mainContent}>
+                        {seriesName &&
+                            <div className="single-essay__main-series">
+                                <div className="single-essay__main-series-name">
+                                    Series
+                                </div>
+                                <div className="single-essay__main-series-data">
+                                    {`${seriesName} / Part ${partNumber}`}
+                                </div>
+                            </div>
+                        }
                         <h1 className="single-essay__main-title">{title}</h1>
                         <Content
                             content={content}
@@ -144,6 +181,20 @@ export default function Essay({ data: { wpPost, furtherReadingPostsDefault, furt
                                 </div>
                             </div>
                             : ''
+                        }
+                        {nextSeriesPartObj &&
+                            <div className="single-essay__main-next-series">
+                                <HeadingWithLink
+                                    title="Next up"
+                                    titleLink={true}
+                                    linkText="Read next in series"
+                                    linkTo={getPostPath(nextSeriesPartObj.slug, nextSeriesPartObj.date)}
+                                    linkArrow={true}
+                                />
+                                <div className="single-essay__main-next-series-essay">
+                                    <EssayLink post={nextSeriesPartObj} />
+                                </div>
+                            </div>
                         }
                         <div className="single-essay__main-further-reading">
                             <h2>Further reading</h2>
@@ -193,6 +244,15 @@ export const query = graphql`
             tghpTaxonomySeries {
                 nodes {
                     name
+                    posts {
+                        nodes {
+                            title
+                            slug
+                            date
+                            excerpt
+                            tghpjcPostSeriesPartNumber
+                        }
+                    }
                 }
             }
             tghpjcReferences {

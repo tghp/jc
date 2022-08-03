@@ -1,0 +1,26 @@
+.heading-with-link {
+    display: grid;
+    grid-template-columns: max-content auto;
+    gap: $padding--small;
+    align-items: end;
+    padding-bottom: $padding--xsmall;
+    margin-bottom: $padding--xxxsmall;
+    border-bottom: 1px solid rgba($color-jc-charcoal, 0.5);
+
+    &__title {
+        @include h2;
+    }
+
+    &__link {
+        @include font__family--inter-regular;
+        line-height: 43px;
+
+        svg {
+            margin-left: 5px;
+        }
+    }
+
+    .single-post & {
+        border-bottom: none
+    }
+}

@@ -14,7 +14,7 @@ const IndexPage = (
     ) => {
 
     return (
-        <Layout>
+        <Layout location={'home'}>
             <HomeContent
                 homeMeta={homeMeta}
                 latestPosts={latestPosts}

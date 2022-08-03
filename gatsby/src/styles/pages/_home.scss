@@ -68,25 +68,6 @@
         }
     }
 
-    &__header {
-        display: grid;
-        grid-template-columns: max-content auto;
-        gap: $padding--small;
-        align-items: end;
-        padding-bottom: $padding--xsmall;
-        margin-bottom: $padding--xxxsmall;
-        border-bottom: 1px solid rgba($color-jc-charcoal, 0.5);
-
-        &-title {
-            @include h2;
-        }
-
-        &-view-all {
-            @include font__family--inter-regular;
-            line-height: 43px;
-        }
-    }
-
     &__essay {
         color: $color-black;
         display: grid;

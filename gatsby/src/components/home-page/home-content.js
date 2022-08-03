@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react"
-import HomeFeaturedEssays from './home-featured-essays';
-import HomeEssayCategories from './home-essay-categories';
 import ModalContext from "../../context/modal-context"
+import HomeFeaturedEssays from "./home-featured-essays";
+import HomeEssayCategories from "./home-essay-categories";
 import FenceIllustration from "../../assets/footer-fence.svg";
 import WalkerIllustration from "../../assets/footer-walker.svg";
 
@@ -9,16 +9,12 @@ const HomeContent = ({ homeMeta, latestPosts, featuredPosts }) => {
     const modalContext = useContext(ModalContext)
 
     useEffect(() => {
-
-        const handler = () => {
-            console.log(modalContext)
-            modalContext.showModal()
-        }
+        const showModalHandler = () => modalContext.showModal()
 
         const button = document.querySelector('.shortcode-text-button__button')
-        button.addEventListener('click', handler)
+        button.addEventListener('click', showModalHandler)
 
-        return () => button.removeEventListener('click', handler)
+        return () => button.removeEventListener('click', showModalHandler)
     }, [modalContext]);
 
     return (
