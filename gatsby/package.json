@@ -2,8 +2,9 @@
   "name": "jc",
   "version": "1.0.0",
   "private": true,
-  "description": "jc",
-  "author": "Josh Davenport-Smith",
+  "description": "Joseph Carlsmith Gatsby codebase",
+  "author": "TGHP",
+  "browserslist": [">0.5%", "not dead"],
   "keywords": [
     "gatsby"
   ],
@@ -37,5 +38,8 @@
     "sass": "^1.53.0",
     "sass-mq": "^6.0.0",
     "the-new-css-reset": "^1.4.1"
+  },
+  "devDependencies": {
+    "gatsby-plugin-webpack-bundle-analyser-v2": "^1.1.27"
   }
 }
