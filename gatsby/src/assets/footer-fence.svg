@@ -1,34 +1,44 @@
-<svg width="388" height="89" viewBox="0 0 388 89" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <mask id="mask0_661_3399" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="388" height="89">
-        <rect width="388" height="89" fill="#D9D9D9"/>
-    </mask>
-    <g mask="url(#mask0_661_3399)">
-        <g clip-path="url(#clip0_661_3399)">
-            <path d="M32.0183 1.17725H27.6606V63.0147L32.0183 58.6875V1.17725Z" stroke="#6161FF" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M22.3547 1.17725H17.9971V72.6109L22.3547 68.2829V1.17725Z" stroke="#6161FF" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M41.6824 1.17725H37.3247V53.4185L41.6824 49.0904V1.17725Z" stroke="#6161FF" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M22.3547 89.3582V75.7339L17.9971 80.0611V89.3582H22.3547Z" stroke="#6161FF" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M32.0183 66.1377L27.6606 70.4658V89.3583H32.0183V66.1377Z" stroke="#6161FF" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M8.63525 89.3582H12.6918V85.3301L10.7063 87.3016L8.63525 89.3582Z" stroke="#6161FF" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M70.674 1.17725H66.3154V24.6306L70.674 20.3026V1.17725Z" stroke="#6161FF" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M51.3461 1.17725H46.9875V43.8222L51.3461 39.4951V1.17725Z" stroke="#6161FF" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M61.0093 1.17725H56.6516V34.2269L61.0093 29.8988V1.17725Z" stroke="#6161FF" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M51.3461 46.9463L46.9875 51.2735V89.3585H51.3461V46.9463Z" stroke="#6161FF" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M75.979 1.17725V15.0344L80.3367 10.7063V1.17725H75.979Z" stroke="#6161FF" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M85.6421 1.17725V5.43816L89.9339 1.17725H85.6421Z" stroke="#6161FF" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M1.13184 89.3583L12.6918 77.8791V1.17725H1.13184V89.3583Z" stroke="#6161FF" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M80.3367 18.1572L75.979 22.4853V89.3581H80.3367V18.1572Z" stroke="#6161FF" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M41.6824 56.5415L37.3247 60.8696V89.3583H41.6824V56.5415Z" stroke="#6161FF" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M61.0093 37.3496L56.6516 41.6768V89.358H61.0093V37.3496Z" stroke="#6161FF" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M70.674 27.7534L66.3154 32.0815V89.3581H70.674V27.7534Z" stroke="#6161FF" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M104.162 89.3583H85.6416V12.8892L97.436 1.17725H104.162H224.625H231.35L243.144 12.8892V89.3583H224.625H104.162Z" stroke="#6161FF" stroke-linecap="round" stroke-linejoin="round"/>
-        </g>
-        <line x1="-993" y1="88.5" x2="86" y2="88.5" stroke="#6161FF"/>
-        <line x1="225" y1="1.18018" x2="387" y2="1.18018" stroke="#6161FF"/>
-    </g>
-    <defs>
-        <clipPath id="clip0_661_3399">
-            <rect width="225" height="88" fill="white"/>
-        </clipPath>
-    </defs>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 388 89" style="enable-background:new 0 0 388 89;" xml:space="preserve">
+<polygon id="obscure" style="fill:#F1EFEF;" points="85.6,89 1.1,89 1.1,0 98.6,0 85.6,12.9 "/>
+<defs>
+	<filter id="Adobe_OpacityMaskFilter" filterUnits="userSpaceOnUse" x="-993" y="0" width="1236.6" height="89.9">
+		<feColorMatrix  type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0"/>
+	</filter>
+</defs>
+<mask maskUnits="userSpaceOnUse" x="-993" y="0" width="1236.6" height="89.9" id="mask0_661_3399_00000179614258892790846620000002310998965754232246_">
+	<rect y="0" style="fill:#D9D9D9;filter:url(#Adobe_OpacityMaskFilter);" width="388" height="89"/>
+</mask>
+<g style="mask:url(#mask0_661_3399_00000179614258892790846620000002310998965754232246_);">
+	<g>
+		<defs>
+			<rect id="SVGID_1_" y="0" width="225" height="88"/>
+		</defs>
+		<clipPath id="SVGID_00000163775856235902706050000005511441429354527677_">
+			<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+		</clipPath>
+		<g style="clip-path:url(#SVGID_00000163775856235902706050000005511441429354527677_);">
+			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M32,1.2h-4.4V63l4.4-4.3V1.2z"/>
+			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M22.4,1.2H18v71.4l4.4-4.3V1.2z"/>
+			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M41.7,1.2h-4.4v52.2l4.4-4.3V1.2z"/>
+			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M22.4,89.4V75.7L18,80.1v9.3H22.4z"/>
+			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M32,66.1l-4.4,4.3v18.9H32V66.1z"/>
+			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M8.6,89.4h4.1v-4l-2,2L8.6,89.4z"/>
+			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M70.7,1.2h-4.4v23.5l4.4-4.3V1.2z"/>
+			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M51.3,1.2H47v42.6l4.4-4.3V1.2z"/>
+			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M61,1.2h-4.4v33l4.4-4.3V1.2z"/>
+			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M51.3,46.9L47,51.3v38.1h4.4V46.9z"/>
+			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M76,1.2V15l4.4-4.3V1.2H76z"/>
+			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M85.6,1.2v4.3l4.3-4.3H85.6z"/>
+			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M1.1,89.4l11.6-11.5V1.2H1.1V89.4z"/>
+			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M80.3,18.2L76,22.5v66.9h4.4V18.2z"/>
+			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M41.7,56.5l-4.4,4.3v28.5h4.4V56.5z"/>
+			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M61,37.3l-4.4,4.3v47.7H61V37.3z"/>
+			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M70.7,27.8l-4.4,4.3v57.3h4.4V27.8z"/>
+			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M231.4,1.2l11.8,11.7v76.5h-18.5H104.2
+				H85.6V12.9L97.4,1.2"/>
+		</g>
+	</g>
+	<line style="fill:none;stroke:#6161FF;" x1="-993" y1="88.5" x2="86" y2="88.5"/>
+</g>
 </svg>
