@@ -198,14 +198,16 @@ export default function Essay(
                                 </div>
                             </div>
                         }
-                        <div className="single-essay__main-further-reading">
-                            <h2>Further reading</h2>
-                            {furtherReadingPosts
-                                .sort((postA, postB) => new Date(postB.date) - new Date(postA.date))
-                                .slice(0, 3)
-                                .map(post => <EssayLink post={post} key={post.slug} /> )
-                            }
-                        </div>
+                        {furtherReadingPosts.length !== 0 &&
+                            <div className="single-essay__main-further-reading">
+                                <h2>Further reading</h2>
+                                {furtherReadingPosts
+                                    .sort((postA, postB) => new Date(postB.date) - new Date(postA.date))
+                                    .slice(0, 3)
+                                    .map(post => <EssayLink post={post} key={post.slug} /> )
+                                }
+                            </div>
+                        }
                     </div>
                     {!!referenceCount &&
                         <References
