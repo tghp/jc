@@ -5,6 +5,8 @@ import EssayLink from "../components/essay-link";
 import PostArchive from "../components/post-archive";
 import ImageLinkArrow from "../assets/link-arrow.svg";
 
+import '../styles/archive.scss';
+
 export default function ArchivePage({ data }) {
     const posts = data.allWpPost.nodes;
     const latestPosts = posts.slice(0, 6);

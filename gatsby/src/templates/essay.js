@@ -13,6 +13,8 @@ import CommentsIcon from "../assets/comments-icon.svg";
 import EssayLink from "../components/essay-link";
 import HeadingWithLink from "../components/heading-with-link";
 
+import '../styles/essay.scss';
+
 export default function Essay(
     {
         data: {

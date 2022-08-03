@@ -3,6 +3,8 @@ import { graphql } from 'gatsby'
 import Layout from '../components/layout';
 import HomeContent from '../components/home-page/home-content';
 
+import '../styles/home.scss';
+
 const IndexPage = (
     {
         data: {
