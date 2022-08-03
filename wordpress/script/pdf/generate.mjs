@@ -13,8 +13,7 @@ let browser;
 const printPDF = async (slug, url) => {
     // Start a headless browser
     if (!browser) {
-        browser = await puppeteer.launch({
-            executablePath: process.env.CHROME_PATH,
+        const puppeteerOptions = {
             headless: true,
             pipe: true,
             args: [
@@ -22,7 +21,13 @@ const printPDF = async (slug, url) => {
                 '--no-sandbox',
                 '--disable-extensions'
             ],
-        })
+        }
+
+        if (process.env.CHROME_PATH) {
+            puppeteerOptions.executablePath = process.env.CHROME_PATH
+        }
+
+        browser = await puppeteer.launch()
     }
 
     const page = await browser.newPage()
