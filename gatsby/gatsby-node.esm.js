@@ -90,10 +90,11 @@ export const createPages = ({ graphql, actions }) => {
 
 exports.createSchemaCustomization = ({ actions }) => {
     const { createTypes, createFieldExtension } = actions;
+
     createFieldExtension({
         name: "content",
         extend: extendContentField,
-    });
+    })
 
     const typeDefs = `
     type WpPost implements Node {
@@ -105,8 +106,9 @@ exports.createSchemaCustomization = ({ actions }) => {
     type WpPage implements Node {
       introPhoto: File @link(from: "fields.pageIntroPhotoLocalFile")
     }
-  `;
-    createTypes(typeDefs);
+    `
+
+    createTypes(typeDefs)
 }
 
 exports.createResolvers = ({ createResolvers, schema }) => {
@@ -116,14 +118,13 @@ exports.createResolvers = ({ createResolvers, schema }) => {
                 resolve: createTableOfContents,
             },
         },
-    });
+    })
 }
 
 async function createTableOfContents(source, args, context, info) {
     if (source.content) {
         const $ = cheerio.load(source.content)
         const titles = $('h2 ,h3')
-        const getUniqueId = UniqueId()
 
         const headings = Array.from(titles).map(title => {
             const depth = parseInt($(title).prop('tagName').substr(1), 10)
@@ -142,7 +143,6 @@ function extendContentField(options, prevFieldConfig) {
             if (source.content) {
                 const $ = cheerio.load(source.content)
                 const titles = $('h2,h3,h4,h5')
-                const getUniqueId = UniqueId()
                 Array.from(titles).forEach(title => {
                     const id = createId($, title)
                     $(title).attr('id', getUniqueId(id))
@@ -168,7 +168,7 @@ function createId($, title) {
     return id
 }
 
-function UniqueId() {
+function getUniqueId() {
     const tempMap = {}
     return el => {
         if (tempMap[el]) {
