@@ -60,8 +60,10 @@ export default function Essay(
     }
 
     useEffect(() => {
-        window.addEventListener('scroll', onScroll)
-        return () => window.removeEventListener('scroll', onScroll)
+        if (!process.env.CI) {
+            window.addEventListener('scroll', onScroll)
+            return () => window.removeEventListener('scroll', onScroll)
+        }
     }, [])
 
     useEffect(() => {
