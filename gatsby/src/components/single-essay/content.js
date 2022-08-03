@@ -1,37 +1,48 @@
 import React from "react"
-import parse from 'html-react-parser';
-import { Element } from 'domhandler/lib/node';
+import parse from 'html-react-parser'
 
-const Content = ({ content, mainContentMeasureRef, referenceContentRefs }) => {
+const Content = ({
+    content,
+    hasReferences,
+    mainContentMeasureRef,
+    referenceContentRefs
+}) => {
     let processedReferences = [];
 
     return (
         <div className="single-essay__main-content" ref={mainContentMeasureRef}>
-            {parse(content, {
-                replace: (domNode) => {
-                    if (domNode instanceof Element && domNode.name === 'sup') {
-                        const referenceNumber = domNode.attribs['data-reference-number'];
+            {!hasReferences &&
+                <div dangerouslySetInnerHTML={{ __html: content }} />
+            }
+            {hasReferences &&
+                <div>
+                    {parse(content, {
+                        replace: domNode => {
+                            if (domNode.name === 'sup') {
+                                const referenceNumber = domNode.attribs['data-reference-number'];
 
-                        const supProps = {
-                            className: 'article-reference'
-                        };
+                                const supProps = {
+                                    className: 'article-reference'
+                                };
 
-                        if (processedReferences.indexOf(referenceNumber) === -1) {
-                            supProps.ref = (ref) => {
-                                referenceContentRefs.current[domNode.attribs['data-reference-number']] = ref;
-                            };
+                                if (processedReferences.indexOf(referenceNumber) === -1) {
+                                    supProps.ref = (ref) => {
+                                        referenceContentRefs.current[domNode.attribs['data-reference-number']] = ref;
+                                    };
+
+                                    processedReferences.push(referenceNumber);
+                                }
+
+                                return (
+                                    <sup {...supProps}>
+                                        {domNode.children[0].data}
+                                    </sup>
+                                );
+                            }
                         }
-
-                        processedReferences.push(referenceNumber);
-
-                        return (
-                            <sup {...supProps}>
-                                {domNode.children[0].data}
-                            </sup>
-                        );
-                    }
-                }
-            })}
+                    })}
+                </div>
+            }
         </div>
     )
 }

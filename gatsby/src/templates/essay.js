@@ -153,6 +153,7 @@ export default function Essay(
                         <h1 className="single-essay__main-title">{title}</h1>
                         <Content
                             content={content}
+                            hasReferences={!!referenceCount}
                             mainContentMeasureRef={mainContentMeasureRef}
                             referenceContentRefs={referenceContentRefs}
                         />
