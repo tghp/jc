@@ -44,6 +44,7 @@ module.exports = {
                     include: /assets/
                 }
             }
-        }
+        },
+        'gatsby-plugin-gatsby-cloud',
     ]
 };
