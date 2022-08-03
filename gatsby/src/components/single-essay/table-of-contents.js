@@ -16,7 +16,7 @@ const TableOfContents = ({ navItems }) => {
                     {buttonText}
                 </button>
             </div>
-            {navItems && toggleNav && <TocNav navItems={navItems} />}
+            {/*{navItems && toggleNav && <TocNav navItems={navItems} />}*/}
         </div>
     )
 }

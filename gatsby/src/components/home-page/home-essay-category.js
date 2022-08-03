@@ -2,8 +2,8 @@ import React from "react"
 import { Link } from "gatsby"
 import { categoryPageSlug } from "../../model/post";
 
-import Series from '../home-essay-category/series';
-import Essay from '../home-essay-category/essay';
+import Series from './series';
+import Essay from './essay';
 
 const HomeEssayCategory = ({ title, slug, posts: { nodes: essays } }) => {
     const essaysBySeries = {}
