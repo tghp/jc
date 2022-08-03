@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react"
-import { graphql, Link } from "gatsby"
-import { getPostPath, getSinglePostDateFormat } from "../model/post";
+import { graphql } from "gatsby"
+import { getSinglePostDateFormat } from "../model/post";
 import { useMeasure } from 'react-use';
 import Layout from "../components/layout"
 import TableOfContents from "../components/single-essay/table-of-contents"
@@ -20,7 +20,7 @@ export default function Essay({ data: { wpPost, furtherReadingPostsDefault, furt
         date,
         modified,
         toc,
-        essayPdf: { publicURL: essayPdfPublicURL },
+        essayPdf,
         tghpjcAudioUrl: audioUrl,
         tghpjcVideoUrl: videoUrl,
         tghpjcSubstackUrl: substackUrl,
@@ -100,7 +100,7 @@ export default function Essay({ data: { wpPost, furtherReadingPostsDefault, furt
                             {title}
                         </div>
                         <div className="single-essay__sidebar-media-links">
-                            {essayPdfPublicURL && <a href={essayPdfPublicURL}><ImagePDFLink /></a>}
+                            {essayPdf && essayPdf.publicURL && <a href={essayPdf.publicURL}><ImagePDFLink /></a>}
                             {audioUrl && <a href={audioUrl} target="_blank" rel="noreferrer" aria-label="Audio link"><ImageAudioLink /></a>}
                             {videoUrl && <a href={videoUrl} target="_blank" rel="noreferrer" aria-label="Video link"><ImageVideoLink /></a>}
                         </div>

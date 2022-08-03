@@ -32,7 +32,7 @@ const printPDF = async (slug, url) => {
 
     const pdfDirectoryPath = join(
         dirname(process.argv[1]),
-        '../../wp-content/uploads/pdf',
+        'out',
     )
 
     try {
