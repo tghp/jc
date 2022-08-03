@@ -1,7 +1,8 @@
 .site-footer {
     background-color: $color-jc-grey-1;
 
-    .single-post & {
+    .single-post &,
+    .archive & {
         background-color: $color-white;
     }
 

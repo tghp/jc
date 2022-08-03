@@ -122,8 +122,8 @@ $top-padding: $padding--ml;
         }
 
         &-archive {
-            @include full-bleed-background($color-jc-grey-1);
-            background-color: $color-jc-grey-1;
+            @include full-bleed-background($color-white);
+            background-color: $color-white;
             padding-top: $padding--large;
             padding-bottom: $padding--large;
 
