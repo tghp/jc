@@ -3,6 +3,7 @@ import HomeFeaturedEssays from './home-featured-essays';
 import HomeEssayCategories from './home-essay-categories';
 import ModalContext from "../../context/modal-context"
 import FenceIllustration from "../../assets/footer-fence.svg";
+import WalkerIllustration from "../../assets/footer-walker.svg";
 
 const HomeContent = ({ homeMeta, latestPosts, featuredPosts }) => {
     const modalContext = useContext(ModalContext)
@@ -47,6 +48,9 @@ const HomeContent = ({ homeMeta, latestPosts, featuredPosts }) => {
         </div>
         <div className="about-text">
             <div className="about-text__inner">
+                <div className="about-text__pre-illustration">
+                    <WalkerIllustration />
+                </div>
                 <div className="about-text__header">
                     <h2 className="about-text__header-title">{homeMeta.tghpjcAboutTextTitle}</h2>
                     <div className="about-text__header-illustration">
