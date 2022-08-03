@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react"
-import { graphql, Link } from "gatsby"
-import { getPostPath, getSinglePostDateFormat } from "../model/post";
+import { graphql } from "gatsby"
+import { getSinglePostDateFormat } from "../model/post";
 import { useMeasure } from 'react-use';
 import Layout from "../components/layout"
 import TableOfContents from "../components/single-essay/table-of-contents"
