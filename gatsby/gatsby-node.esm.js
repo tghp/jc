@@ -1,10 +1,12 @@
 import path from 'path'
 import {
     categoryPageSlug,
-    getPostPath,
+    getPostPath
+} from './src/model/post'
+import {
     createTableOfContents,
     getTableOfContentsFieldExtension
-} from './src/model/post'
+} from './src/model/toc'
 const { createRemoteFileNode } = require(`gatsby-source-filesystem`) // For some reason `import { createRemoteFileNode } from 'gatsby-source-filesystem'` doesn't work
 
 export const createPages = ({ graphql, actions }) => {
