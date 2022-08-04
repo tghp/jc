@@ -7,21 +7,42 @@
     padding-bottom: $padding--xsmall;
 
     &__grid {
+        display: grid;
+        grid-template-areas:
+        "header"
+        "sidebar"
+        "sidebar"
+        "main"
+        "references"
+        "extra";
+        column-gap: $padding--medium;
 
-        @include mq($from: l) {
-            display: grid;
-            grid-template-columns: 305px auto;
+        @include mq($from: m) {
+            grid-template-columns: 6.5fr 3.5fr;
             grid-template-rows: minmax(85px, auto) min-content auto;
-            column-gap: $padding--medium;
+            grid-template-areas:
+            "header  header"
+            "sidebar sidebar"
+            "main    references"
+            "extra   references";
         }
 
         @include mq($from: xl) {
-            grid-template-columns: 305px minmax(auto, 650px) auto;
+            grid-template-columns: 250px 6fr 4fr;
+            grid-template-areas:
+            "sidebar .      ."
+            "sidebar header ."
+            "sidebar main   references"
+            "sidebar extra  references";
+        }
+
+        @include mq($from: xxl) {
+            grid-template-columns: 305px minmax(482px, auto) auto;
         }
     }
 
     &__header {
-        grid-area: 2/2;
+        grid-area: header;
 
         &-update-date,
         &-publish-date {
@@ -36,13 +57,39 @@
         &-publish-date {
             color: rgba($color-jc-charcoal, 0.3);
         }
+
+        &-title {
+            @include font__sizing(44px, 57.2px);
+            margin-top: $padding--small;
+            margin-bottom: $padding--medium;
+
+            @include mq($until: m) {
+                @include font__sizing(34px, 46px);
+            }
+        }
+
+        &-series {
+            margin-top: $padding--small;
+            margin-bottom: -$padding--xxsmall;
+            color: $color-jc-blue;
+
+            &-name {
+                @include font__family--inter-light;
+                @include font__size-regular-alt;
+            }
+
+            &-data {
+                @include font__family--newsreader-light;
+                @include font__sizing(22px, 28.6px);
+            }
+        }
     }
 
     &__sidebar {
+        grid-area: sidebar;
         margin-bottom: $padding--ml;
 
-        @include mq($from: l) {
-            grid-row: 1/-1;
+        @include mq($from: xl) {
             height: max-content;
             position: sticky;
             top: $header--height + $main-padding--top;
@@ -53,6 +100,10 @@
             @include h4;
             color: $color-jc-blue;
             margin-bottom: $padding--xxsmall;
+
+            @include mq($until: xl) {
+                display: none;
+            }
 
             @include mq($from: l) {
                 min-height: 85px;
@@ -126,29 +177,8 @@
     }
 
     &__main {
-        grid-area: 3/2/-1/3;
-
-        &-title {
-            @include font__sizing(44px, 57.2px);
-            margin-top: $padding--small;
-            margin-bottom: $padding--medium;
-        }
-
-        &-series {
-            margin-top: $padding--small;
-            margin-bottom: -$padding--xxsmall;
-            color: $color-jc-blue;
-
-            &-name {
-                @include font__family--inter-light;
-                @include font__size-regular-alt;
-            }
-
-            &-data {
-                @include font__family--newsreader-light;
-                @include font__sizing(22px, 28.6px);
-            }
-        }
+        grid-area: main;
+        position: relative;
 
         &-content {
             @include font__family--newsreader-medium;
@@ -184,6 +214,10 @@
                 font-weight: 400;
             }
         }
+    }
+
+    &__extra-reading {
+        grid-area: extra;
 
         .post-comments {
             margin-top: $padding--medium;
@@ -264,22 +298,21 @@
 
         &-further-reading {
             padding-top: $padding--large;
+            padding-bottom: $padding--large;
         }
     }
 
     &__references {
-        grid-area: 3/3/4/4;
+        grid-area: references;
         display: grid;
         grid-template-columns: 1fr;
         grid-auto-rows: auto;
         transition: opacity 150ms ease;
         align-self: start;
 
-        /*
-        TODO: Apply this when the references are below the main content. i.e. Change the $until value to match when that happens
-        */
-        @include mq($until: l) {
+        @include mq($until: m) {
             grid-template-rows: var(--reference-row-sizes-mobile) !important;
+            margin-top: $padding--small;
         }
 
         &:not(&--visible) {

@@ -18,6 +18,7 @@ export const createPages = ({ graphql, actions }) => {
             nodes {
                 slug
                 date
+                content
                 categories {
                     nodes {
                         slug

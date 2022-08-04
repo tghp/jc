@@ -54,7 +54,7 @@ export default function Essay(
     const onScroll = () => {
         const mainContentWindowTop = mainContent.current.getBoundingClientRect().top
         const sidebarTitle = document.querySelector('.single-essay__sidebar-title')
-        if (mainContentWindowTop < -200) {
+        if (mainContentWindowTop < -150) {
             sidebarTitle.classList.add('show-title')
         } else {
             sidebarTitle.classList.remove('show-title')
@@ -123,6 +123,7 @@ export default function Essay(
         <Layout location={'single-post'}>
             <div className="single-essay">
                 <div className="single-essay__grid">
+
                     <div className="single-essay__sidebar">
                         <div className="single-essay__sidebar-title">
                             {seriesName &&
@@ -137,31 +138,35 @@ export default function Essay(
                         </div>
                         <TableOfContents navItems={toc?.items} />
                     </div>
+
                     <div className="single-essay__header">
                         {modified && <div className="single-essay__header-update-date">Last updated: {getSinglePostDateFormat(modified)}</div>}
                         {date && <div className="single-essay__header-publish-date">Published: {getSinglePostDateFormat(date)}</div>}
-                    </div>
-                    <div className="single-essay__main" ref={mainContent}>
                         {seriesName &&
-                            <div className="single-essay__main-series">
-                                <div className="single-essay__main-series-name">
-                                    Series
-                                </div>
-                                <div className="single-essay__main-series-data">
-                                    {`${seriesName} / Part ${partNumber}`}
-                                </div>
+                        <div className="single-essay__header-series">
+                            <div className="single-essay__header-series-name">
+                                Series
                             </div>
+                            <div className="single-essay__header-series-data">
+                                {`${seriesName} / Part ${partNumber}`}
+                            </div>
+                        </div>
                         }
-                        <h1 className="single-essay__main-title">{title}</h1>
+                        <h1 className="single-essay__header-title">{title}</h1>
+                    </div>
+
+                    <div className="single-essay__main" ref={mainContent}>
                         <Content
                             content={content}
                             hasReferences={!!referenceCount}
                             mainContentMeasureRef={mainContentMeasureRef}
                             referenceContentRefs={referenceContentRefs}
                         />
+                    </div>
+                    <div className="single-essay__extra-reading">
                         {substackUrl || lessWrongUrl || eaForumUrl
                             ?
-                            <div className="single-essay__main-comments post-comments">
+                            <div className="single-essay__extra-reading-comments post-comments">
                                 <div className="post-comments__separator">
                                     <CommentsIcon />
                                 </div>
@@ -188,7 +193,7 @@ export default function Essay(
                             : ''
                         }
                         {nextSeriesPartObj &&
-                            <div className="single-essay__main-next-series">
+                            <div className="single-essay__extra-reading-next-series">
                                 <HeadingWithLink
                                     title="Next up"
                                     titleLink={true}
@@ -196,13 +201,13 @@ export default function Essay(
                                     linkTo={getPostPath(nextSeriesPartObj.slug, nextSeriesPartObj.date)}
                                     linkArrow={true}
                                 />
-                                <div className="single-essay__main-next-series-essay">
+                                <div className="single-essay__extra-reading-next-series-essay">
                                     <EssayLink post={nextSeriesPartObj} />
                                 </div>
                             </div>
                         }
                         {furtherReadingPosts.length !== 0 &&
-                            <div className="single-essay__main-further-reading">
+                            <div className="single-essay__extra-reading-further-reading">
                                 <h2>Further reading</h2>
                                 {furtherReadingPosts
                                     .sort((postA, postB) => new Date(postB.date) - new Date(postA.date))
@@ -212,6 +217,7 @@ export default function Essay(
                             </div>
                         }
                     </div>
+
                     {!!referenceCount &&
                         <References
                             references={references}
