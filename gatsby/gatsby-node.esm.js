@@ -171,7 +171,7 @@ export const onCreateNode = async ({
                 createNodeField({node, name: "essayPdfLocalFile", value: fileNode.id})
             }
         } catch (e) {
-            console.log(`🥃🏠️ [Node ${node.slug}] ⛔️ No PDF found. If some have been generated this probably isn't a problem`)
+            console.log(`🥃🏠️ [Node ${node.slug}] ⛔️ No PDF found (${pdfUrl}). If some have been generated this probably isn't a problem`)
         }
     }
 }
