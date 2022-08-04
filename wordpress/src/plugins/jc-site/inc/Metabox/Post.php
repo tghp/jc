@@ -38,6 +38,7 @@ class Post extends AbstractMetabox implements MetaboxDefinerInterface
                             '9' => '9',
                             '10' => '10',
                         ],
+                        'admin_columns' => 'after taxonomy-series',
                     ],
                 ]
             ],
