@@ -152,8 +152,8 @@ const triggerModificationForPost = async (postId) => {
         for (const post of allPosts) {
             console.log(`🥃🏠️ Creating PDF for post ${post.databaseId}`)
             await printPDF(post.slug, `${process.env.WP_BASE_URL}${post.uri}`)
-            console.log(`🥃🏠️ Triggering post change for ID ${postId}`)
-            await triggerModificationForPost(postId)
+            console.log(`🥃🏠️ Triggering post change for ID ${post.databaseId}`)
+            await triggerModificationForPost(post.databaseId)
         }
         await browser.close()
     }
