@@ -163,6 +163,7 @@ export default function Essay(
                             referenceContentRefs={referenceContentRefs}
                         />
                     </div>
+
                     <div className="single-essay__extra-reading">
                         {substackUrl || lessWrongUrl || eaForumUrl
                             ?
@@ -280,6 +281,12 @@ export const query = graphql`
                 title
                 excerpt
                 date
+                tghpjcPostSeriesPartNumber
+                tghpTaxonomySeries {
+                    nodes {
+                        name
+                    }
+                }
             }
         } 
         
@@ -289,6 +296,12 @@ export const query = graphql`
                 title
                 excerpt
                 date
+                tghpjcPostSeriesPartNumber
+                tghpTaxonomySeries {
+                    nodes {
+                        name
+                    }
+                }
             }
         }
     }
