@@ -68,6 +68,26 @@ const printPDF = async (slug, url) => {
     return pdfFilePath
 }
 
+const triggerModificationForPost = async (postId) => {
+    await request(
+        process.env.WP_GRAPHQL_URL,
+        gql`
+            mutation ($postUpdate: UpdatePostInput!) {
+                updatePost (input: $postUpdate) {
+                    post {
+                        modified
+                    }
+                }
+            }
+        `,
+        {
+            postUpdate: {
+                id: postId,
+            }
+        }
+    )
+}
+
 (async () => {
 
     if(!process.env.WP_GRAPHQL_URL) {
@@ -100,6 +120,9 @@ const printPDF = async (slug, url) => {
 
         await printPDF(slug, `${process.env.WP_BASE_URL}${uri}`)
         await browser.close()
+
+        console.log(`🥃🏠️ Triggering post change for ID ${postId}`)
+        await triggerModificationForPost(postId)
     } else {
         // Generate PDF for all posts
         console.log('🥃🏠️ Creating PDF for all posts')
@@ -123,6 +146,8 @@ const printPDF = async (slug, url) => {
         for (const post of allPosts) {
             console.log(`🥃🏠️ Creating PDF for post ${post.databaseId}`)
             await printPDF(post.slug, `${process.env.WP_BASE_URL}${post.uri}`)
+            console.log(`🥃🏠️ Triggering post change for ID ${postId}`)
+            await triggerModificationForPost(postId)
         }
         await browser.close()
     }
