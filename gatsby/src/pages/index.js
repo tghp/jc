@@ -57,6 +57,12 @@ export const indexQuery = graphql`
             slug
             date
             excerpt
+            tghpjcPostSeriesPartNumber
+            tghpTaxonomySeries {
+                nodes {
+                    name
+                }
+            }
         }
     }
     
@@ -70,6 +76,12 @@ export const indexQuery = graphql`
             slug
             date
             excerpt
+            tghpjcPostSeriesPartNumber
+            tghpTaxonomySeries {
+                nodes {
+                    name
+                }
+            }
         }
     }
     

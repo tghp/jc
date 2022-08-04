@@ -32,7 +32,7 @@ class Home extends AbstractMetabox implements MetaboxDefinerInterface
                         'type' => 'wysiwyg',
                         'options' => $this->getWysiwygOptionsConfig(),
                         'columns' => 5,
-                        'desc' => 'The text_with_button shortcode <strong>requires</strong> text & button_text attributes'
+                        'desc' => 'The subscribe_modal_button shortcode <strong>requires</strong> text & button_text attributes'
                     ],
                     [
                         'id' => Metabox::generateKey('intro_photo'),

@@ -20,7 +20,7 @@ const Series = ({ title, description, posts }) =>
                 .map(({slug, title, date, tghpjcPostSeriesPartNumber: partNumber}) => (
                     <Link to={getPostPath(slug, date)} className="category-essays__series-essay" key={slug}>
                         <div className="category-essays__series-essay-title">
-                            Part {partNumber}: {title}
+                            {partNumber && `Part ${partNumber}: `}{title}
                         </div>
                     </Link>
                 ))}

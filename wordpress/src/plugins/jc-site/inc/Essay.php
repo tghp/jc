@@ -12,7 +12,7 @@ class Essay extends AbstractJc
         add_filter('the_content', [$this, 'addHeaderSections']);
         add_filter('the_content', [$this, 'addReferenceSups']);
         add_filter('rwmb_get_value', [$this, 'applyShortcodeToWysiwygMetabox'], 10, 4 );
-        add_shortcode('text_with_button', [$this, 'textWithButtonShortcode']);
+        add_shortcode('subscribe_modal_button', [$this, 'subscribeModalTriggerShortcode']);
         add_action('save_post', [$this, 'generatePdf']);
     }
 
@@ -118,15 +118,17 @@ class Essay extends AbstractJc
     }
 
     /**
-     * Text with button shortcode
+     * Subscribe modal trigger shortcode
      */
-    public function textWithButtonShortcode($attributes) {
+    public function subscribeModalTriggerShortcode($attributes) {
         $input = shortcode_atts([
             'text' => 'Add text',
             'button_text' => 'Add button text',
         ], $attributes);
 
-        return "<span class='shortcode-text-button'>{$input['text']} <a href='#' class='shortcode-text-button__button'>{$input['button_text']}</a></span>";
+        return "<span class='shortcode-text-button'>
+            {$input['text']} <a href='#' class='shortcode-text-button__button'>{$input['button_text']}</a>
+        </span>";
     }
 
     /**

@@ -13,14 +13,21 @@ const HomeFeaturedEssays = ({ title, posts, titleLink }) => (
             linkTo={'/archive'}
             linkArrow={false}
         />
-        {posts.map(({ slug, date, title, excerpt }) => (
-            <Link to={getPostPath(slug, date)} className="featured-essays__essay" key={slug}>
-                <div className="featured-essays__essay-title">
-                    {title}
-                </div>
-                <div className="featured-essays__essay-excerpt" dangerouslySetInnerHTML={{ __html: excerpt }} />
-            </Link>
-        ))}
+        {posts.map(({ slug, date, title, excerpt, tghpTaxonomySeries, tghpjcPostSeriesPartNumber: seriesPart }) => {
+            const seriesTitle = tghpTaxonomySeries?.nodes[0]?.name
+
+            return (
+                <Link to={getPostPath(slug, date)} className="featured-essays__essay" key={slug}>
+                    <div className="featured-essays__essay-title">
+                        <div className="featured-essays__essay-title-series">
+                            {seriesTitle && `${seriesTitle} / Part ${seriesPart}: `}
+                        </div>
+                        {title}
+                    </div>
+                    <div className="featured-essays__essay-excerpt" dangerouslySetInnerHTML={{ __html: excerpt }} />
+                </Link>
+            )
+        })}
     </div>
 )
 

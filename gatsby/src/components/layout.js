@@ -33,7 +33,7 @@ const Layout = ({ isHomePage, children, location }) => {
     location && globalWrapperClasses.push(location)
 
     /**
-     * Modal state
+     * Subscribe modal state
      */
     const [modalState, setModalState] = useState(false);
     const showModal = () => setModalState(true)
