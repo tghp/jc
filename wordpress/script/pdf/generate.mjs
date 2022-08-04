@@ -84,18 +84,24 @@ const triggerModificationForPost = async (postId) => {
             postUpdate: {
                 id: postId,
             }
+        },
+        {
+            authorization: `Bearer ${process.env.WP_GRAPHQL_TOKEN}`,
         }
     )
 }
 
 (async () => {
-
-    if(!process.env.WP_GRAPHQL_URL) {
+    if (!process.env.WP_GRAPHQL_URL) {
         throw 'Missing env variable WP_GRAPHQL_URL'
     }
 
-    if(!process.env.GATSBY_CLOUD_BUILD_WEBHOOK_URL) {
+    if (!process.env.GATSBY_CLOUD_BUILD_WEBHOOK_URL) {
         throw 'Missing env variable GATSBY_CLOUD_BUILD_WEBHOOK_URL'
+    }
+
+    if (!process.env.WP_GRAPHQL_TOKEN) {
+        throw 'Missing env variable WP_GRAPHQL_TOKEN'
     }
 
     const postId = parseInt(process.argv.slice(2))
