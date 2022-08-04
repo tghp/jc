@@ -86,7 +86,7 @@ const triggerModificationForPost = async (postId) => {
             }
         },
         {
-            authorization: `Bearer ${process.env.WP_GRAPHQL_TOKEN}`,
+            authorization: `Basic ${process.env.WP_GRAPHQL_TOKEN}`,
         }
     )
 }
