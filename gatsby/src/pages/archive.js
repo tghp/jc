@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useRef} from 'react'
 import Layout from '../components/layout';
 import { graphql, Link } from 'gatsby'
 import { MetaData } from "../components/meta-data";
@@ -12,6 +12,27 @@ export default function ArchivePage({ data }) {
     const posts = data.allWpPost.nodes;
     const latestPosts = posts.slice(0, 6);
     const archivedPosts = posts.slice(6);
+    const sideBar = useRef()
+    const archiveSection = useRef()
+
+    const onScroll = () => {
+        const archiveSectionWindowTop = archiveSection.current.getBoundingClientRect().top
+        const mostRecentLink = sideBar.current.querySelector('.archive-posts__posts-sidebar-link:first-child')
+        const archiveLink = sideBar.current.querySelector('.archive-posts__posts-sidebar-link:last-child')
+
+        if (archiveSectionWindowTop <= 1) {
+            mostRecentLink.classList.remove('link-active')
+            archiveLink.classList.add('link-active')
+        } else {
+            mostRecentLink.classList.add('link-active')
+            archiveLink.classList.remove('link-active')
+        }
+    }
+
+    useEffect(() => {
+        window.addEventListener('scroll', onScroll)
+        return () => window.removeEventListener('scroll', onScroll)
+    }, [])
 
     return (
         <>
@@ -29,8 +50,8 @@ export default function ArchivePage({ data }) {
                         </div>
                     </div>
                     <div className="archive-posts__posts">
-                        <div className="archive-posts__posts-sidebar">
-                            <Link to={'#most-recent-posts'} className="archive-posts__posts-sidebar-link">
+                        <div className="archive-posts__posts-sidebar" ref={sideBar}>
+                            <Link to={'#most-recent-posts'} className="archive-posts__posts-sidebar-link link-active">
                                 Most recent
                             </Link>
                             <Link to={'#archived-posts'} className="archive-posts__posts-sidebar-link">
@@ -42,7 +63,7 @@ export default function ArchivePage({ data }) {
                                 <EssayLink post={post} key={post.slug} />
                             ))}
                         </div>
-                        <div className="archive-posts__posts-archive" id="archived-posts">
+                        <div className="archive-posts__posts-archive" id="archived-posts" ref={archiveSection}>
                             <PostArchive posts={archivedPosts} />
                         </div>
                     </div>

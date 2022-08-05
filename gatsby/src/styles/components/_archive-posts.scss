@@ -69,7 +69,8 @@ $top-padding: $padding--ml;
             &-link {
                 @include h2;
                 display: flex;
-                color: $color-jc-charcoal;
+                color: rgba($color-jc-charcoal, 0.25);
+                transition-duration: 0.05s;
 
                 @include mq($until: l) {
                     @include font__sizing(30px, 35px);
@@ -90,6 +91,10 @@ $top-padding: $padding--ml;
                     @include mq($from: m) {
                         padding-top: $padding--xxsmall;
                     }
+                }
+
+                &.link-active {
+                    color: $color-jc-charcoal;
                 }
             }
 
