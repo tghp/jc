@@ -72,7 +72,7 @@
         color: $color-black;
         display: grid;
         gap: $padding--xsmall;
-        padding-bottom: $padding--small;
+        padding-bottom: $padding--xxxsmall;
         margin-bottom: $padding--small;
 
         @include mq($from: l) {
@@ -88,15 +88,11 @@
         }
 
         &-title {
-            @include h4;
+            @include font__size-medium-title;
         }
 
         &-excerpt {
             @include font__size-regular-alt;
-
-            p {
-                margin-bottom: 0;
-            }
         }
     }
 }

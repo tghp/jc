@@ -54,7 +54,7 @@
 }
 
 @mixin h3 {
-  @include font__family--newsreader-regular;
+  @include font__family--newsreader-medium;
   @include font__sizing(24px, 28.8px);
 }
 
@@ -77,8 +77,18 @@
 }
 
 @mixin font__size-regular-subtitle {
-  @include font__family--newsreader-regular;
-  @include font__sizing(16px, 19.2px);
+    @include font__family--newsreader-regular;
+    @include font__sizing(16px, 19.2px);
+}
+
+@mixin font__size-medium-title {
+    @include font__family--newsreader-medium;
+    @include font__sizing(18px, 21.6px);
+}
+
+@mixin font__size-medium-subtitle {
+    @include font__family--newsreader-medium;
+    @include font__sizing(16px, 19.2px);
 }
 
 @mixin font__size-single-essay-h2 {
