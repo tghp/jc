@@ -5,7 +5,10 @@ import HomeEssayCategories from "./home-essay-categories";
 import FenceIllustration from "../../assets/footer-fence.svg";
 import WalkerIllustration from "../../assets/footer-walker.svg";
 
-const HomeContent = ({ homeMeta, latestPosts, featuredPosts }) => {
+const HomeContent = ({ homeMeta, allPosts }) => {
+    /**
+     * Subscribe modal trigger
+     */
     const modalContext = useContext(ModalContext)
 
     useEffect(() => {
@@ -16,6 +19,17 @@ const HomeContent = ({ homeMeta, latestPosts, featuredPosts }) => {
 
         return () => button.removeEventListener('click', showModalHandler)
     }, [modalContext]);
+
+    /**
+     * Get Featured Essays
+     */
+    const featuredEssayIds = homeMeta.tghpjcHomeFeaturedEssays
+    const featuredPosts = allPosts.filter(item => featuredEssayIds.find(essayId => item.databaseId === Number(essayId)))
+
+    /**
+     * Limit Latest Posts
+     */
+    const latestPosts = allPosts.slice(0, 6)
 
     return (
         <>

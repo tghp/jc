@@ -43,19 +43,6 @@ class Post extends AbstractMetabox implements MetaboxDefinerInterface
                 ]
             ],
             [
-                'id' => Metabox::generateKey('posts_general_meta'),
-                'title' => 'Featured post',
-                'post_types' => 'post',
-                'context' => 'side',
-                'fields' => [
-                    [
-                        'id' => Metabox::generateKey('featured_essay'),
-                        'type' => 'checkbox',
-                        'desc' => 'Display in the Featured section on the home page. Up to 6 featured posts will be shown, ordered by publish date.'
-                    ],
-                ]
-            ],
-            [
                 'id' => Metabox::generateKey('posts_media'),
                 'title' => 'Media',
                 'post_types' => 'post',

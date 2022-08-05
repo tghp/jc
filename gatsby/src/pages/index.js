@@ -6,15 +6,12 @@ import HomeContent from '../components/home-page/home-content';
 
 import '../styles/home.scss';
 
-const IndexPage = (
-    {
+const IndexPage = ({
         data: {
             homeMeta,
-            latestPosts: { nodes: latestPosts },
-            featuredPosts: { nodes: featuredPosts }
+            allPosts: { nodes: allPosts }
         }
-    }
-    ) => {
+    }) => {
 
     return (
         <>
@@ -22,8 +19,7 @@ const IndexPage = (
             <Layout location={'home'}>
                 <HomeContent
                     homeMeta={homeMeta}
-                    latestPosts={latestPosts}
-                    featuredPosts={featuredPosts}
+                    allPosts={allPosts}
                 />
             </Layout>
         </>
@@ -41,6 +37,7 @@ export const indexQuery = graphql`
         introPhoto {
             publicURL
         }
+        tghpjcHomeFeaturedEssays
         tghpjcHomeEssayCategories {
             id
             name
@@ -52,9 +49,9 @@ export const indexQuery = graphql`
         tghpjcAboutTextColumn2
     }   
   
-    latestPosts: allWpPost(
-        sort: {fields: [date], order: DESC}, 
-        limit: 6
+    allPosts: allWpPost(
+        sort: {fields: [date], 
+        order: DESC}
     ) {
         nodes {
             title
@@ -67,28 +64,9 @@ export const indexQuery = graphql`
                     name
                 }
             }
+            databaseId
         }
     }
-    
-    featuredPosts: allWpPost(
-        sort: {fields: [date]},
-        limit: 6,
-        filter: {tghpjcFeaturedEssay: {eq: "1"}}
-    ) {
-        nodes {
-            title
-            slug
-            date
-            excerpt
-            tghpjcPostSeriesPartNumber
-            tghpTaxonomySeries {
-                nodes {
-                    name
-                }
-            }
-        }
-    }
-    
 }
 `
 
