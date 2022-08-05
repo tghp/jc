@@ -14,6 +14,7 @@ import EssayLink from "../components/essay-link";
 import HeadingWithLink from "../components/heading-with-link";
 
 import '../styles/essay.scss';
+import {MetaData} from "../components/meta-data";
 
 export default function Essay(
     {
@@ -120,116 +121,119 @@ export default function Essay(
         : furtherReadingPostsOverride.posts
 
     return (
-        <Layout location={'single-post'}>
-            <div className="single-essay">
-                <div className="single-essay__grid">
+        <>
+            <MetaData title={title} />
+            <Layout location={'single-post'}>
+                <div className="single-essay">
+                    <div className="single-essay__grid">
 
-                    <div className="single-essay__sidebar">
-                        <div className="single-essay__sidebar-title">
-                            {seriesName &&
-                                <div>{`${seriesName} / Part ${partNumber}`}</div>
-                            }
-                            {title}
-                        </div>
-                        <div className="single-essay__sidebar-media-links">
-                            {essayPdf && essayPdf.publicURL && <a href={essayPdf.publicURL} aria-label="Download PDF"><ImagePDFLink /></a>}
-                            {audioUrl && <a href={audioUrl} target="_blank" rel="noreferrer" aria-label="Audio link"><ImageAudioLink /></a>}
-                            {videoUrl && <a href={videoUrl} target="_blank" rel="noreferrer" aria-label="Video link"><ImageVideoLink /></a>}
-                        </div>
-                        <TableOfContents navItems={toc?.items} />
-                    </div>
-
-                    <div className="single-essay__header">
-                        {modified && <div className="single-essay__header-update-date">Last updated: {getSinglePostDateFormat(modified)}</div>}
-                        {date && <div className="single-essay__header-publish-date">Published: {getSinglePostDateFormat(date)}</div>}
-                        {seriesName &&
-                        <div className="single-essay__header-series">
-                            <div className="single-essay__header-series-name">
-                                Series
-                            </div>
-                            <div className="single-essay__header-series-data">
-                                {`${seriesName} / Part ${partNumber}`}
-                            </div>
-                        </div>
-                        }
-                        <h1 className="single-essay__header-title">{title}</h1>
-                    </div>
-
-                    <div className="single-essay__main" ref={mainContent}>
-                        <Content
-                            content={content}
-                            hasReferences={!!referenceCount}
-                            mainContentMeasureRef={mainContentMeasureRef}
-                            referenceContentRefs={referenceContentRefs}
-                        />
-                    </div>
-
-                    <div className="single-essay__extra-reading">
-                        {substackUrl || lessWrongUrl || eaForumUrl
-                            ?
-                            <div className="single-essay__extra-reading-comments post-comments">
-                                <div className="post-comments__separator">
-                                    <CommentsIcon />
-                                </div>
-                                <div className="post-comments__options">
-                                    <div className="post-comments__options-text">Leave a comment</div>
-                                    <div className="post-comments__options-separator" />
-                                    {substackUrl &&
-                                        <a href={substackUrl} className="post-comments__options-system" target="_blank" rel="noreferrer">
-                                            Substack
-                                        </a>
-                                    }
-                                    {lessWrongUrl &&
-                                        <a href={lessWrongUrl} className="post-comments__options-system" target="_blank" rel="noreferrer">
-                                            LessWrong
-                                        </a>
-                                    }
-                                    {eaForumUrl &&
-                                        <a href={eaForumUrl} className="post-comments__options-system" target="_blank" rel="noreferrer">
-                                            EA Forum
-                                        </a>
-                                    }
-                                </div>
-                            </div>
-                            : ''
-                        }
-                        {nextSeriesPartObj &&
-                            <div className="single-essay__extra-reading-next-series">
-                                <HeadingWithLink
-                                    title="Next up"
-                                    titleLink={true}
-                                    linkText="Read next in series"
-                                    linkTo={getPostPath(nextSeriesPartObj.slug, nextSeriesPartObj.date)}
-                                    linkArrow={true}
-                                />
-                                <div className="single-essay__extra-reading-next-series-essay">
-                                    <EssayLink post={nextSeriesPartObj} />
-                                </div>
-                            </div>
-                        }
-                        {furtherReadingPosts.length !== 0 &&
-                            <div className="single-essay__extra-reading-further-reading">
-                                <h2>Further reading</h2>
-                                {furtherReadingPosts
-                                    .sort((postA, postB) => new Date(postB.date) - new Date(postA.date))
-                                    .slice(0, 3)
-                                    .map(post => <EssayLink post={post} key={post.slug} /> )
+                        <div className="single-essay__sidebar">
+                            <div className="single-essay__sidebar-title">
+                                {seriesName &&
+                                    <div>{`${seriesName} / Part ${partNumber}`}</div>
                                 }
+                                {title}
                             </div>
+                            <div className="single-essay__sidebar-media-links">
+                                {essayPdf && essayPdf.publicURL && <a href={essayPdf.publicURL} aria-label="Download PDF"><ImagePDFLink /></a>}
+                                {audioUrl && <a href={audioUrl} target="_blank" rel="noreferrer" aria-label="Audio link"><ImageAudioLink /></a>}
+                                {videoUrl && <a href={videoUrl} target="_blank" rel="noreferrer" aria-label="Video link"><ImageVideoLink /></a>}
+                            </div>
+                            <TableOfContents navItems={toc?.items} />
+                        </div>
+
+                        <div className="single-essay__header">
+                            {modified && <div className="single-essay__header-update-date">Last updated: {getSinglePostDateFormat(modified)}</div>}
+                            {date && <div className="single-essay__header-publish-date">Published: {getSinglePostDateFormat(date)}</div>}
+                            {seriesName &&
+                            <div className="single-essay__header-series">
+                                <div className="single-essay__header-series-name">
+                                    Series
+                                </div>
+                                <div className="single-essay__header-series-data">
+                                    {`${seriesName} / Part ${partNumber}`}
+                                </div>
+                            </div>
+                            }
+                            <h1 className="single-essay__header-title">{title}</h1>
+                        </div>
+
+                        <div className="single-essay__main" ref={mainContent}>
+                            <Content
+                                content={content}
+                                hasReferences={!!referenceCount}
+                                mainContentMeasureRef={mainContentMeasureRef}
+                                referenceContentRefs={referenceContentRefs}
+                            />
+                        </div>
+
+                        <div className="single-essay__extra-reading">
+                            {substackUrl || lessWrongUrl || eaForumUrl
+                                ?
+                                <div className="single-essay__extra-reading-comments post-comments">
+                                    <div className="post-comments__separator">
+                                        <CommentsIcon />
+                                    </div>
+                                    <div className="post-comments__options">
+                                        <div className="post-comments__options-text">Leave a comment</div>
+                                        <div className="post-comments__options-separator" />
+                                        {substackUrl &&
+                                            <a href={substackUrl} className="post-comments__options-system" target="_blank" rel="noreferrer">
+                                                Substack
+                                            </a>
+                                        }
+                                        {lessWrongUrl &&
+                                            <a href={lessWrongUrl} className="post-comments__options-system" target="_blank" rel="noreferrer">
+                                                LessWrong
+                                            </a>
+                                        }
+                                        {eaForumUrl &&
+                                            <a href={eaForumUrl} className="post-comments__options-system" target="_blank" rel="noreferrer">
+                                                EA Forum
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+                                : ''
+                            }
+                            {nextSeriesPartObj &&
+                                <div className="single-essay__extra-reading-next-series">
+                                    <HeadingWithLink
+                                        title="Next up"
+                                        titleLink={true}
+                                        linkText="Read next in series"
+                                        linkTo={getPostPath(nextSeriesPartObj.slug, nextSeriesPartObj.date)}
+                                        linkArrow={true}
+                                    />
+                                    <div className="single-essay__extra-reading-next-series-essay">
+                                        <EssayLink post={nextSeriesPartObj} />
+                                    </div>
+                                </div>
+                            }
+                            {furtherReadingPosts.length !== 0 &&
+                                <div className="single-essay__extra-reading-further-reading">
+                                    <h2>Further reading</h2>
+                                    {furtherReadingPosts
+                                        .sort((postA, postB) => new Date(postB.date) - new Date(postA.date))
+                                        .slice(0, 3)
+                                        .map(post => <EssayLink post={post} key={post.slug} /> )
+                                    }
+                                </div>
+                            }
+                        </div>
+
+                        {!!referenceCount &&
+                            <References
+                                references={references}
+                                referenceRowSizes={[referenceRowSizesDesktop, referenceRowSizesMobile]}
+                                referencesAreaMeasureRef={referencesAreaMeasureRef}
+                                referenceSidebarRefs={referenceSidebarRefs}
+                            />
                         }
                     </div>
-
-                    {!!referenceCount &&
-                        <References
-                            references={references}
-                            referenceRowSizes={[referenceRowSizesDesktop, referenceRowSizesMobile]}
-                            referencesAreaMeasureRef={referencesAreaMeasureRef}
-                            referenceSidebarRefs={referenceSidebarRefs}
-                        />
-                    }
                 </div>
-            </div>
-        </Layout>
+            </Layout>
+        </>
     )
 }
 

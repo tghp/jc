@@ -4,7 +4,8 @@ require("dotenv").config({
 
 module.exports = {
     siteMetadata: {
-        title: `JC`,
+        title: `Joseph Carlsmith`,
+        description: `Joseph Carlsmith's Personal Website`,
         siteUrl: process.env.GATSBY_SITE_URL
     },
     plugins: [

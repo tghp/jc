@@ -1,5 +1,6 @@
 import React from 'react'
 import { graphql } from 'gatsby'
+import { MetaData } from "../components/meta-data";
 import Layout from '../components/layout';
 import HomeContent from '../components/home-page/home-content';
 
@@ -16,13 +17,16 @@ const IndexPage = (
     ) => {
 
     return (
-        <Layout location={'home'}>
-            <HomeContent
-                homeMeta={homeMeta}
-                latestPosts={latestPosts}
-                featuredPosts={featuredPosts}
-            />
-        </Layout>
+        <>
+            <MetaData title={`Home`} />
+            <Layout location={'home'}>
+                <HomeContent
+                    homeMeta={homeMeta}
+                    latestPosts={latestPosts}
+                    featuredPosts={featuredPosts}
+                />
+            </Layout>
+        </>
     );
 }
 
