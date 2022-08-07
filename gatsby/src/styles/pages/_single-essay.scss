@@ -213,6 +213,16 @@
                 font-size: 0.8em;
                 font-weight: 400;
             }
+
+            ul {
+                list-style: disc;
+                padding-left: $padding--xsmall;
+                margin-bottom: $padding--xxsmall;
+            }
+
+            i {
+                font-style: italic;
+            }
         }
     }
 
