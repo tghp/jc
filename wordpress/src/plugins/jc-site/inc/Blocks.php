@@ -5,7 +5,6 @@ namespace TGHP\Jc;
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Options;
 use TGHP\Jc\Blocks\BlockDefinerInterface;
-use TGHP\Jc\Blocks\CaseStudySingle;
 
 class Blocks extends AbstractDefinesMetabox
 {
@@ -19,6 +18,7 @@ class Blocks extends AbstractDefinesMetabox
     {
         parent::__construct($jc);
         add_filter('block_categories_all', [$this, 'addGutenbergBlockCategories'], 10, 2);
+        add_action('enqueue_block_editor_assets', [$this, 'addGutenbergAssets']);
     }
 
     protected function _getDefiners()
@@ -43,6 +43,22 @@ class Blocks extends AbstractDefinesMetabox
                 ],
             ],
             $categories
+        );
+    }
+
+    /**
+     * Add scripts to modify gutenberg behaviour
+     *
+     * @return void
+     */
+    public function addGutenbergAssets()
+    {
+        wp_enqueue_script(
+            'augmentum-theme-editor',
+            Jc::getPluginUrl() . '/assets/src/js/editor.js',
+            ['wp-blocks', 'wp-dom'],
+            filemtime( Jc::getPluginPath() . '/assets/src/js/editor.js' ),
+            true
         );
     }
 

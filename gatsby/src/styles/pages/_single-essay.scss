@@ -214,14 +214,29 @@
                 font-weight: 400;
             }
 
-            ul {
-                list-style: disc;
+            ul, ol {
                 padding-left: $padding--xsmall;
                 margin-bottom: $padding--xxsmall;
             }
 
-            i {
+            ul {
+                list-style: disc;
+            }
+
+            ol {
+                list-style: decimal;
+            }
+
+            i, em {
                 font-style: italic;
+            }
+
+            .wp-block-separator {
+                background-color: $color-jc-blue;
+                width: 100%;
+                height: 1px;
+                margin-top: $padding--medium;
+                margin-bottom: $padding--medium;
             }
         }
     }
