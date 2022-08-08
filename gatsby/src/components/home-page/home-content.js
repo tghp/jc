@@ -24,12 +24,16 @@ const HomeContent = ({ homeMeta, allPosts }) => {
      * Get Featured Essays
      */
     const featuredEssayIds = homeMeta.tghpjcHomeFeaturedEssays
-    const featuredPosts = allPosts.filter(item => featuredEssayIds.find(essayId => item.databaseId === Number(essayId)))
+    const featuredPosts = allPosts
+        .filter(item => featuredEssayIds.find(essayId => item.databaseId === Number(essayId)))
 
     /**
-     * Limit Latest Posts
+     * Get latest Posts
+     * exclude featured posts & limit to 6
      */
-    const latestPosts = allPosts.slice(0, 6)
+    const latestPosts = allPosts
+        .filter(item => !featuredEssayIds.includes(String(item.databaseId)))
+        .slice(0, 6)
 
     return (
         <>
