@@ -1,5 +1,17 @@
 wp.domReady(() => {
 
+    wp.blocks.registerBlockStyle('core/paragraph', [
+        {
+            name: 'default',
+            label: 'Default Paragraph',
+            isDefault: true,
+        },
+        {
+            name: 'small-text',
+            label: 'Small text',
+        },
+    ]);
+
     wp.blocks.unregisterBlockType('core/media-text');
     wp.blocks.unregisterBlockType('core/search');
     wp.blocks.unregisterBlockType('core/verse');

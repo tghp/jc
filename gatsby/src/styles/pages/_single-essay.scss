@@ -286,6 +286,11 @@
                     right: -40px;
                 }
             }
+
+            .is-style-small-text {
+                @include font__family--newsreader-light;
+                @include font__sizing(14px, 22.4px);
+            }
         }
     }
 
