@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react"
 import { graphql } from "gatsby"
-import { getPostPath, getSinglePostDateFormat } from "../model/post";
 import { useMeasure } from 'react-use';
+import { getPostPath, getSinglePostDateFormat } from "../model/post";
+import { MetaData } from "../components/meta-data";
 import Layout from "../components/layout"
 import TableOfContents from "../components/single-essay/table-of-contents"
 import Content from "../components/single-essay/content";
@@ -14,7 +15,6 @@ import EssayLink from "../components/essay-link";
 import HeadingWithLink from "../components/heading-with-link";
 
 import '../styles/essay.scss';
-import {MetaData} from "../components/meta-data";
 
 export default function Essay(
     {
