@@ -28,7 +28,7 @@
         }
 
         @include mq($from: xl) {
-            grid-template-columns: 250px 6fr 4fr;
+            grid-template-columns: 220px 7fr 3fr;
             grid-template-areas:
             "sidebar .      ."
             "sidebar header ."
