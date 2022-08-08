@@ -274,7 +274,6 @@ export const query = graphql`
                 }
             }
             tghpjcReferences {
-                url
                 text
             }
         } 

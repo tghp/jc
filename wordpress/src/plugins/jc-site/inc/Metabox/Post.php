@@ -68,8 +68,11 @@ class Post extends AbstractMetabox implements MetaboxDefinerInterface
                 'priority' => 'high',
                 'fields' => [
                     [
+                        'type' => 'heading',
+                        'desc' => 'Insert a reference into the main text by adding (ref x) where you want the footnote to appear. X refers to the number of the footnote determined by the order below. You can drag footnotes to rearrange them. e.g the first reference below would be inserted into the copy as (ref 1).',
+                    ],
+                    [
                         'id' => Metabox::generateKey('references'),
-                        'name' => 'References',
                         'type' => 'group',
                         'clone' => true,
                         'sort_clone' => true,
@@ -77,15 +80,8 @@ class Post extends AbstractMetabox implements MetaboxDefinerInterface
                             [
                                 'id' => 'text',
                                 'name' => 'Text',
-                                'type' => 'textarea',
-                                'attributes' => [
-                                    'rows' => 2,
-                                ],
-                            ],
-                            [
-                                'id' => 'url',
-                                'name' => 'URL',
-                                'type' => 'url',
+                                'type' => 'wysiwyg',
+                                'options' => $this->getReferencesWysiwygOptionsConfig(),
                             ],
                         ],
                     ],

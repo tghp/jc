@@ -20,4 +20,17 @@ abstract class AbstractMetabox extends AbstractJc
             ],
         ];
     }
+
+    public function getReferencesWysiwygOptionsConfig(): array
+    {
+        return [
+            'textarea_rows' => 5,
+            'media_buttons' => false,
+            'tinymce' => [
+                'toolbar1' => 'bold, italic, link, unlink',
+                'toolbar2' => '',
+                'toolbar3' => '',
+            ],
+        ];
+    }
 }

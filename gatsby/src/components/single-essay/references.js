@@ -30,9 +30,7 @@ const References = ({ references, referenceRowSizes, referencesAreaMeasureRef, r
                     <div className="reference__index">
                         {i+1}
                     </div>
-                    <div className="reference__text">
-                        {reference.text}
-                    </div>
+                    <div className="reference__text" dangerouslySetInnerHTML={{ __html: reference.text }} />
                 </div>
             )}
         </div>

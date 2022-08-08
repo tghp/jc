@@ -1,0 +1,10 @@
+/**
+ * Block
+ */
+.rwmb-field.rwmb-heading-wrapper {
+    margin-bottom: 25px;
+}
+
+.rwmb-field.rwmb-heading-wrapper h4 {
+    display: none;
+}
