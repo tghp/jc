@@ -37,7 +37,7 @@
         }
 
         @include mq($from: xxl) {
-            grid-template-columns: 305px minmax(482px, auto) auto;
+            grid-template-columns: 305px 7fr 3fr;
         }
     }
 
