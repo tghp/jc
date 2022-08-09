@@ -230,67 +230,6 @@
             i, em {
                 font-style: italic;
             }
-
-            .wp-block-separator {
-                background-color: $color-jc-blue;
-                width: 100%;
-                height: 1px;
-                margin-top: $padding--medium;
-                margin-bottom: $padding--medium;
-            }
-
-            blockquote {
-                position: relative;
-                display: inline-block;
-                margin-top: $padding--medium;
-                margin-bottom: $padding--medium;
-                padding-left: $padding--medium;
-
-                p {
-                    @include font__family--newsreader-light;
-                    @include font__sizing(20px, 18px);
-                    margin-bottom: 0;
-                }
-
-                cite {
-                    @include font__family--inter-light;
-                    @include font__sizing(12px, 19.2px);
-                    position: relative;
-                    color: $color-jc-grey-4;
-
-                    &:before {
-                        content: '\2014\00a0';
-                        display: contents;
-                        position: absolute;
-                        top: -2px;
-                    }
-                }
-
-                &:before,
-                &:after {
-                    @include pseudo-element-create;
-                    background-image: url('../images/quote-mark.svg');
-                    width: 28px;
-                    height: 24px;
-                    position: absolute;
-                    top: -5px;
-                }
-
-                &:before {
-                    left: 0;
-                }
-
-
-                &:after {
-                    transform: rotate(180deg);
-                    right: -40px;
-                }
-            }
-
-            .is-style-small-text {
-                @include font__family--newsreader-light;
-                @include font__sizing(14px, 22.4px);
-            }
         }
     }
 

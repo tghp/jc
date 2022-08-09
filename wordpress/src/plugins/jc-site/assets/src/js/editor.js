@@ -12,6 +12,18 @@ wp.domReady(() => {
         },
     ]);
 
+    wp.blocks.registerBlockStyle('core/quote', [
+        {
+            name: 'default',
+            label: 'Default Quote',
+            isDefault: true,
+        },
+        // {
+        //     name: 'without-quotes',
+        //     label: 'Remove quote marks',
+        // },
+    ]);
+
     wp.blocks.unregisterBlockType('core/media-text');
     wp.blocks.unregisterBlockType('core/search');
     wp.blocks.unregisterBlockType('core/verse');
