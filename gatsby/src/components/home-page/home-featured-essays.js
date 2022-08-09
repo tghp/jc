@@ -19,9 +19,7 @@ const HomeFeaturedEssays = ({ title, posts, titleLink }) => (
             return (
                 <Link to={getPostPath(slug, date)} className="featured-essays__essay" key={slug}>
                     <div className="featured-essays__essay-title">
-                        <div className="featured-essays__essay-title-series">
-                            {seriesTitle && `${seriesTitle} / Part ${seriesPart}: `}
-                        </div>
+                        {seriesTitle && `${seriesTitle} / Part ${seriesPart}: `}
                         {title}
                     </div>
                     <div className="featured-essays__essay-excerpt" dangerouslySetInnerHTML={{ __html: excerpt }} />
