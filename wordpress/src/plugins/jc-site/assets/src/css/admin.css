@@ -15,3 +15,11 @@
 .is-style-small-text {
     font-size: 14px;
 }
+
+.is-style-indent-once {
+    padding-left: 30px;
+}
+
+.is-style-indent-twice {
+    padding-left: 60px;
+}

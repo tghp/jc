@@ -10,18 +10,14 @@ wp.domReady(() => {
             name: 'small-text',
             label: 'Small text',
         },
-    ]);
-
-    wp.blocks.registerBlockStyle('core/quote', [
         {
-            name: 'default',
-            label: 'Default Quote',
-            isDefault: true,
+            name: 'indent-once',
+            label: 'Indent',
         },
-        // {
-        //     name: 'without-quotes',
-        //     label: 'Remove quote marks',
-        // },
+        {
+            name: 'indent-twice',
+            label: 'Double indent',
+        },
     ]);
 
     wp.blocks.unregisterBlockType('core/media-text');
@@ -58,7 +54,6 @@ wp.domReady(() => {
     wp.blocks.unregisterBlockType('core/social-links');
     wp.blocks.unregisterBlockType('core/tag-cloud');
     wp.blocks.unregisterBlockType('core/nextpage');
-    wp.blocks.unregisterBlockType('core/table');
     wp.blocks.unregisterBlockType('core/pullquote');
     wp.blocks.unregisterBlockType('core/query');
     wp.blocks.unregisterBlockType('core/embed');
@@ -70,6 +65,7 @@ wp.domReady(() => {
     wp.blocks.unregisterBlockType('core/term-description');
     wp.blocks.unregisterBlockType('core/group');
     wp.blocks.unregisterBlockType('core/columns');
+    // wp.blocks.unregisterBlockType('core/table');
     // wp.blocks.unregisterBlockType('core/quote');
     // wp.blocks.unregisterBlockType('core/freeform');
     // wp.blocks.unregisterBlockType('core/shortcode');

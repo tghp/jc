@@ -68,3 +68,11 @@
     @include font__family--newsreader-light;
     @include font__sizing(14px, 22.4px);
 }
+
+.is-style-indent-once {
+    padding-left: $padding--medium;
+}
+
+.is-style-indent-twice {
+    padding-left: $padding--medium*2;
+}
