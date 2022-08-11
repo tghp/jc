@@ -2,7 +2,7 @@ import React, { useState } from "react"
 
 const Reference = ({ reference, index, referenceSidebarRefs }) => {
     let shortenedText
-    const characterCount = 400
+    const characterCount = 270
     const fullText = reference.text
     const isLongText = fullText.length > characterCount + 20
     if (isLongText) {
