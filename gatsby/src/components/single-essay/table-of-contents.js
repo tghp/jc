@@ -5,7 +5,6 @@ const TableOfContents = ({ navItems }) => {
     const [toggleNav, setToggleNav] = useState(true)
     const handleToggle = () => setToggleNav(!toggleNav)
     const buttonText = toggleNav ? 'hide' : 'show'
-    console.log(navItems.length)
 
     return (
         <>
