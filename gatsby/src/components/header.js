@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useEffect, useRef} from "react"
 import { graphql, useStaticQuery, Link } from "gatsby";
 
 const Header = ({ siteTitle }) => {
@@ -20,8 +20,25 @@ const Header = ({ siteTitle }) => {
         }
     `)
 
+    const header = useRef()
+
+    const onScroll = () => {
+        const position = window.pageYOffset;
+
+        if (position > 580) {
+            header.current.classList.add('site-header--sticky')
+        } else {
+            header.current.classList.remove('site-header--sticky')
+        }
+    }
+
+    useEffect(() => {
+        window.addEventListener('scroll', onScroll)
+        return () => window.removeEventListener('scroll', onScroll)
+    }, [])
+
     return (
-        <header className="site-header">
+        <header className="site-header" ref={header}>
             <div className="site-header__inner">
                 <div className="site-header__inner-content">
                     <div className="site-header__logo">

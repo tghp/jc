@@ -1,5 +1,7 @@
 .site-header {
+    $self: &;
     background-color: $color-jc-grey-1;
+    z-index: 1;
 
     &__inner {
         @include max-width-element;
@@ -16,7 +18,7 @@
         @include font__sizing(26px, 28px);
 
         a {
-            color: $color-black;
+            color: $color-jc-charcoal;
         }
     }
 
@@ -26,7 +28,7 @@
 
         li a {
             @include font__sizing(16px, 22.4px);
-            color: $color-black;
+            color: $color-jc-charcoal;
         }
     }
 
@@ -49,13 +51,30 @@
     }
 
     /*
+     * Sticky header
+     */
+    &--sticky:not(.archive &, .single-post &) {
+        position: sticky;
+        top: 0;
+        background-color: $color-jc-grey-1 !important;
+        border-bottom: 1px solid $color-jc-charcoal;
+
+        a {
+            color: $color-jc-charcoal !important;
+        }
+
+        #{$self}__inner-content {
+            border: none;
+        }
+    }
+
+    /*
      * Single pages
      */
     .single-post & {
         background-color: $color-white;
         position: sticky;
         top: 0;
-        z-index: 1;
     }
 
     @media print {
