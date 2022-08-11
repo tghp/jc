@@ -10,13 +10,13 @@ const PostArchive = ({posts}) => {
         postsUniqueYears.map((year, index) => (
             <div className="archive-posts__posts-year archive-year" key={year}>
                 <h4 className="archive-year__title">{year}</h4>
-                {postsArchive[index].map(({ title, slug, date }) => (
+                {postsArchive[index].map(({ title, slug, date, tghpjcPostSeriesPartNumber: partNumber }) => (
                     <Link to={getPostPath(slug, date)} className="archive-year__post" key={slug}>
                         <div className="archive-year__post-date">
                             {`${getPostDateMonthDay(date)}`}
                         </div>
                         <div className="archive-year__post-title">
-                            {title}
+                            {title}{partNumber && `: Part ${partNumber}`}
                         </div>
                     </Link>
                 ))}
