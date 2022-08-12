@@ -44,7 +44,8 @@ export default function Essay(
         tghpTaxonomySeries: series,
     } = wpPost;
 
-    let mainContent = useRef()
+    const mainContent = useRef()
+    const sidebarTitle = useRef()
     const referenceContentRefs = useRef({})
     const referenceSidebarRefs = useRef({})
     const [mainContentMeasureRef, { width: mainContentAreaWidth }] = useMeasure()
@@ -54,11 +55,10 @@ export default function Essay(
 
     const onScroll = () => {
         const mainContentWindowTop = mainContent.current.getBoundingClientRect().top
-        const sidebarTitle = document.querySelector('.single-essay__sidebar-title')
         if (mainContentWindowTop < -150) {
-            sidebarTitle.classList.add('show-title')
+            sidebarTitle.current.classList.add('show-title')
         } else {
-            sidebarTitle.classList.remove('show-title')
+            sidebarTitle.current.classList.remove('show-title')
         }
     }
 
@@ -128,7 +128,7 @@ export default function Essay(
                     <div className="single-essay__grid">
 
                         <div className="single-essay__sidebar">
-                            <div className="single-essay__sidebar-title">
+                            <div className="single-essay__sidebar-title" ref={sidebarTitle}>
                                 {seriesName &&
                                     <div>{`${seriesName} / Part ${partNumber}`}</div>
                                 }

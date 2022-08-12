@@ -1,9 +1,7 @@
 .single-essay {
-    $main-padding--top: $padding--xsmall;
-
     @include max-width-element;
     @include main-padding;
-    padding-top: $main-padding--top;
+    padding-top: $post-sidebar--padding-top;
     padding-bottom: $padding--xsmall;
 
     &__grid {
@@ -28,7 +26,7 @@
         }
 
         @include mq($from: xl) {
-            grid-template-columns: 220px 7fr 3fr;
+            grid-template-columns: $post-sidebar--width-xl 7fr 3fr;
             grid-template-areas:
             "sidebar .      ."
             "sidebar header ."
@@ -37,7 +35,7 @@
         }
 
         @include mq($from: xxl) {
-            grid-template-columns: 305px 7fr 3fr;
+            grid-template-columns: $post-sidebar--width-xxl 7fr 3fr;
         }
     }
 
@@ -92,23 +90,21 @@
         @include mq($from: xl) {
             height: max-content;
             position: sticky;
-            top: $header--height + $main-padding--top;
+            top: $header--height + $post-sidebar--padding-top;
         }
 
         &-title {
-            @include font__family--newsreader-medium;
             @include h4;
             color: $color-jc-blue;
-            margin-bottom: $padding--xxsmall;
+            padding-bottom: $padding--xxsmall;
 
             @include mq($until: xl) {
                 display: none;
             }
 
             @include mq($from: l) {
-                min-height: 85px;
+                min-height: $post-sidebar--height-title;
                 opacity: 0;
-                margin-bottom: $padding--medium;
             }
 
             &.show-title {
@@ -119,14 +115,14 @@
         &-media-links {
             display: flex;
             gap: $padding--mini;
-            margin-bottom: $padding--medium;
+            height: $post-sidebar--height-mediaLinks;
         }
 
         &-menu {
             &-title {
                 @include font__family--inter-regular;
                 @include font__size-regular-alt;
-                margin-bottom: $padding--xsmall;
+                height: $post-sidebar--height-menuTitle;
             }
 
             &-toggle {
@@ -139,6 +135,19 @@
             &-nav {
                 @include font__family--newsreader-medium;
                 @include font__sizing(15px, 22.5px);
+
+                @include mq($from: xl) {
+                    width: $post-sidebar--width-xl;
+                    overflow-y: auto;
+                    position: fixed;
+                    top: $post-sidebar--toc-items--top;
+                    bottom: 0;
+                    padding-bottom: $padding--small;
+                }
+
+                @include mq($from: xxl) {
+                    width: $post-sidebar--width-xxl;
+                }
 
                 li {
                     margin-bottom: $padding--xxxsmall;
