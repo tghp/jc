@@ -43,24 +43,6 @@ class Home extends AbstractMetabox implements MetaboxDefinerInterface
                 ]
             ],
             [
-                'id' => Metabox::generateKey('home_featured_essays'),
-                'title' => 'Featured posts',
-                'post_types' => 'page',
-                'revision' => true,
-                'include' => [
-                    'template' => ['templates/template-home.php'],
-                ],
-                'fields' => [
-                    [
-                        'id' => Metabox::generateKey('home_featured_essays'),
-                        'type' => 'post',
-                        'clone' => true,
-                        'sort_clone' => true,
-                        'add_button' => '+ Add Post',
-                    ],
-                ]
-            ],
-            [
                 'id' => Metabox::generateKey('home_essay_categories'),
                 'title' => 'Essay Categories',
                 'post_types' => 'page',

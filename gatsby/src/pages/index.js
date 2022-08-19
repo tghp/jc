@@ -9,7 +9,12 @@ import '../styles/home.scss';
 const IndexPage = ({
         data: {
             homeMeta,
-            allPosts: { nodes: allPosts }
+            allPosts: { nodes: allPosts },
+            wp: {
+                siteOptionsMetaboxSettings: {
+                    optionsFavouritesPosts: favouritePostIds
+                }
+            },
         }
     }) => {
 
@@ -20,6 +25,7 @@ const IndexPage = ({
                 <HomeContent
                     homeMeta={homeMeta}
                     allPosts={allPosts}
+                    favouritePostIds={favouritePostIds}
                 />
             </Layout>
         </>
@@ -27,7 +33,7 @@ const IndexPage = ({
 }
 
 export const indexQuery = graphql`
-{
+{    
     homeMeta: wpPage(isFrontPage: {eq: true}) {
         tghpjcIntroColumn1
         tghpjcIntroColumn2
@@ -37,7 +43,6 @@ export const indexQuery = graphql`
         introPhoto {
             publicURL
         }
-        tghpjcHomeFeaturedEssays
         tghpjcHomeEssayCategories {
             id
             name
@@ -65,6 +70,12 @@ export const indexQuery = graphql`
                 }
             }
             databaseId
+        }
+    }
+    
+    wp {
+        siteOptionsMetaboxSettings {
+            optionsFavouritesPosts
         }
     }
 }

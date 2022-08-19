@@ -83,10 +83,6 @@
             padding-right: $padding--xsmall;
         }
 
-        &:not(:last-child) {
-            border-bottom: 1px solid rgba($color-jc-charcoal, 0.1);
-        }
-
         &-title {
             @include font__size-medium-title;
         }

@@ -31,3 +31,19 @@ function getDates(date) {
 
     return { day: postDay, month: postMonth, newDate: newDate }
 }
+
+export const getFavouritePosts = (postIds, allPosts) => {
+    const favouritesObject = postIds
+        .map((id, idx) => ({ id: Number(id), order: idx+1 }))
+
+    return allPosts
+        .filter(post => favouritesObject.find(item => item.id === post.databaseId))
+        .map(post => {
+            const item = favouritesObject.find(item => item.id === post.databaseId)
+            return {
+                ...post,
+                order: item.order
+            }
+        })
+        .sort((postA, postB) => postA.order - postB.order);
+}

@@ -1,11 +1,12 @@
 import React, { useContext, useEffect } from "react"
 import ModalContext from "../../context/modal-context"
+import {getFavouritePosts, getOrderedPosts} from '../../model/post';
 import HomeFeaturedEssays from "./home-featured-essays";
 import HomeEssayCategories from "./home-essay-categories";
 import FenceIllustration from "../../assets/footer-fence.svg";
 import WalkerIllustration from "../../assets/footer-walker.svg";
 
-const HomeContent = ({ homeMeta, allPosts }) => {
+const HomeContent = ({ homeMeta, allPosts, favouritePostIds }) => {
     /**
      * Subscribe modal trigger
      */
@@ -21,18 +22,17 @@ const HomeContent = ({ homeMeta, allPosts }) => {
     }, [modalContext]);
 
     /**
-     * Get Featured Essays
+     * Get favourite essays (Top 3)
      */
-    const featuredEssayIds = homeMeta.tghpjcHomeFeaturedEssays
-    const featuredPosts = allPosts
-        .filter(item => featuredEssayIds.find(essayId => item.databaseId === Number(essayId)))
+    const favouritePosts = getFavouritePosts(favouritePostIds, allPosts)
+        .slice(0, 3)
 
     /**
-     * Get latest Posts
-     * exclude featured posts & limit to 6
+     * Get latest essays (Top 3)
+     * exclude favourite posts
      */
     const latestPosts = allPosts
-        .filter(item => !featuredEssayIds.includes(String(item.databaseId)))
+        .filter(item => !favouritePostIds.includes(String(item.databaseId)))
         .slice(0, 3)
 
     return (
@@ -51,8 +51,16 @@ const HomeContent = ({ homeMeta, allPosts }) => {
         </div>
         <div className="featured-essays">
             <div className="featured-essays__inner">
-                <HomeFeaturedEssays title="Latest" posts={latestPosts} titleLink={true} />
-                <HomeFeaturedEssays title="Featured" posts={featuredPosts} titleLink={false} />
+                <HomeFeaturedEssays
+                    title="Latest"
+                    posts={latestPosts}
+                    linkText="View all the latest essays"
+                    linkTo={'/archive'} />
+                <HomeFeaturedEssays
+                    title="Favourites"
+                    posts={favouritePosts}
+                    linkText="View all Favourites"
+                    linkTo={'/favourites'} />
             </div>
         </div>
         <div className="essay-categories">

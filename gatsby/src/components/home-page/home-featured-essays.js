@@ -3,14 +3,13 @@ import { Link } from "gatsby"
 import { getPostPath } from "../../model/post";
 import HeadingWithLink from "../heading-with-link";
 
-const HomeFeaturedEssays = ({ title, posts, titleLink }) => (
+const HomeFeaturedEssays = ({ title, posts, linkText, linkTo }) => (
 
     <div className="featured-essays__latest">
         <HeadingWithLink
             title={title}
-            titleLink={titleLink}
-            linkText="View all the latest essays"
-            linkTo={'/archive'}
+            linkText={linkText}
+            linkTo={linkTo}
             linkArrow={false}
         />
         {posts.map(({ slug, date, title, excerpt, tghpTaxonomySeries, tghpjcPostSeriesPartNumber: seriesPart }) => {

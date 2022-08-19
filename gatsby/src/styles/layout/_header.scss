@@ -38,7 +38,8 @@
     .archive &,
     .category &,
     .default-page &,
-    .error-404 & {
+    .error-404 &,
+    .favourites & {
         background-color: $color-jc-blue;
 
         a {

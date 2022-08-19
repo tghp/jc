@@ -3,11 +3,13 @@
  * Plugin Name: WP GraphQL Meta Box Custom Fields (TGHP Version)
  * Description: Exposes all registered Meta Box Custom Fields to the WPGraphQL EndPoint.
  * Author: TGHP / Niklas Dahlqvist
- * Version: 0.9
+ * Version: 1.0
  * License: GPL2+
  */
 
 namespace WPGraphQL\Extensions;
+
+use RWMB_Image_Field;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -21,7 +23,7 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
          *
          * @var array
          */
-        protected $media_fields = [
+        static $media_fields = [
             'media',
             'file',
             'file_upload',
@@ -39,7 +41,7 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
          *
          * @var array
          */
-        protected $taxonomy_fields = [
+        static $taxonomy_fields = [
             'taxonomy_advanced',
         ];
 
@@ -48,23 +50,23 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
          *
          * @var array
          */
-        protected $group_fields = [
+        static $group_fields = [
             'group',
         ];
 
         public function __construct()
         {
-            $this->add_meta_boxes_to_graphQL();
             $this->add_extra_types();
+            $this->add_meta_boxes_to_graphQL();
         }
 
         public function add_meta_boxes_to_graphQL()
         {
             // Add fields for meta boxes relating to posts
-            foreach ($this->get_types() as $type => $object) {
+            foreach ($this->get_types('post') as $type => $object) {
                 if (isset($object->graphql_single_name)) {
                     add_action('graphql_register_types', function ($fields) use ($type, $object) {
-                        return $this->add_meta_fields(
+                        $this->add_meta_fields(
                             $this->get_post_type_meta_boxes($type),
                             $fields,
                             $type,
@@ -78,7 +80,7 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
             foreach ($this->get_types('taxonomy') as $type => $object) {
                 if (isset($object->graphql_single_name)) {
                     add_action('graphql_register_types', function ($fields) use ($type, $object) {
-                        return $this->add_meta_fields(
+                        $this->add_meta_fields(
                             $this->get_term_meta_boxes($type),
                             $fields,
                             $type,
@@ -87,10 +89,109 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
                     });
                 }
             }
+
+            // Add fields for meta boxes relating to settings
+            add_action('graphql_register_types', function () {
+                $settingsPages = apply_filters('mb_settings_pages', []);
+                $metaboxesBySettingsPage = [];
+
+                foreach ($settingsPages as $settingsPage) {
+                    $metaboxesBySettingsPage[$settingsPage['id']] = [
+                        'id' => $settingsPage['id'],
+                        'option_name' => $settingsPage['option_name'],
+                        'metaboxes' => [],
+                    ];
+                }
+
+                $settingsMetaboxes = $this->get_settings_meta_boxes();
+
+                /** @var \MBSP\MetaBox $settingMetabox */
+                foreach ($settingsMetaboxes as $settingsMetabox) {
+                    $settingsPageIds = $settingsMetabox->settings_pages;
+
+                    if (!is_array($settingsPageIds)) {
+                        $settingsPageIds = [$settingsPageIds];
+                    }
+
+                    foreach ($settingsPageIds as $settingsPageId) {
+                        $metaboxesBySettingsPage[$settingsPageId]['metaboxes'][] = $settingsMetabox;
+                    }
+                }
+
+                foreach ($metaboxesBySettingsPage as $settingsPageId => $settingsPageData) {
+                    $this->add_settings_meta_fields(
+                        $settingsPageData['metaboxes'],
+                        $settingsPageId,
+                        $settingsPageData['option_name'],
+                        self::_graphql_label($settingsPageData['option_name']) . 'MetaboxSettings',
+                    );
+                }
+            });
         }
 
         public function add_extra_types()
         {
+            $settingsMetaboxes = $this->get_settings_meta_boxes();
+            $settingsFields = [];
+
+            foreach ($settingsMetaboxes as $settingsMetabox) {
+                $settingsPages = $settingsMetabox->settings_pages;
+
+                if (!is_array($settingsPages)) {
+                    $settingsPages = [$settingsPages];
+                }
+
+                foreach ($settingsPages as $settingsPage) {
+                    if (!$settingsFields[self::_graphql_label($settingsPage)]) {
+                        $settingsFields[self::_graphql_label($settingsPage)] = [];
+                    }
+
+                    foreach($settingsMetabox->meta_box['fields'] as $field) {
+                        if (in_array($field['type'], self::$media_fields)) {
+                            if ($field['clone'] == true || $field['multiple'] == true) {
+                                $fieldDefinition = [
+                                    'type' => ['list_of' => 'Media'],
+                                ];
+                            } else {
+                                $fieldDefinition = [
+                                    'type' => 'Media',
+                                ];
+                            }
+                        } else if (in_array($field['type'], self::$taxonomy_fields)) {
+                            if ($field['clone'] == true || $field['multiple'] == true) {
+                                $fieldDefinition = [
+                                    'type' => ['list_of' => 'Term'],
+                                ];
+                            } else {
+                                $fieldDefinition = [
+                                    'type' => 'Term',
+                                ];
+                            }
+                        } else {
+                            if ($field['clone'] == true || $field['multiple'] == true) {
+                                $fieldDefinition = [
+                                    'type' => ['list_of' => 'String'],
+                                ];
+                            } else {
+                                $fieldDefinition = [
+                                    'type' => 'String',
+                                ];
+                            }
+                        }
+
+                        $fieldDefinition['description'] = 'Metabox setting - ' . $field['id'];
+                        $settingsFields[self::_graphql_label($settingsPage)][self::_graphql_label($field['id'])] = $fieldDefinition;
+                    }
+                }
+            }
+
+            foreach ($settingsFields as $settingsFieldsPage => $fields) {
+                register_graphql_object_type(ucfirst($settingsFieldsPage . 'MetaboxSettings'), [
+                    'description' => 'Metabox settings for settings page: ' . $settingsFieldsPage,
+                    'fields' => $fields,
+                ]);
+            }
+
             register_graphql_object_type('Media', [
                 'description' => 'Media object',
                 'fields' => [
@@ -169,129 +270,175 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
             $graphql_single_name = ucfirst($graphql_single_name);
 
             foreach ($boxes as $box) {
-                foreach ($box->post_types as $type) {
-                    foreach ($box->fields as $field) {
-                        $field_name = self::_graphql_label($field['id']);
+                foreach ($box->fields as $field) {
+                    $field_name = self::_graphql_label($field['id']);
 
-                        if (in_array($field['type'], $this->group_fields)) {
-                            $group_type_name = ucfirst(self::_graphql_label($field['id']));
-                            $group_fields = [];
-                            foreach ($field['fields'] as $group_sub_field) {
+                    if (in_array($field['type'], self::$group_fields)) {
+                        $group_type_name = ucfirst(self::_graphql_label($field['id']));
+                        $group_fields = [];
+                        foreach ($field['fields'] as $group_sub_field) {
+                            if (in_array($group_sub_field['type'], self::$media_fields)) {
+                                $group_fields[self::_graphql_label($group_sub_field['id'])] = [
+                                    'type' => 'Media',
+                                    'description' => "Group field - {$group_sub_field['name']}",
+                                ];
+                            } else {
                                 $group_fields[self::_graphql_label($group_sub_field['id'])] = [
                                     'type' => 'String',
                                     'description' => "Group field - {$group_sub_field['name']}",
                                 ];
                             }
+                        }
 
-                            register_graphql_object_type($group_type_name, [
-                                'description' => "Metabox Group {$group_type_name} object",
-                                'fields' => $group_fields
+                        register_graphql_object_type($group_type_name, [
+                            'description' => "Metabox Group {$group_type_name} object",
+                            'fields' => $group_fields,
+                        ]);
+
+                        if (($field['clone'] == true || $field['multiple'] == true)) {
+                            register_graphql_field($graphql_single_name, $field_name, [
+                                'type' => ['list_of' => $group_type_name],
+                                'description' => $field['desc'],
+                                'resolve' => function ($object) use ($object_type, $field) {
+                                    $meta = self::_get_meta_value($field, $object, $object_type);
+                                    return $meta;
+                                },
                             ]);
-
-
-                            if (($field['clone'] == true || $field['multiple'] == true)) {
-                                register_graphql_field($graphql_single_name, $field_name, [
-                                    'type' => ['list_of' => $group_type_name],
-                                    'description' => $field['desc'],
-                                    'resolve' => function ($object) use ($object_type, $field) {
-                                        $meta = self::_get_meta_value($field, $object, $object_type);
-                                        return $meta;
-                                    },
-                                ]);
-                            } else {
-                                register_graphql_field($graphql_single_name, $field_name, [
-                                    'type' => $group_type_name,
-                                    'description' => $field['desc'],
-                                    'resolve' => function ($object) use ($object_type, $field) {
-                                        $meta = self::_get_meta_value($field, $object, $object_type);
-                                        return $meta;
-                                    },
-                                ]);
-                            }
-                        } else if (in_array($field['type'], $this->media_fields)) {
-                            // TODO: How do we deal with something like image_advanced with multiple images, or file?
-
-                            if ($field['multiple'] == false) {
-                                register_graphql_field($graphql_single_name, $field_name, [
-                                    'type' => 'Media',
-                                    'description' => $field['desc'],
-                                    'resolve' => function ($object) use ($object_type, $field) {
-                                        $meta = self::_get_meta_value($field, $object, $object_type);
-                                        $meta = self::_convert_wp_internal($meta);
-                                        return $meta;
-                                    },
-                                ]);
-                            }
-
-                            if (($field['clone'] == true || $field['multiple'] == true)) {
-                                // TODO: Support this use-case, does it even happen?
-                            }
-                        } else if (in_array($field['type'], $this->taxonomy_fields)) {
-                            if ($field['clone'] == false && $field['multiple'] == false) {
-                                register_graphql_field($graphql_single_name, $field_name, [
-                                    'type' => "Term",
-                                    'description' => $field['desc'],
-                                    'resolve' => function ($object) use ($object_type, $field) {
-                                        $meta = self::_get_meta_value($field, $object, $object_type);
-                                        $meta = self::_convert_wp_internal($meta);
-
-                                        return $meta;
-                                    },
-                                ]);
-                            }
-
-                            if (($field['clone'] == true || $field['multiple'] == true)) {
-                                register_graphql_field($graphql_single_name, $field_name, [
-                                    'type' => ['list_of' => 'Term'],
-                                    'description' => $field['desc'],
-                                    'resolve' => function ($object) use ($object_type, $field) {
-                                        $meta = self::_get_meta_value($field, $object, $object_type);
-
-                                        foreach ($meta as &$metaValue) {
-                                            $metaValue = self::_convert_wp_internal($metaValue);
-                                        }
-
-                                        return $meta;
-                                    },
-
-                                ]);
-                            }
                         } else {
-                            if ($field['clone'] == false && $field['multiple'] == false) {
-                                register_graphql_field($graphql_single_name, $field_name, [
-                                    'type' => "string",
-                                    'description' => $field['desc'],
-                                    'resolve' => function ($object) use ($object_type, $field) {
-                                        $meta = self::_get_meta_value($field, $object, $object_type);
-                                        $meta = self::_convert_wp_internal($meta);
+                            register_graphql_field($graphql_single_name, $field_name, [
+                                'type' => $group_type_name,
+                                'description' => $field['desc'],
+                                'resolve' => function ($object) use ($object_type, $field) {
+                                    $meta = self::_get_meta_value($field, $object, $object_type);
+                                    return $meta;
+                                },
+                            ]);
+                        }
+                    } else if (in_array($field['type'], self::$media_fields)) {
+                        // TODO: How do we deal with something like image_advanced with multiple images, or file?
 
-                                        return $meta;
-                                    },
-                                ]);
-                            }
+                        if (($field['clone'] == true || $field['multiple'] == true)) {
+                            register_graphql_field($graphql_single_name, $field_name, [
+                                'type' => ['list_of' => 'Media'],
+                                'description' => $field['desc'],
+                                'resolve' => function ($object) use ($object_type, $field) {
+                                    $meta = self::_get_meta_value($field, $object, $object_type);
 
-                            if (($field['clone'] == true || $field['multiple'] == true)) {
-                                register_graphql_field($graphql_single_name, $field_name, [
-                                    'type' => ['list_of' => 'String'],
-                                    'description' => $field['desc'],
-                                    'resolve' => function ($object) use ($object_type, $field) {
-                                        $meta = self::_get_meta_value($field, $object, $object_type);
+                                    foreach ($meta as &$metaValue) {
+                                        $metaValue = self::_convert_wp_internal($metaValue);
+                                    }
 
-                                        foreach ($meta as &$metaValue) {
-                                            $metaValue = self::_convert_wp_internal($metaValue);
-                                        }
+                                    return $meta;
+                                },
+                            ]);
+                        } else {
+                            register_graphql_field($graphql_single_name, $field_name, [
+                                'type' => 'Media',
+                                'description' => $field['desc'],
+                                'resolve' => function ($object) use ($object_type, $field) {
+                                    $meta = self::_get_meta_value($field, $object, $object_type);
+                                    $meta = self::_convert_wp_internal($meta);
+                                    return $meta;
+                                },
+                            ]);
+                        }
+                    } else if (in_array($field['type'], self::$taxonomy_fields)) {
+                        if ($field['clone'] == false && $field['multiple'] == false) {
+                            register_graphql_field($graphql_single_name, $field_name, [
+                                'type' => 'Term',
+                                'description' => $field['desc'],
+                                'resolve' => function ($object) use ($object_type, $field) {
+                                    $meta = self::_get_meta_value($field, $object, $object_type);
+                                    $meta = self::_convert_wp_internal($meta);
 
-                                        return $meta;
-                                    },
+                                    return $meta;
+                                },
+                            ]);
+                        }
 
-                                ]);
-                            }
+                        if (($field['clone'] == true || $field['multiple'] == true)) {
+                            register_graphql_field($graphql_single_name, $field_name, [
+                                'type' => ['list_of' => 'Term'],
+                                'description' => $field['desc'],
+                                'resolve' => function ($object) use ($object_type, $field) {
+                                    $meta = self::_get_meta_value($field, $object, $object_type);
+
+                                    foreach ($meta as &$metaValue) {
+                                        $metaValue = self::_convert_wp_internal($metaValue);
+                                    }
+
+                                    return $meta;
+                                },
+
+                            ]);
+                        }
+                    } else {
+                        if ($field['clone'] == false && $field['multiple'] == false) {
+                            register_graphql_field($graphql_single_name, $field_name, [
+                                'type' => "string",
+                                'description' => $field['desc'],
+                                'resolve' => function ($object) use ($object_type, $field) {
+                                    $meta = self::_get_meta_value($field, $object, $object_type);
+                                    $meta = self::_convert_wp_internal($meta);
+
+                                    return $meta;
+                                },
+                            ]);
+                        }
+
+                        if (($field['clone'] == true || $field['multiple'] == true)) {
+                            register_graphql_field($graphql_single_name, $field_name, [
+                                'type' => ['list_of' => 'String'],
+                                'description' => $field['desc'],
+                                'resolve' => function ($object) use ($object_type, $field) {
+                                    $meta = self::_get_meta_value($field, $object, $object_type);
+
+                                    foreach ($meta as &$metaValue) {
+                                        $metaValue = self::_convert_wp_internal($metaValue);
+                                    }
+
+                                    return $meta;
+                                },
+
+                            ]);
                         }
                     }
                 }
             }
 
             return $fields;
+        }
+
+        public function add_settings_meta_fields($boxes, $option_page_id, $options_name, $root_field)
+        {
+            register_graphql_field('RootQuery', $root_field, [
+                'type' => ucfirst(self::_graphql_label($option_page_id) . 'MetaboxSettings'),
+                'description' => 'Settings for ' . $options_name,
+                'resolve' => function ($root, $args, $context, $info) use ($boxes, $options_name) {
+                    $meta = [];
+
+                    foreach ($boxes as $box) {
+                        foreach ($box->meta_box['fields'] as $field) {
+                            if ($field['clone'] == true || $field['multiple'] == true) {
+                                $metaValue = [];
+                                $metaMultipleValue = self::_get_meta_value($field, $options_name, 'setting');
+
+                                foreach ($metaMultipleValue as $value) {
+                                    $metaValue[] = self::_convert_wp_internal($value);
+                                }
+                            } else {
+                                $metaValue = self::_get_meta_value($field, $options_name, 'setting');
+                                $metaValue = self::_convert_wp_internal($metaValue);
+                            }
+
+                            $meta[self::_graphql_label($field['id'])] = $metaValue;
+                        }
+                    }
+
+                    return $meta;
+                },
+
+            ]);
         }
 
         /**
@@ -309,18 +456,59 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
             if ('post' === $object_type || in_array($object_type, get_post_types(), true)) {
                 $meta = rwmb_meta($field['id'], null, $object->ID);
             }
+
             if ('term' === $object_type || in_array($object_type, get_taxonomies(), true)) {
                 $meta = rwmb_meta($field['id'], ['object_type' => 'term'], $object->term_id);
             }
+
             if ('user' === $object_type) {
                 $meta = rwmb_meta($field['id'], ['object_type' => 'user'], $object->ID);
             }
 
+            if ('setting' === $object_type) {
+                $meta = rwmb_meta($field['id'], ['object_type' => 'setting'], $object);
+            }
+
+            if (!empty($meta) && $field['type'] === 'group') {
+                if (($field['clone'] == true || $field['multiple'] == true)) {
+                    foreach ($meta as &$groupItem) {
+                        $groupItem = self::_get_group_subvalues($groupItem, $field);
+                    }
+                } else {
+                    $meta = self::_get_group_subvalues($meta, $field);
+                }
+            }
             return $meta;
         }
 
+        public static function _get_group_subvalues($groupMeta, $groupField)
+        {
+            $newGroupMeta = [];
+
+            foreach ($groupField['fields'] as $field) {
+                $originalFieldId = $field['id'];
+                $fieldId = self::_graphql_label($originalFieldId);
+
+                if (!empty($groupMeta[$originalFieldId])) {
+                    if (in_array($field['type'], self::$media_fields)) {
+                        if (is_array($groupMeta[$originalFieldId] )) {
+                            foreach ($groupMeta[$originalFieldId] as $attachment) {
+                                $newGroupMeta[$fieldId][] = RWMB_Image_Field::file_info($attachment, [ 'size' => 'original' ]);
+                            }
+                        } else {
+                            $newGroupMeta[$fieldId] = RWMB_Image_Field::file_info($groupMeta[$field['id']], [ 'size' => 'original' ]);
+                        }
+                    } else {
+                        $newGroupMeta[$fieldId] = $groupMeta[$originalFieldId];
+                    }
+                }
+            }
+
+            return $newGroupMeta;
+        }
+
         /**
-         * Get metaboxes .
+         * Get post metaboxes
          *
          * @param array $object Post object.
          *
@@ -328,34 +516,53 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
          */
         public function get_post_type_meta_boxes($type)
         {
-            $meta_boxes = \rwmb_get_registry('meta_box')->get_by(['object_type' => 'post']);
+            $meta_boxes = \rwmb_get_registry('meta_box')->get_by([
+                'object_type' => 'post',
+            ]);
+
             foreach ($meta_boxes as $key => $meta_box) {
                 if (!in_array($type, $meta_box->post_types, true)) {
                     unset($meta_boxes[$key]);
                 }
             }
+
             return $meta_boxes;
         }
 
         /**
-         * Get term meta boxes.
+         * Get term meta boxes
          *
          * @param array $object Term object.
          *
          * @return array
          */
-        public function get_term_meta_boxes($type)
+        public function get_term_meta_boxes()
         {
-            $output = [];
-            if (!class_exists('MB_Term_Meta_Box') && !class_exists('\MBTM\MetaBox')) {
-                return $output;
+            if (!class_exists('\MBTM\MetaBox')) {
+                return [];
             }
 
-            $meta_boxes = \rwmb_get_registry('meta_box')->get_by([
+            return \rwmb_get_registry('meta_box')->get_by([
                 'object_type' => 'term',
             ]);
+        }
 
-            return $meta_boxes;
+        /**
+         * Get settings metaboxes
+         *
+         * @param array $object Post object.
+         *
+         * @return array
+         */
+        public function get_settings_meta_boxes()
+        {
+            if (!class_exists('\MBSP\SettingsPage')) {
+                return [];
+            }
+
+            return \rwmb_get_registry('meta_box')->get_by([
+                'object_type' => 'setting',
+            ]);
         }
 
         /**
@@ -365,7 +572,7 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
          *
          * @return array
          */
-        protected function get_types($type = 'post')
+        protected function get_types($type)
         {
             switch ($type) {
                 case 'post':
@@ -386,9 +593,9 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
          */
         public static function _graphql_label($input)
         {
-            $graphql_label = str_ireplace('_', ' ', $input);
+            $graphql_label = preg_replace('/[-_]/', ' ', $input);
             $graphql_label = ucwords($graphql_label);
-            $graphql_label = str_ireplace(' ', '', $graphql_label);
+            $graphql_label = preg_replace('/ /', '', $graphql_label);
             $graphql_label = lcfirst($graphql_label);
 
             return $graphql_label;
