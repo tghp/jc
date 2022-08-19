@@ -60,7 +60,7 @@ const HomeContent = ({ homeMeta, allPosts }) => {
                 <HomeEssayCategories selectedCategories={homeMeta.tghpjcHomeEssayCategories} />
             </div>
         </div>
-        <div className="about-text">
+        <div className="about-text" id="about-section">
             <div className="about-text__inner">
                 <div className="about-text__pre-illustration">
                     <WalkerIllustration />
