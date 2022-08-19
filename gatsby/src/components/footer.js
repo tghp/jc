@@ -41,7 +41,7 @@ const Footer = ({ siteTitle }) => {
                         ))}
                     </ul>
                     <div className="site-footer__built-by">
-                        <a href="https://and-now.co.uk/" target="_blank" rel="noreferrer">Designed by And–Now</a>
+                        <a href="https://and-now.co.uk/" target="_blank" rel="noreferrer">Designed by And–Now</a>, with support from the <a href="https://effectiveideas.org/" target="_blank" rel="noreferrer">Blog Prize</a>
                     </div>
                 </div>
             </div>
