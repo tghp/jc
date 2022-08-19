@@ -33,7 +33,7 @@ const HomeContent = ({ homeMeta, allPosts }) => {
      */
     const latestPosts = allPosts
         .filter(item => !featuredEssayIds.includes(String(item.databaseId)))
-        .slice(0, 6)
+        .slice(0, 3)
 
     return (
         <>
