@@ -22,6 +22,7 @@ const HomeEssayCategories = ({ selectedCategories }) => {
                             excerpt
                             date
                             tghpjcPostSeriesPartNumber
+                            tghpjcExternalUrl
                             tghpTaxonomySeries {
                                 nodes {
                                     name

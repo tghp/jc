@@ -82,6 +82,7 @@ export const query = graphql`
                 date
                 excerpt
                 tghpjcPostSeriesPartNumber
+                tghpjcExternalUrl
                 tghpTaxonomySeries {
                     nodes {
                         name
