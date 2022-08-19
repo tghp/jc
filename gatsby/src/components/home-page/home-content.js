@@ -15,9 +15,11 @@ const HomeContent = ({ homeMeta, allPosts }) => {
         const showModalHandler = () => modalContext.showModal()
 
         const button = document.querySelector('.shortcode-text-button__button')
-        button.addEventListener('click', showModalHandler)
+        if (button) {
+            button.addEventListener('click', showModalHandler)
 
-        return () => button.removeEventListener('click', showModalHandler)
+            return () => button.removeEventListener('click', showModalHandler)
+        }
     }, [modalContext]);
 
     /**
