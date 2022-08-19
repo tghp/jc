@@ -7,12 +7,12 @@ export const getPostPath = (slug, date) => {
 
 export const getPostDate = (date) => {
     const postDate = getDates(date)
-    return `${postDate.day.padStart(2, '0')}.${postDate.month.padStart(2, '0')}.${getPostDateFullYear(postDate.newDate)}`;
+    return `${postDate.month.padStart(2, '0')}.${postDate.day.padStart(2, '0')}.${getPostDateFullYear(postDate.newDate)}`;
 }
 
 export const getPostDateMonthDay = (date) => {
     const postDate = getDates(date)
-    return `${postDate.day.padStart(2, '0')}/${postDate.month.padStart(2, '0')}`;
+    return `${postDate.month.padStart(2, '0')}/${postDate.day.padStart(2, '0')}`;
 }
 
 export const getPostDateFullYear = (date) => new Date(date).getFullYear()
