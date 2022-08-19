@@ -39,7 +39,9 @@ const HomeEssayCategory = ({ title, slug, posts: { nodes: essays } }) => {
 
     return (
         <div className="essay-categories__category">
-            <h2 className="essay-categories__category-title">{title}</h2>
+            <h2 className="essay-categories__category-title">
+                <Link to={`${categoryPageSlug}/${slug}`}>{title}</Link>
+            </h2>
             {sortedEssaysBySeries.map(({ type, data, slug }) => {
                 if (slotsUsed > maxSlots) {
                     return null

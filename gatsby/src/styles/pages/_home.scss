@@ -130,6 +130,10 @@
         }
     }
 
+    &__category-title a {
+        color: $color-black;
+    }
+
     &__category-link {
         @include font__family--inter-regular;
     }
