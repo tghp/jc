@@ -12,18 +12,42 @@ const HomeFeaturedEssays = ({ title, posts, linkText, linkTo }) => (
             linkTo={linkTo}
             linkArrow={false}
         />
-        {posts.map(({ slug, date, title, excerpt, tghpTaxonomySeries, tghpjcPostSeriesPartNumber: seriesPart }) => {
+        {posts.map(({
+            slug,
+            date,
+            title,
+            excerpt,
+            tghpTaxonomySeries,
+            tghpjcPostSeriesPartNumber: seriesPart,
+            tghpjcExternalUrl: externalUrl,
+        }) => {
             const seriesTitle = tghpTaxonomySeries?.nodes[0]?.name
 
-            return (
-                <Link to={getPostPath(slug, date)} className="featured-essays__essay" key={slug}>
+            const essayOutput = (
+                <>
                     <div className="featured-essays__essay-title">
                         {seriesTitle && `${seriesTitle} / Part ${seriesPart}: `}
                         {title}
                     </div>
                     <div className="featured-essays__essay-excerpt" dangerouslySetInnerHTML={{ __html: excerpt }} />
-                </Link>
+                </>
             )
+
+            const linkClassName = 'featured-essays__essay';
+
+            if (externalUrl) {
+                return (
+                    <a href={externalUrl} className={linkClassName} key={slug}>
+                        {essayOutput}
+                    </a>
+                )
+            } else {
+                return (
+                    <Link to={getPostPath(slug, date)} className={linkClassName} key={slug}>
+                        {essayOutput}
+                    </Link>
+                )
+            }
         })}
     </div>
 )

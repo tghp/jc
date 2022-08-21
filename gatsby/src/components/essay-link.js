@@ -3,11 +3,21 @@ import { Link } from "gatsby"
 import { getPostPath, getPostDate } from "../model/post";
 import LinkArrow from "../assets/link-arrow.svg";
 
-const EssayLink = ({ post: { slug, date, title, excerpt, tghpTaxonomySeries, tghpjcPostSeriesPartNumber: seriesPart } }) => {
+const EssayLink = ({
+    post: {
+        slug,
+        date,
+        title,
+        excerpt,
+        tghpTaxonomySeries,
+        tghpjcPostSeriesPartNumber: seriesPart,
+        tghpjcExternalUrl: externalUrl,
+    }
+}) => {
     const seriesTitle = tghpTaxonomySeries?.nodes[0]?.name
 
-    return (
-        <Link to={getPostPath(slug, date)} className="post-essays__essay">
+    const essayOutput = (
+        <>
             <div className="post-essays__essay-date">
                 {getPostDate(date)}
             </div>
@@ -21,8 +31,24 @@ const EssayLink = ({ post: { slug, date, title, excerpt, tghpTaxonomySeries, tgh
             <div className="post-essays__essay-action">
                 Continue reading <LinkArrow />
             </div>
-        </Link>
+        </>
     )
+
+    const linkClassName = 'post-essays__essay';
+
+    if (externalUrl) {
+        return (
+            <a href={externalUrl} className={linkClassName}>
+                {essayOutput}
+            </a>
+        )
+    } else {
+        return (
+            <Link to={getPostPath(slug, date)} className={linkClassName}>
+                {essayOutput}
+            </Link>
+        )
+    }
 }
 
 export default EssayLink

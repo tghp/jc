@@ -11,6 +11,20 @@ class Post extends AbstractMetabox implements MetaboxDefinerInterface
     {
         return [
             [
+                'id' => Metabox::generateKey('post_external'),
+                'title' => 'External Content',
+                'post_types' => 'post',
+                'context' => 'side',
+                'fields' => [
+                    [
+                        'id' => Metabox::generateKey('external_url'),
+                        'type' => 'url',
+                        'name' => 'External URL',
+                        'desc' => 'Anywhere the article is presented, it will link here rather than to the actual post. Excerpts, title, date, still come from this post.',
+                    ],
+                ]
+            ],
+            [
                 'id' => Metabox::generateKey('post_series_parts'),
                 'title' => 'Series Part',
                 'post_types' => 'post',
