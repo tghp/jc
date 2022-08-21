@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react"
 import ModalContext from "../../context/modal-context"
-import {getFavouritePosts, getOrderedPosts} from '../../model/post';
+import { getFavouritePosts } from '../../model/post';
 import HomeFeaturedEssays from "./home-featured-essays";
 import HomeEssayCategories from "./home-essay-categories";
 import FenceIllustration from "../../assets/footer-fence.svg";

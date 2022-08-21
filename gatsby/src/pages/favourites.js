@@ -1,7 +1,7 @@
 import React from 'react'
 import { graphql, Link } from 'gatsby'
 import { MetaData } from '../components/meta-data';
-import {getFavouritePosts, getOrderedPosts} from '../model/post';
+import { getFavouritePosts } from '../model/post';
 import Layout from '../components/layout';
 import EssayLink from '../components/essay-link';
 import LinkArrow from '../assets/link-arrow.svg';
