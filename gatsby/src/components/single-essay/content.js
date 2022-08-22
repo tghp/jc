@@ -22,7 +22,8 @@ const Content = ({
                                 const referenceNumber = domNode.attribs['data-reference-number'];
 
                                 const supProps = {
-                                    className: 'article-reference'
+                                    className: 'article-reference',
+                                    id: `ref-${referenceNumber}`
                                 };
 
                                 if (processedReferences.indexOf(referenceNumber) === -1) {
