@@ -37,17 +37,15 @@ $padding--mini: 10px;
 // Element sizes
 $header--height: 87px;
 $post-sidebar--padding-top: $padding--xsmall;
-$post-sidebar--width-xl: 220px;
-$post-sidebar--width-xxl: 305px;
 $post-sidebar--height-title: 125px;
 $post-sidebar--height-menuTitle: 45px;
 $post-sidebar--height-mediaLinks: 75px;
 $post-sidebar--toc-items--top:
-        $header--height +
-        $post-sidebar--padding-top +
-        $post-sidebar--height-title +
-        $post-sidebar--height-mediaLinks +
-        $post-sidebar--height-menuTitle;
+    $header--height +
+    $post-sidebar--padding-top +
+    $post-sidebar--height-title +
+    $post-sidebar--height-mediaLinks +
+    $post-sidebar--height-menuTitle;
 
 // Paths
 $path__image: '../../images';
