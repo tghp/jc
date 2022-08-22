@@ -21,21 +21,37 @@ const Header = ({ siteTitle }) => {
     `)
 
     const header = useRef()
+    const body = document.body
+    const scrollUp = "scroll-up"
+    const scrollDown = "scroll-down"
+    let lastScroll = 0
+
+    body.classList.remove(scrollDown, scrollUp)
 
     const onScroll = () => {
-        const position = window.pageYOffset;
+        const currentScroll = window.pageYOffset
 
-        if (position > 460) {
-            header.current.classList.add('site-header--sticky')
-        } else {
-            header.current.classList.remove('site-header--sticky')
+        if (currentScroll <= header.current.offsetHeight) {
+            body.classList.remove(scrollUp)
+            return
         }
+
+        if (currentScroll > lastScroll && !body.classList.contains(scrollDown)) {
+            // Down scroll
+            body.classList.remove(scrollUp)
+            body.classList.add(scrollDown)
+        } else if (currentScroll < lastScroll && body.classList.contains(scrollDown)) {
+            // Up scroll
+            body.classList.remove(scrollDown)
+            body.classList.add(scrollUp)
+        }
+        lastScroll = currentScroll
     }
 
     useEffect(() => {
         window.addEventListener('scroll', onScroll)
         return () => window.removeEventListener('scroll', onScroll)
-    }, [])
+    })
 
     return (
         <header className="site-header" ref={header}>

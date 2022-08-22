@@ -1,7 +1,7 @@
 .site-header {
     $self: &;
     background-color: $color-jc-grey-1;
-    z-index: 1;
+    z-index: 100;
 
     &__inner {
         @include max-width-element;
@@ -54,11 +54,11 @@
     /*
      * Sticky header
      */
-    &--sticky:not(.archive &, .single-post &) {
+    .home &,
+    .single-post & {
         position: sticky;
         top: 0;
-        background-color: $color-jc-grey-1 !important;
-        border-bottom: 1px solid $color-jc-charcoal;
+        transition: transform 0.4s;
 
         a {
             color: $color-jc-charcoal !important;
@@ -66,7 +66,12 @@
 
         #{$self}__inner-content {
             border: none;
+            border-bottom: 1px solid $color-jc-charcoal;
         }
+    }
+
+    .scroll-down & {
+        transform: translate3d(0, -100%, 0);
     }
 
     /*
@@ -74,8 +79,6 @@
      */
     .single-post & {
         background-color: $color-white;
-        position: sticky;
-        top: 0;
     }
 
     @media print {
