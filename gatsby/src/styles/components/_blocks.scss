@@ -1,3 +1,6 @@
+/*
+ * Separator block
+ */
 .wp-block-separator {
     background-color: $color-jc-blue;
     width: 100%;
@@ -6,6 +9,9 @@
     margin-bottom: $padding--medium;
 }
 
+/*
+ * Quote block
+ */
 .wp-block-quote {
     display: inline-block;
     margin-top: $padding--medium;
@@ -75,4 +81,39 @@
 
 .is-style-indent-twice {
     padding-left: $padding--medium*2;
+}
+
+/*
+ * Table block
+ */
+.wp-block-table {
+    margin-bottom: $padding--small;
+    overflow-x: auto;
+
+    table {
+        width: 100%;
+
+        @include mq($until: xxl) {
+            width: 200%;
+        }
+    }
+
+    tr {
+        border-bottom: 1px solid $color-jc-grey-1;
+    }
+
+    td {
+        padding: 8px;
+    }
+
+    &.is-style-stripes {
+        tbody tr:nth-child(odd) {
+            background-color: rgba($color-jc-grey-1, 0.6);
+        }
+    }
+
+    &.is-style-with-header tr:first-child {
+        @include font__family--newsreader-regular;
+        background-color: rgba($color-jc-blue, 0.1);
+    }
 }

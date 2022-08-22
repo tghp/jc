@@ -9,6 +9,17 @@
     display: none;
 }
 
+.wp-block-table.is-style-with-header tr:first-child {
+    background-color: rgba(56, 114, 233, 0.1);
+}
+
+/* Block settings panel */
+.blocks-table-settings,
+.color-block-support-panel,
+.typography-block-support-panel {
+    display: none !important;
+}
+
 /**
  * Editor
  */

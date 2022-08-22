@@ -188,11 +188,11 @@
     &__main {
         grid-area: main;
         position: relative;
+        overflow-x: hidden;
 
         &-content {
             @include font__family--newsreader-medium;
             @include font__sizing(16px, 25.6px);
-            overflow: hidden;
 
             h2, h3 {
                 color: $color-jc-blue;

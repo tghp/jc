@@ -20,6 +20,13 @@ wp.domReady(() => {
         },
     ]);
 
+    wp.blocks.registerBlockStyle('core/table', [
+        {
+            name: 'with-header',
+            label: 'First row header',
+        },
+    ]);
+
     wp.blocks.unregisterBlockType('core/media-text');
     wp.blocks.unregisterBlockType('core/search');
     wp.blocks.unregisterBlockType('core/verse');
