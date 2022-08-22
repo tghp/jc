@@ -25,7 +25,7 @@ const Header = ({ siteTitle }) => {
     const onScroll = () => {
         const position = window.pageYOffset;
 
-        if (position > 580) {
+        if (position > 460) {
             header.current.classList.add('site-header--sticky')
         } else {
             header.current.classList.remove('site-header--sticky')
