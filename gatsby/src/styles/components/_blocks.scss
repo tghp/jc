@@ -87,22 +87,28 @@
  * Table block
  */
 .wp-block-table {
+    margin-top: $padding--xsmall;
     margin-bottom: $padding--small;
     overflow-x: auto;
 
-    table {
+    table.has-fixed-layout {
         width: 100%;
 
         @include mq($until: xxl) {
-            width: 200%;
+            width: 150%;
         }
+    }
+
+    thead {
+        @include font__family--newsreader-regular;
+        background-color: rgba($color-jc-blue, 0.1);
     }
 
     tr {
         border-bottom: 1px solid $color-jc-grey-1;
     }
 
-    td {
+    th, td {
         padding: 8px;
     }
 
@@ -112,8 +118,32 @@
         }
     }
 
-    &.is-style-with-header tr:first-child {
+    strong {
         @include font__family--newsreader-regular;
-        background-color: rgba($color-jc-blue, 0.1);
+    }
+
+    &.alignright table {
+        margin-left: auto;
+    }
+
+    &.aligncenter table {
+        margin-left: auto;
+        margin-right: auto;
     }
 }
+
+/*
+ * Gutenberg styles
+ */
+.has-text-align-left {
+    text-align: left;
+}
+
+.has-text-align-right {
+    text-align: right;
+}
+
+.has-text-align-center {
+    text-align: center;
+}
+

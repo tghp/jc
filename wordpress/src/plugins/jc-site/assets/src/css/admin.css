@@ -9,12 +9,29 @@
     display: none;
 }
 
-.wp-block-table.is-style-with-header tr:first-child {
+.wp-block-table table:not(.has-fixed-layout) {
+    width: auto;
+}
+
+.wp-block-table thead {
     background-color: rgba(56, 114, 233, 0.1);
+    border-bottom: none;
+}
+
+.wp-block[data-align=left],
+.wp-block[data-align=right] {
+    height: auto;
+}
+.wp-block[data-align=left] > *,
+.wp-block[data-align=right] > * {
+    float: none;
+}
+
+.wp-block[data-align=right] table {
+    margin-left: auto;
 }
 
 /* Block settings panel */
-.blocks-table-settings,
 .color-block-support-panel,
 .typography-block-support-panel {
     display: none !important;
