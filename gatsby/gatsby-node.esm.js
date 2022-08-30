@@ -152,27 +152,4 @@ export const onCreateNode = async ({
             }
         }
     }
-
-    if (node.internal.type === 'WpPost' && process.env.WP_URL) {
-        console.log(`🥃🏠️ [Node ${node.slug}] Adding file node for PDF`)
-
-        const pdfUrl = `${process.env.WP_URL.trim('/')}/wp-content/uploads/pdf/${node.slug}.pdf`
-
-        try {
-            const fileNode = await createRemoteFileNode({
-                url: pdfUrl,
-                parentNodeId: node.id,
-                createNode,
-                createNodeId,
-                getCache,
-            })
-
-            // If the file was created, extend the node with "localFile"
-            if (fileNode) {
-                createNodeField({node, name: "essayPdfLocalFile", value: fileNode.id})
-            }
-        } catch (e) {
-            console.log(`🥃🏠️ [Node ${node.slug}] ⛔️ No PDF found (${pdfUrl}). If some have been generated this probably isn't a problem`)
-        }
-    }
 }

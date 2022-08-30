@@ -64,6 +64,13 @@ class Post extends AbstractMetabox implements MetaboxDefinerInterface
                 'priority' => 'high',
                 'fields' => [
                     [
+                        'id' => Metabox::generateKey('pdf_upload'),
+                        'name' => 'PDF upload',
+                        'type' => 'file_advanced',
+                        'max_file_uploads' => 1,
+                        'mime_type' => 'pdf',
+                    ],
+                    [
                         'id' => Metabox::generateKey('audio_url'),
                         'name' => 'Audio URL',
                         'type' => 'url',
