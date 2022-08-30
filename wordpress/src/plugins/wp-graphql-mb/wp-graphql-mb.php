@@ -641,6 +641,13 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
                         'alt' => $instance['alt'],
                         'name' => $instance['name'],
                     ];
+                } else if (isset($instance['url'])) {
+                    return [
+                        'id' => $instance['ID'],
+                        'url' => $instance['url'],
+                        'title' => $instance['title'],
+                        'name' => $instance['name'],
+                    ];
                 } else {
                     return '';
                 }
