@@ -37,7 +37,7 @@ const HomeFeaturedEssays = ({ title, posts, linkText, linkTo }) => (
 
             if (externalUrl) {
                 return (
-                    <a href={externalUrl} className={linkClassName} key={slug}>
+                    <a href={externalUrl} className={linkClassName} target={`_blank`} key={slug}>
                         {essayOutput}
                     </a>
                 )
