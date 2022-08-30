@@ -63,10 +63,12 @@ export default function Essay(
     }
 
     useEffect(() => {
-        if (!process.env.CI) {
-            window.addEventListener('scroll', onScroll)
-            return () => window.removeEventListener('scroll', onScroll)
+        if (typeof window === 'undefined') {
+            return
         }
+        
+        window.addEventListener('scroll', onScroll)
+        return () => window.removeEventListener('scroll', onScroll)
     }, [])
 
     useEffect(() => {

@@ -30,6 +30,10 @@ export default function ArchivePage({ data }) {
     }
 
     useEffect(() => {
+        if (typeof window === 'undefined') {
+            return
+        }
+
         window.addEventListener('scroll', onScroll)
         return () => window.removeEventListener('scroll', onScroll)
     }, [])
