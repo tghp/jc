@@ -35,10 +35,6 @@
         @include mq($from: s, $until: xl) {
             grid-row: 1;
         }
-
-        p:first-child {
-            max-width: 547px;
-        }
     }
 
     &__column-2 {
