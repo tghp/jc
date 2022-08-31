@@ -107,6 +107,8 @@ export default function Essay(
      */
     const seriesName = series.nodes[0]?.name
 
+    const pdfUploadUrl = tghpjcPdfUpload[0]?.url
+
     /**
      * Next Part in Series data
      */
@@ -136,11 +138,15 @@ export default function Essay(
                                 }
                                 {title}
                             </div>
-                            <div className="single-essay__sidebar-media-links">
-                                {tghpjcPdfUpload[0]?.url && <a href={tghpjcPdfUpload[0].url} target={`_blank`} aria-label="Download PDF"><ImagePDFLink /></a>}
-                                {audioUrl && <a href={audioUrl} target={`_blank`} aria-label="Audio link"><ImageAudioLink /></a>}
-                                {videoUrl && <a href={videoUrl} target={`_blank`} aria-label="Video link"><ImageVideoLink /></a>}
-                            </div>
+                            {pdfUploadUrl || audioUrl || videoUrl
+                                ?
+                                <div className="single-essay__sidebar-media-links">
+                                    {pdfUploadUrl && <a href={pdfUploadUrl} target={`_blank`} aria-label="Download PDF"><ImagePDFLink /></a>}
+                                    {audioUrl && <a href={audioUrl} target={`_blank`} aria-label="Audio link"><ImageAudioLink /></a>}
+                                    {videoUrl && <a href={videoUrl} target={`_blank`} aria-label="Video link"><ImageVideoLink /></a>}
+                                </div>
+                                : null
+                            }
                             <TableOfContents navItems={toc?.items} />
                         </div>
 
@@ -196,7 +202,7 @@ export default function Essay(
                                         }
                                     </div>
                                 </div>
-                                : ''
+                                : null
                             }
                             {nextSeriesPartObj &&
                                 <div className="single-essay__extra-reading-next-series">
