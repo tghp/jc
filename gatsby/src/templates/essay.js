@@ -107,6 +107,9 @@ export default function Essay(
      */
     const seriesName = series.nodes[0]?.name
 
+    /**
+     * PDF upload URL
+     */
     const pdfUploadUrl = tghpjcPdfUpload[0]?.url
 
     /**

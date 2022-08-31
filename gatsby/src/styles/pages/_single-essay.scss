@@ -193,7 +193,7 @@
             @include font__family--newsreader-medium;
             @include font__sizing(16px, 25.6px);
 
-            h2, h3 {
+            h2, h3, h4 {
                 color: $color-jc-blue;
             }
 

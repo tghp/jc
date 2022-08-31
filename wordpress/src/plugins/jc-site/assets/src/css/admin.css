@@ -31,7 +31,13 @@
     margin-left: auto;
 }
 
-/* Block settings panel */
+.wp-block-freeform h2,
+.wp-block-freeform h3,
+.wp-block-freeform h4 {
+    color: #3872e9;
+}
+
+    /* Block settings panel */
 .color-block-support-panel,
 .typography-block-support-panel {
     display: none !important;
