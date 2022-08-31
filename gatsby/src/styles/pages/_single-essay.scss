@@ -221,6 +221,10 @@
                 font-size: 0.8em;
                 font-weight: 400;
                 scroll-margin-top: $header--height + 5px;
+
+                button {
+                    cursor: pointer;
+                }
             }
 
             ul, ol {
@@ -350,6 +354,7 @@
             display: grid;
             grid-template-columns: 1.4em 1fr;
             font-weight: 400;
+            scroll-margin-top: $header--height;
 
             &__text {
                 p {

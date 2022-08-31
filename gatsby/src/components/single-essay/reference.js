@@ -16,10 +16,8 @@ const Reference = ({ reference, index, referenceSidebarRefs }) => {
 
     const content = seeMoreText ? fullText : shortenedText
 
-    function scrollToRef() {
-        document.getElementById(`ref-${index+1}`).scrollIntoView({
-            behavior: 'smooth'
-        });
+    function jumpToContentRef() {
+        document.getElementById(`ref-${index+1}`).scrollIntoView();
     }
 
     return (
@@ -30,8 +28,9 @@ const Reference = ({ reference, index, referenceSidebarRefs }) => {
             style={{
                 gridRow: `${(index*2)+2}/${(index*2)+3}`
             }}
+            id={`reference-item-${index+1}`}
         >
-            <button className="reference__index reference__index--link" onClick={scrollToRef}>
+            <button className="reference__index reference__index--link" onClick={jumpToContentRef}>
                 {index+1}
             </button>
             <div className="reference__index reference__index--text">

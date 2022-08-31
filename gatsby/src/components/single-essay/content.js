@@ -18,6 +18,7 @@ const Content = ({
                 <div>
                     {parse(content, {
                         replace: domNode => {
+
                             if (domNode.name === 'sup') {
                                 const referenceNumber = domNode.attribs['data-reference-number'];
 
@@ -34,9 +35,15 @@ const Content = ({
                                     processedReferences.push(referenceNumber);
                                 }
 
+                                function jumpToSidebarRef() {
+                                    document.getElementById(`reference-item-${referenceNumber}`).scrollIntoView();
+                                }
+
                                 return (
                                     <sup {...supProps}>
-                                        {domNode.children[0].data}
+                                        <button onClick={jumpToSidebarRef}>
+                                            {domNode.children[0].data}
+                                        </button>
                                     </sup>
                                 );
                             }
