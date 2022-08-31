@@ -1,6 +1,6 @@
 import React from "react"
-import { Link } from "gatsby"
 import { getPostPath, getPostDateMonthDay, getPostDateFullYear } from "../model/post";
+import EssayLinkWrapper from "./essay-link-wrapper";
 
 const PostArchive = ({posts}) => {
     const postsUniqueYears = [...new Set(posts.map(post => getPostDateFullYear(post.date)))].sort((postA, postB) => postB - postA)
@@ -28,21 +28,16 @@ const PostArchive = ({posts}) => {
                         </>
                     )
 
-                    const linkClassName = 'archive-year__post'
-
-                    if (externalUrl) {
-                        return (
-                            <a href={externalUrl} className={linkClassName} key={slug}>
-                                {essayOutput}
-                            </a>
-                        )
-                    } else {
-                        return (
-                            <Link to={getPostPath(slug, date)} className={linkClassName} key={slug}>
-                                {essayOutput}
-                            </Link>
-                        )
-                    }
+                    return (
+                        <EssayLinkWrapper
+                            externalUrl={externalUrl}
+                            className={`archive-year__post`}
+                            postPath={getPostPath(slug, date)}
+                            key={slug}
+                        >
+                            {essayOutput}
+                        </EssayLinkWrapper>
+                    )
                 })}
             </div>
         ))

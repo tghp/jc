@@ -1,7 +1,7 @@
 import React from "react"
 import { getPostDate, getPostPath } from '../../model/post';
-import { Link } from 'gatsby';
 import Arrow from '../../assets/link-arrow.svg';
+import EssayLinkWrapper from "../essay-link-wrapper";
 
 const Essay = ({
     post: {
@@ -27,21 +27,15 @@ const Essay = ({
         </>
     )
 
-    const linkClassName = 'category-essays__essay';
-
-    if (externalUrl) {
-        return (
-            <a href={externalUrl} className={linkClassName}>
-                {essayOutput}
-            </a>
-        )
-    } else {
-        return (
-            <Link to={getPostPath(slug, date)} className={linkClassName}>
-                {essayOutput}
-            </Link>
-        )
-    }
+    return (
+        <EssayLinkWrapper
+            externalUrl={externalUrl}
+            className={`category-essays__essay`}
+            postPath={getPostPath(slug, date)}
+        >
+            {essayOutput}
+        </EssayLinkWrapper>
+    )
 }
 
 export default Essay

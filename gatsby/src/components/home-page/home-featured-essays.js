@@ -1,7 +1,7 @@
 import React from "react"
-import { Link } from "gatsby"
 import { getPostPath } from "../../model/post";
 import HeadingWithLink from "../heading-with-link";
+import EssayLinkWrapper from "../essay-link-wrapper";
 
 const HomeFeaturedEssays = ({ title, posts, linkText, linkTo }) => (
 
@@ -33,21 +33,16 @@ const HomeFeaturedEssays = ({ title, posts, linkText, linkTo }) => (
                 </>
             )
 
-            const linkClassName = 'featured-essays__essay';
-
-            if (externalUrl) {
-                return (
-                    <a href={externalUrl} className={linkClassName} target={`_blank`} key={slug}>
-                        {essayOutput}
-                    </a>
-                )
-            } else {
-                return (
-                    <Link to={getPostPath(slug, date)} className={linkClassName} key={slug}>
-                        {essayOutput}
-                    </Link>
-                )
-            }
+            return (
+                <EssayLinkWrapper
+                    externalUrl={externalUrl}
+                    className={`featured-essays__essay`}
+                    postPath={getPostPath(slug, date)}
+                    key={slug}
+                >
+                    {essayOutput}
+                </EssayLinkWrapper>
+            )
         })}
     </div>
 )

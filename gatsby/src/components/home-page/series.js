@@ -1,6 +1,6 @@
 import React from "react"
 import { getPostDate, getPostPath } from '../../model/post';
-import { Link } from 'gatsby';
+import EssayLinkWrapper from "../essay-link-wrapper";
 
 const Series = ({ title, description, posts }) =>
     <div className="category-essays__series">
@@ -30,21 +30,16 @@ const Series = ({ title, description, posts }) =>
                         </div>
                     )
 
-                    const linkClassName = 'category-essays__series-essay';
-
-                    if (externalUrl) {
-                        return (
-                            <a href={externalUrl} className={linkClassName} key={slug}>
-                                {essayOutput}
-                            </a>
-                        )
-                    } else {
-                        return (
-                            <Link to={getPostPath(slug, date)} className={linkClassName} key={slug}>
-                                {essayOutput}
-                            </Link>
-                        )
-                    }
+                    return (
+                        <EssayLinkWrapper
+                            externalUrl={externalUrl}
+                            className={`category-essays__series-essay`}
+                            postPath={getPostPath(slug, date)}
+                            key={slug}
+                        >
+                            {essayOutput}
+                        </EssayLinkWrapper>
+                    )
                 })}
         </div>
     </div>
