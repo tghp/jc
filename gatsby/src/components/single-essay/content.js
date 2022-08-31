@@ -22,6 +22,10 @@ const Content = ({
                             if (domNode.name === 'sup') {
                                 const referenceNumber = domNode.attribs['data-reference-number'];
 
+                                if (!referenceNumber) {
+                                    return
+                                }
+
                                 const supProps = {
                                     className: 'article-reference',
                                     id: `ref-${referenceNumber}`

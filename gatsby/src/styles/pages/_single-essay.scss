@@ -217,13 +217,16 @@
 
             sup {
                 vertical-align: super;
-                color: $color-jc-blue;
                 font-size: 0.8em;
                 font-weight: 400;
                 scroll-margin-top: $header--height + 5px;
 
-                button {
-                    cursor: pointer;
+                &.article-reference {
+                    color: $color-jc-blue;
+
+                    button {
+                        cursor: pointer;
+                    }
                 }
             }
 
