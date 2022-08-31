@@ -33,7 +33,7 @@ export default function Essay(
         date,
         modified,
         toc,
-        essayPdf,
+        tghpjcPdfUpload,
         tghpjcAudioUrl: audioUrl,
         tghpjcVideoUrl: videoUrl,
         tghpjcSubstackUrl: substackUrl,
@@ -137,9 +137,9 @@ export default function Essay(
                                 {title}
                             </div>
                             <div className="single-essay__sidebar-media-links">
-                                {essayPdf && essayPdf.publicURL && <a href={essayPdf.publicURL} aria-label="Download PDF"><ImagePDFLink /></a>}
-                                {audioUrl && <a href={audioUrl} target="_blank" rel="noreferrer" aria-label="Audio link"><ImageAudioLink /></a>}
-                                {videoUrl && <a href={videoUrl} target="_blank" rel="noreferrer" aria-label="Video link"><ImageVideoLink /></a>}
+                                {tghpjcPdfUpload[0]?.url && <a href={tghpjcPdfUpload[0].url} target={`_blank`} aria-label="Download PDF"><ImagePDFLink /></a>}
+                                {audioUrl && <a href={audioUrl} target={`_blank`} aria-label="Audio link"><ImageAudioLink /></a>}
+                                {videoUrl && <a href={videoUrl} target={`_blank`} aria-label="Video link"><ImageVideoLink /></a>}
                             </div>
                             <TableOfContents navItems={toc?.items} />
                         </div>
@@ -254,8 +254,8 @@ export const query = graphql`
             toc
             tghpjcAudioUrl
             tghpjcVideoUrl
-            essayPdf {
-                publicURL
+            tghpjcPdfUpload {
+                url
             }
             tghpjcSubstackUrl
             tghpjcLesswrongUrl

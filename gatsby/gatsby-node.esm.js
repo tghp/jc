@@ -103,13 +103,7 @@ export const createSchemaCustomization = ({ actions }) => {
         extend: getTableOfContentsFieldExtension,
     })
 
-    const typeDefs = `
-    type WpPost implements Node {
-      toc: JSON
-      content: String @content
-      essayPdf: File @link(from: "fields.essayPdfLocalFile")
-    }
-    
+    const typeDefs = ` 
     type WpPage implements Node {
       introPhoto: File @link(from: "fields.pageIntroPhotoLocalFile")
     }
