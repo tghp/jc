@@ -20,7 +20,14 @@ module.exports = {
         {
             resolve: 'gatsby-source-wordpress',
             options: {
-                "url": process.env.WP_GRAPHQL_URL
+                "url": process.env.WP_GRAPHQL_URL,
+                html: {
+                    createStaticFiles: false,
+                    useGatsbyImage: false,
+                },
+                type: {
+                    MediaItem: { createFileNodes: false },
+                },
             }
         },
         "gatsby-plugin-sass",
