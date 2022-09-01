@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react"
 import { graphql } from "gatsby"
 import { useMeasure } from 'react-use';
-import { getPostPath, getSinglePostDateFormat } from "../model/post";
+import { getPostDate, getPostPath } from "../model/post";
 import { MetaData } from "../components/meta-data";
 import Layout from "../components/layout"
 import TableOfContents from "../components/single-essay/table-of-contents"
@@ -154,8 +154,8 @@ export default function Essay(
                         </div>
 
                         <div className="single-essay__header">
-                            {modified && <div className="single-essay__header-update-date">Last updated: {getSinglePostDateFormat(modified)}</div>}
-                            {date && <div className="single-essay__header-publish-date">Published: {getSinglePostDateFormat(date)}</div>}
+                            {modified && <div className="single-essay__header-update-date">Last updated: {getPostDate(modified)}</div>}
+                            {date && <div className="single-essay__header-publish-date">Published: {getPostDate(date)}</div>}
                             {seriesName &&
                             <div className="single-essay__header-series">
                                 <div className="single-essay__header-series-name">
