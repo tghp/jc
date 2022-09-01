@@ -21,7 +21,7 @@ export default function FavouritesPage({
 
     return (
         <>
-            <MetaData title={`Favourites`} />
+            <MetaData title={`Favorites`} />
             <Layout location={'favourites'}>
                 <div className="archive-posts">
                     <div className="archive-posts__header">
@@ -30,7 +30,7 @@ export default function FavouritesPage({
                                 <LinkArrow /> Back to homepage
                             </Link>
                             <h1 className="archive-posts__header-title">
-                                Favourites
+                                Favorites
                             </h1>
                         </div>
                     </div>

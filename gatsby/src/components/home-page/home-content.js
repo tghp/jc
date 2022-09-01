@@ -59,10 +59,10 @@ const HomeContent = ({ homeMeta, allPosts, favouritePostIds }) => {
                     linkText="View all the latest essays"
                     linkTo={'/archive'} />
                 <HomeFeaturedEssays
-                    title="Favourites"
+                    title="Favorites"
                     posts={favouritePosts}
-                    linkText="View all Favourites"
-                    linkTo={'/favourites'} />
+                    linkText="View all Favorites"
+                    linkTo={'/favorites'} />
             </div>
         </div>
         <div className="essay-categories">
