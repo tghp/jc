@@ -46,7 +46,10 @@ const Layout = ({ isHomePage, children, location }) => {
             closeModal,
         }}>
             <div className={globalWrapperClasses.join(' ')} data-is-root-path={isHomePage}>
-                <Header siteTitle={title} />
+                <Header
+                    siteTitle={title}
+                    location={location}
+                />
                 <main className="site-main">
                     {children}
                 </main>
