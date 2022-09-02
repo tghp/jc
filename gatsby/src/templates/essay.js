@@ -33,6 +33,9 @@ export default function Essay(
         date,
         modified,
         toc,
+        excerpt,
+        guid,
+        featuredImage,
         tghpjcPdfUpload,
         tghpjcAudioUrl: audioUrl,
         tghpjcVideoUrl: videoUrl,
@@ -129,7 +132,12 @@ export default function Essay(
 
     return (
         <>
-            <MetaData title={title} />
+            <MetaData
+                title={title}
+                description={excerpt}
+                image={featuredImage.node.sourceUrl}
+                url={guid}
+            />
             <Layout location={'single-post'}>
                 <div className="single-essay">
                     <div className="single-essay__grid">
@@ -261,6 +269,13 @@ export const query = graphql`
             modified
             content
             toc
+            excerpt
+            guid
+            featuredImage {
+                node {
+                    sourceUrl
+                }
+            }
             tghpjcAudioUrl
             tghpjcVideoUrl
             tghpjcPdfUpload {
