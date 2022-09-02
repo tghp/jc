@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from "react"
 import { graphql, useStaticQuery, Link } from "gatsby";
 
-const Header = ({ siteTitle }) => {
+const Header = ({ siteTitle, location }) => {
     const {
         menu: {
             menuData: { items },
@@ -35,6 +35,10 @@ const Header = ({ siteTitle }) => {
         body.classList.remove(scrollDown, scrollUp)
 
         const onScroll = () => {
+            if (location === 'home') {
+                return
+            }
+
             const currentScroll = window.pageYOffset
 
             if (currentScroll <= header.current.offsetHeight) {
@@ -56,7 +60,7 @@ const Header = ({ siteTitle }) => {
 
         window.addEventListener('scroll', onScroll)
         return () => window.removeEventListener('scroll', onScroll)
-    }, [])
+    }, [location])
 
     return (
         <header className="site-header" ref={header}>
