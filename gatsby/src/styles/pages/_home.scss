@@ -44,8 +44,6 @@
     }
 
     &__photo {
-        mix-blend-mode: luminosity;
-
         @include mq($from: s, $until: xl) {
             grid-area: 1/2/-1/2;
         }
