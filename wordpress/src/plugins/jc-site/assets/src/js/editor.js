@@ -24,7 +24,6 @@ wp.domReady(() => {
     wp.blocks.unregisterBlockType('core/search');
     wp.blocks.unregisterBlockType('core/verse');
     wp.blocks.unregisterBlockType('core/gallery');
-    wp.blocks.unregisterBlockType('core/audio');
     wp.blocks.unregisterBlockType('core/video');
     wp.blocks.unregisterBlockType('core/cover');
     wp.blocks.unregisterBlockType('core/file');
@@ -56,7 +55,6 @@ wp.domReady(() => {
     wp.blocks.unregisterBlockType('core/nextpage');
     wp.blocks.unregisterBlockType('core/pullquote');
     wp.blocks.unregisterBlockType('core/query');
-    wp.blocks.unregisterBlockType('core/embed');
     wp.blocks.unregisterBlockType('core/html');
     wp.blocks.unregisterBlockType('core/navigation');
     wp.blocks.unregisterBlockType('core/post-author');
@@ -65,6 +63,8 @@ wp.domReady(() => {
     wp.blocks.unregisterBlockType('core/term-description');
     wp.blocks.unregisterBlockType('core/group');
     wp.blocks.unregisterBlockType('core/columns');
+    // wp.blocks.unregisterBlockType('core/audio');
+    // wp.blocks.unregisterBlockType('core/embed');
     // wp.blocks.unregisterBlockType('core/table');
     // wp.blocks.unregisterBlockType('core/quote');
     // wp.blocks.unregisterBlockType('core/freeform');
@@ -74,6 +74,7 @@ wp.domReady(() => {
 
     const allowedEmbedBlocks = [
         'youtube',
+        'vimeo',
     ];
 
     wp.blocks.getBlockVariations('core/embed').forEach(function (blockVariation) {

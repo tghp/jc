@@ -133,6 +133,34 @@
 }
 
 /*
+ * Audio block
+ */
+.wp-block-audio {
+    padding-top: 5px;
+    padding-bottom: $padding--small;
+
+    audio {
+        width: 100%;
+        height: revert;
+    }
+
+    figcaption {
+        @include font__sizing(12px, 12px);
+        text-align: center;
+    }
+}
+
+/*
+ * Embed/YouTube/Vimeo block
+ */
+.wp-block-embed {
+    display: flex;
+    justify-content: center;
+    padding-top: 5px;
+    padding-bottom: $padding--small;
+}
+
+/*
  * Gutenberg styles
  */
 .has-text-align-left {
