@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { useStaticQuery, graphql } from "gatsby"
+import { useStaticQuery, graphql, Script } from "gatsby"
 import ModalContext from "../context/modal-context"
 import Header from "./header";
 import Footer from "./footer";
@@ -54,6 +54,19 @@ const Layout = ({ isHomePage, children, location }) => {
                 <SubscribeButton />
                 <SubscribeModal />
             </div>
+            <Script
+                id="gtag-config"
+                strategy="post-hydrate"
+                src="https://www.googletagmanager.com/gtag/js?id=G-R3WSC4KDYY"
+                onLoad={() => console.log("[gtag script] successfully loaded")}
+                onError={() => console.log("[gtag script] failed to load")} >
+                    {`
+                        window.dataLayer = window.dataLayer || []; 
+                        function gtag(){dataLayer.push(arguments);} 
+                        gtag('js', new Date()); 
+                        gtag('config', 'G-R3WSC4KDYY');
+                    `}
+            </Script>
         </ModalContext.Provider>
     )
 }
