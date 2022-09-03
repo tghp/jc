@@ -159,11 +159,11 @@
         },
         {
             "name": "dalkmania/wp-graphql-mb",
-            "version": "0.8.0",
+            "version": "1.0.0",
             "dist": {
                 "type": "path",
                 "url": "./src/plugins/wp-graphql-mb",
-                "reference": "e1b1f6617426cd5fe7d637b8891382993dc4735d"
+                "reference": "44d4c844b8bb417fca3faaccd5b3297d095387c1"
             },
             "type": "wordpress-plugin",
             "transport-options": {
@@ -1156,5 +1156,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.1.0"
 }

@@ -20,6 +20,30 @@ class Category extends AbstractMetabox implements MetaboxDefinerInterface
                         'id' => Metabox::generateKey('category_content'),
                         'name' => 'Content',
                         'type' => 'wysiwyg',
+                        'options' => [
+                            'textarea_rows' => 10
+                        ]
+                    ],
+                ]
+            ],
+            [
+                'id' => Metabox::generateKey('category_home_meta'),
+                'title' => 'Home Page',
+                'post_types' => 'post',
+                'taxonomies' => 'category',
+                'fields' => [
+                    [
+                        'type' => 'heading',
+                        'desc' => 'Selected posts will display beneath this category on the home page',
+                    ],
+                    [
+                        'id' => Metabox::generateKey('category_home_posts'),
+                        'name' => 'Select posts',
+                        'type' => 'post',
+                        'post_type' => 'post',
+                        'clone' => true,
+                        'sort_clone' => true,
+                        'admin_columns' => 'after name',
                     ],
                 ]
             ],

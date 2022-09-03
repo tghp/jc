@@ -67,7 +67,10 @@ const HomeContent = ({ homeMeta, allPosts, favouritePostIds }) => {
         </div>
         <div className="essay-categories">
             <div className="essay-categories__inner">
-                <HomeEssayCategories selectedCategories={homeMeta.tghpjcHomeEssayCategories} />
+                <HomeEssayCategories
+                    selectedCategories={homeMeta.tghpjcHomeEssayCategories}
+                    allPosts={allPosts}
+                />
             </div>
         </div>
         <div className="about-text" id="about-section">

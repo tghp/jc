@@ -5,7 +5,7 @@ import { categoryPageSlug } from "../../model/post";
 import Series from './series';
 import Essay from './essay';
 
-const HomeEssayCategory = ({ title, slug, posts: { nodes: essays } }) => {
+const HomeEssayCategory = ({ title, slug, posts: essays }) => {
     const essaysBySeries = {}
 
     essays.forEach((essay, index) => {

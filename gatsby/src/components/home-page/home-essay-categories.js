@@ -1,8 +1,9 @@
 import React from "react"
 import { useStaticQuery, graphql } from "gatsby"
 import HomeEssayCategory from "./home-essay-category";
+import {getFilteredCategoriesWithSelectedPosts} from "../../model/post";
 
-const HomeEssayCategories = ({ selectedCategories }) => {
+const HomeEssayCategories = ({ selectedCategories, allPosts }) => {
 
     const {
         allWpCategory: {
@@ -15,43 +16,16 @@ const HomeEssayCategories = ({ selectedCategories }) => {
                     databaseId
                     slug
                     name
-                    posts {
-                        nodes {
-                            slug
-                            title
-                            excerpt
-                            date
-                            tghpjcPostSeriesPartNumber
-                            tghpjcExternalUrl
-                            tghpTaxonomySeries {
-                                nodes {
-                                    name
-                                    slug
-                                    description
-                                }
-                            }
-                        }
-                    }
+                    tghpjcCategoryHomePosts   
                 }
             }
         }
     `)
 
-    const categories = selectedCategories
-        .map((category, idx) => ({ ...category, menuOrder: idx }))
-    const filteredCategories = allCategories
-        .filter(category => categories.find(item => parseInt(item.id) === category.databaseId))
-        .map(category => {
-            const item = categories.find(item => parseInt(item.id) === category.databaseId)
-            return {
-                ...category,
-                menuOrder: item.menuOrder
-            }
-        })
-        .sort((catA, catB) => catA.menuOrder - catB.menuOrder)
+    const categoriesWithPosts = getFilteredCategoriesWithSelectedPosts(selectedCategories, allCategories, allPosts)
 
     return (
-        filteredCategories.map(({ name, posts, slug }) => (
+        categoriesWithPosts.map(({ name, posts, slug }) => (
             <HomeEssayCategory title={name} posts={posts} slug={slug} key={slug} />
         ))
     )

@@ -17,13 +17,6 @@ export const getPostDateMonthDay = (date) => {
 
 export const getPostDateFullYear = (date) => new Date(date).getFullYear()
 
-export const getSinglePostDateFormat = (date) => {
-    const newDate = new Date(date);
-    const postDay = String(newDate.getDate());
-    const postMonth = newDate.toLocaleString('default', { month: 'long' });
-    return `${postMonth} ${postDay.padStart(2, '0')}, ${getPostDateFullYear(newDate)}`;
-}
-
 function getDates(date) {
     const newDate = new Date(date);
     const postDay = String(newDate.getDate());
@@ -46,4 +39,31 @@ export const getFavouritePosts = (postIds, allPosts) => {
             }
         })
         .sort((postA, postB) => postA.order - postB.order);
+}
+
+export const getFilteredCategoriesWithSelectedPosts = (selectedCategories, allCategories, allPosts) => {
+    const categories = selectedCategories
+        .map((category, idx) => ({ ...category, menuOrder: idx }))
+
+    const filteredCategories = allCategories
+        .filter(category => categories.find(item => parseInt(item.id) === category.databaseId))
+        .map(category => {
+            const item = categories.find(item => parseInt(item.id) === category.databaseId)
+            return {
+                ...category,
+                menuOrder: item.menuOrder
+            }
+        })
+        .sort((catA, catB) => catA.menuOrder - catB.menuOrder)
+
+    return filteredCategories
+        .map(category => {
+            const posts = category.tghpjcCategoryHomePosts.map(item => {
+                return allPosts.find(post => post.databaseId === parseInt(item))
+            })
+            return {
+                ...category,
+                posts: posts
+            }
+        })
 }

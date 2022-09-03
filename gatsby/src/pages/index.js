@@ -68,6 +68,8 @@ export const indexQuery = graphql`
             tghpTaxonomySeries {
                 nodes {
                     name
+                    slug
+                    description
                 }
             }
             databaseId
