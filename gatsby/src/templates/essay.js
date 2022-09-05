@@ -135,7 +135,7 @@ export default function Essay(
             <MetaData
                 title={title}
                 description={excerpt}
-                image={featuredImage.node.sourceUrl}
+                image={featuredImage?.node.sourceUrl}
                 url={guid}
             />
             <Layout location={'single-post'}>

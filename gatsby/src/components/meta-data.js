@@ -3,13 +3,18 @@ import { useSiteMetadata } from "../hooks/use-site-metadata"
 import { Helmet } from "react-helmet"
 
 export const MetaData = ({ title, description, image, url }) => {
-    const { title: defaultTitle, description: defaultDescription } = useSiteMetadata()
+    const {
+        title: defaultTitle,
+        description: defaultDescription,
+        siteUrl: defaultSiteUrl,
+        favicon: defaultImage,
+    } = useSiteMetadata()
 
     const seo = {
         title: title || defaultTitle,
         description: description || defaultDescription,
-        image: image || '',
-        url: url || '',
+        image: image || defaultImage,
+        url: url || defaultSiteUrl,
     }
 
     return (
