@@ -142,7 +142,7 @@
                 @include font__family--newsreader-medium;
                 @include font__sizing(15px, 22.5px);
                 width: 100%;
-                overflow: scroll;
+                overflow-y: auto;
 
                 @include mq($from: xl) {
                     height: calc(100vh - #{$post-sidebar--toc-items--top + $padding--medium});
