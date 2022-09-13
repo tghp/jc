@@ -47,7 +47,7 @@ const Content = ({
                 });
             }
         }
-    }, [mainContentRef]);
+    }, [setImagesReady, mainContentRef]);
 
     return (
         <div className="single-essay__main-content" ref={mainContentMeasureRef}>
