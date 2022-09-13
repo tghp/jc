@@ -23,12 +23,14 @@ export default function Essay(
             furtherReadingPostsDefault,
             furtherReadingPostsOverride },
         pageContext: {
-            referenceCount
+            referenceCount,
+            hasPdf
         }
     }
 ) {
     const {
         title,
+        slug,
         content,
         date,
         modified,
@@ -36,7 +38,6 @@ export default function Essay(
         excerpt,
         guid,
         featuredImage,
-        tghpjcPdfUpload,
         tghpjcAudioUrl: audioUrl,
         tghpjcVideoUrl: videoUrl,
         tghpjcSubstackUrl: substackUrl,
@@ -111,11 +112,6 @@ export default function Essay(
     const seriesName = series.nodes[0]?.name
 
     /**
-     * PDF upload URL
-     */
-    const pdfUploadUrl = tghpjcPdfUpload[0]?.url
-
-    /**
      * Next Part in Series data
      */
     const nextSeriesPartIndex = series.nodes[0]?.posts.nodes.findIndex(item => {
@@ -149,10 +145,10 @@ export default function Essay(
                                 }
                                 {title}
                             </div>
-                            {pdfUploadUrl || audioUrl || videoUrl
+                            {hasPdf || audioUrl || videoUrl
                                 ?
                                 <div className="single-essay__sidebar-media-links">
-                                    {pdfUploadUrl && <a href={pdfUploadUrl} target={`_blank`} aria-label="Download PDF"><ImagePDFLink /></a>}
+                                    {hasPdf && <a href={`./${slug}/pdf/`} target={`_blank`} aria-label="Download PDF"><ImagePDFLink /></a>}
                                     {audioUrl && <a href={audioUrl} target={`_blank`} aria-label="Audio link"><ImageAudioLink /></a>}
                                     {videoUrl && <a href={videoUrl} target={`_blank`} aria-label="Video link"><ImageVideoLink /></a>}
                                 </div>
@@ -278,9 +274,6 @@ export const query = graphql`
             }
             tghpjcAudioUrl
             tghpjcVideoUrl
-            tghpjcPdfUpload {
-                url
-            }
             tghpjcSubstackUrl
             tghpjcLesswrongUrl
             tghpjcEaforumUrl

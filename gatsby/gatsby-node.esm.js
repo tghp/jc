@@ -10,7 +10,7 @@ import {
 const { createRemoteFileNode } = require(`gatsby-source-filesystem`) // For some reason `import { createRemoteFileNode } from 'gatsby-source-filesystem'` doesn't work
 
 export const createPages = async ({ graphql, actions }) => {
-    const { createPage } = actions
+    const { createPage, createRedirect } = actions
 
     /**
      * Create post pages
@@ -29,13 +29,18 @@ export const createPages = async ({ graphql, actions }) => {
                         }
                     }
                     tghpjcFurtherReadingPosts
+                    tghpjcPdfUpload {
+                        url
+                    }
                 }
             }
         }
     `)
 
     if (posts && posts.data && posts.data.allWpPost && posts.data.allWpPost.nodes) {
-        posts.data.allWpPost.nodes.forEach(({ slug, date, content, categories, tghpjcFurtherReadingPosts }) => {
+        posts.data.allWpPost.nodes.forEach((
+            { slug, date, content, categories, tghpjcFurtherReadingPosts, tghpjcPdfUpload }
+        ) => {
             const postPath = getPostPath(slug, date);
             const postCategories = categories.nodes.map(item => item.slug)
             const furtherReadingPosts = tghpjcFurtherReadingPosts.map(item => Number(item))
@@ -44,6 +49,21 @@ export const createPages = async ({ graphql, actions }) => {
             console.log(`🥃🏠️ Creating post gatsby page for ${slug}`);
             console.log(`🥃🏠️ References found: ${references.length}`);
 
+            const hasPdf = tghpjcPdfUpload && tghpjcPdfUpload[0] && tghpjcPdfUpload[0].url;
+
+            if (hasPdf) {
+                console.log(`🥃🏠️ ↪️ Creating post PDF redirect for ${slug}`);
+
+                createRedirect({
+                    fromPath: `${postPath}/pdf/`,
+                    toPath: tghpjcPdfUpload[0].url,
+                    isPermanent: true,
+                    redirectInBrowser: true,
+                });
+
+                console.log(`🥃🏠️ ↪️  ${postPath}/pdf/ -> ${tghpjcPdfUpload[0].url}`);
+            }
+
             createPage({
                 path: postPath,
                 component: path.resolve(`./src/templates/essay.js`),
@@ -51,7 +71,7 @@ export const createPages = async ({ graphql, actions }) => {
                     slug,
                     postCategories,
                     furtherReadingPosts,
-                    downloadFile: `${postPath}.pdf`,
+                    hasPdf,
                     referenceCount: references.length,
                 },
             });
