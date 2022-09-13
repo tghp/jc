@@ -36,7 +36,6 @@ const Content = ({
 
         const images = mainContentRef.current.querySelectorAll('img');
 
-        let i = 0;
         for (const image of images) {
             if (image.complete) {
                 imagesLoadedRef.current++;
@@ -47,7 +46,6 @@ const Content = ({
                     maybeSetImagesReady(images.length);
                 });
             }
-            i++;
         }
     }, [mainContentRef]);
 
