@@ -23,15 +23,15 @@ const Content = ({
         return <code>{error.name}: {error.message}</code>
     }
 
-    const maybeSetImagesReady = (totalImageCount) => {
-        if (imagesLoadedRef.current === totalImageCount) {
-            setImagesReady(true);
-        }
-    }
-
     useEffect(() => {
         if (!mainContentRef.current) {
             return;
+        }
+
+        const maybeSetImagesReady = (totalImageCount) => {
+            if (imagesLoadedRef.current === totalImageCount) {
+                setImagesReady(true);
+            }
         }
 
         const images = mainContentRef.current.querySelectorAll('img');
