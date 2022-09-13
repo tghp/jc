@@ -160,6 +160,18 @@
     padding-bottom: $padding--small;
 }
 
+.wp-block-image {
+    margin-top: $padding--small;
+    margin-bottom: $padding--small;
+
+    figcaption {
+        @include font__family--newsreader-light;
+        @include font__sizing(12px, 21.6px);
+        color: rgba($color-jc-charcoal, 0.85);
+        margin-top: 5px;
+    }
+}
+
 /*
  * Gutenberg styles
  */
@@ -173,5 +185,16 @@
 
 .has-text-align-center {
     text-align: center;
+}
+
+.aligncenter {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.alignright {
+    display: table;
+    margin-left: auto;
 }
 
