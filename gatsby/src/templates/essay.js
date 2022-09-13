@@ -58,7 +58,7 @@ export default function Essay(
     const [referencesAreaMeasureRef, { width: referencesAreaWidth }] = useMeasure()
     const [referenceRowSizesDesktop, setReferenceRowSizesDesktop] = useState([]);
     const [referenceRowSizesMobile, setReferenceRowSizesMobile] = useState([]);
-    const [imagesReady, setImagesReady] = useState(!content.match(/<img/g));
+    const [imagesReady, setImagesReady] = useState(!content || !content.match(/<img/g));
 
     const onScroll = () => {
         const mainContentWindowTop = mainContent.current.getBoundingClientRect().top
