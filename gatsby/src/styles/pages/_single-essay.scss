@@ -247,6 +247,10 @@
                 font-style: italic;
             }
 
+            div[data-testid="react-katex"] {
+                margin-bottom: 20px;
+            }
+
             code:only-child {
                 display: block;
                 font-family: monospace;
