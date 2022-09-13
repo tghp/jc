@@ -58,6 +58,7 @@ export default function Essay(
     const [referencesAreaMeasureRef, { width: referencesAreaWidth }] = useMeasure()
     const [referenceRowSizesDesktop, setReferenceRowSizesDesktop] = useState([]);
     const [referenceRowSizesMobile, setReferenceRowSizesMobile] = useState([]);
+    const [imagesReady, setImagesReady] = useState(!content.match(/<img/g));
 
     const onScroll = () => {
         const mainContentWindowTop = mainContent.current.getBoundingClientRect().top
@@ -78,6 +79,10 @@ export default function Essay(
     }, [])
 
     useEffect(() => {
+        if (!imagesReady) {
+            return;
+        }
+
         if (Object.keys(referenceContentRefs.current).length === 0 && Object.keys(referenceSidebarRefs.current).length === 0) {
             return;
         }
@@ -106,7 +111,7 @@ export default function Essay(
 
         setReferenceRowSizesDesktop(gridRowsDesktop);
         setReferenceRowSizesMobile(gridRowsMobile);
-    }, [referenceContentRefs, referenceSidebarRefs, mainContentAreaWidth, referencesAreaWidth])
+    }, [referenceContentRefs, referenceSidebarRefs, mainContentAreaWidth, referencesAreaWidth, imagesReady])
 
     /**
      * Post Series data
@@ -178,8 +183,10 @@ export default function Essay(
                         <div className="single-essay__main" ref={mainContent}>
                             <Content
                                 content={content}
+                                setImagesReady={setImagesReady}
                                 hasReferences={!!referenceCount}
                                 hasLatex={!!latexCount}
+                                mainContentRef={mainContent}
                                 mainContentMeasureRef={mainContentMeasureRef}
                                 referenceContentRefs={referenceContentRefs}
                             />

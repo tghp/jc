@@ -1,14 +1,17 @@
-import React, { Fragment } from "react"
+import React, { Fragment, useEffect, useRef } from 'react'
 import parse from 'html-react-parser'
 import { InlineMath, BlockMath } from 'react-katex'
 
 const Content = ({
     content,
+    setImagesReady,
     hasReferences,
     hasLatex,
+    mainContentRef,
     mainContentMeasureRef,
     referenceContentRefs
 }) => {
+    const imagesLoadedRef = useRef(0);
     let processedReferences = [];
 
     // Remove weird JS in content
@@ -19,6 +22,34 @@ const Content = ({
 
         return <code>{error.name}: {error.message}</code>
     }
+
+    const maybeSetImagesReady = (totalImageCount) => {
+        if (imagesLoadedRef.current === totalImageCount) {
+            setImagesReady(true);
+        }
+    }
+
+    useEffect(() => {
+        if (!mainContentRef.current) {
+            return;
+        }
+
+        const images = mainContentRef.current.querySelectorAll('img');
+
+        let i = 0;
+        for (const image of images) {
+            if (image.complete) {
+                imagesLoadedRef.current++;
+                maybeSetImagesReady(images.length);
+            } else {
+                image.addEventListener('load', () => {
+                    imagesLoadedRef.current++;
+                    maybeSetImagesReady(images.length);
+                });
+            }
+            i++;
+        }
+    }, [mainContentRef]);
 
     return (
         <div className="single-essay__main-content" ref={mainContentMeasureRef}>
