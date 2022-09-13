@@ -66,6 +66,10 @@ export const MetaData = ({ title, description, image, url }) => {
                     name: `twitter:image`,
                     content: seo.image
                 },
+                {
+                    name: `google-site-verification`,
+                    content: `0Fc_5Il-Vrl96Q3nufFCYOIuYzKbxAfxgBNhOR6ZbGw`
+                },
             ]}
         />
     )
