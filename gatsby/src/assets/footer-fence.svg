@@ -18,27 +18,27 @@
 			<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
 		</clipPath>
 		<g style="clip-path:url(#SVGID_00000163775856235902706050000005511441429354527677_);">
-			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M32,1.2h-4.4V63l4.4-4.3V1.2z"/>
-			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M22.4,1.2H18v71.4l4.4-4.3V1.2z"/>
-			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M41.7,1.2h-4.4v52.2l4.4-4.3V1.2z"/>
-			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M22.4,89.4V75.7L18,80.1v9.3H22.4z"/>
-			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M32,66.1l-4.4,4.3v18.9H32V66.1z"/>
-			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M8.6,89.4h4.1v-4l-2,2L8.6,89.4z"/>
-			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M70.7,1.2h-4.4v23.5l4.4-4.3V1.2z"/>
-			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M51.3,1.2H47v42.6l4.4-4.3V1.2z"/>
-			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M61,1.2h-4.4v33l4.4-4.3V1.2z"/>
-			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M51.3,46.9L47,51.3v38.1h4.4V46.9z"/>
-			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M76,1.2V15l4.4-4.3V1.2H76z"/>
-			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M85.6,1.2v4.3l4.3-4.3H85.6z"/>
-			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M1.1,89.4l11.6-11.5V1.2H1.1V89.4z"/>
-			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M80.3,18.2L76,22.5v66.9h4.4V18.2z"/>
-			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M41.7,56.5l-4.4,4.3v28.5h4.4V56.5z"/>
-			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M61,37.3l-4.4,4.3v47.7H61V37.3z"/>
-			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M70.7,27.8l-4.4,4.3v57.3h4.4V27.8z"/>
-			<path style="fill:none;stroke:#6161FF;stroke-linecap:round;stroke-linejoin:round;" d="M231.4,1.2l11.8,11.7v76.5h-18.5H104.2
+			<path style="fill:none;stroke:#3872E9;stroke-linecap:round;stroke-linejoin:round;" d="M32,1.2h-4.4V63l4.4-4.3V1.2z"/>
+			<path style="fill:none;stroke:#3872E9;stroke-linecap:round;stroke-linejoin:round;" d="M22.4,1.2H18v71.4l4.4-4.3V1.2z"/>
+			<path style="fill:none;stroke:#3872E9;stroke-linecap:round;stroke-linejoin:round;" d="M41.7,1.2h-4.4v52.2l4.4-4.3V1.2z"/>
+			<path style="fill:none;stroke:#3872E9;stroke-linecap:round;stroke-linejoin:round;" d="M22.4,89.4V75.7L18,80.1v9.3H22.4z"/>
+			<path style="fill:none;stroke:#3872E9;stroke-linecap:round;stroke-linejoin:round;" d="M32,66.1l-4.4,4.3v18.9H32V66.1z"/>
+			<path style="fill:none;stroke:#3872E9;stroke-linecap:round;stroke-linejoin:round;" d="M8.6,89.4h4.1v-4l-2,2L8.6,89.4z"/>
+			<path style="fill:none;stroke:#3872E9;stroke-linecap:round;stroke-linejoin:round;" d="M70.7,1.2h-4.4v23.5l4.4-4.3V1.2z"/>
+			<path style="fill:none;stroke:#3872E9;stroke-linecap:round;stroke-linejoin:round;" d="M51.3,1.2H47v42.6l4.4-4.3V1.2z"/>
+			<path style="fill:none;stroke:#3872E9;stroke-linecap:round;stroke-linejoin:round;" d="M61,1.2h-4.4v33l4.4-4.3V1.2z"/>
+			<path style="fill:none;stroke:#3872E9;stroke-linecap:round;stroke-linejoin:round;" d="M51.3,46.9L47,51.3v38.1h4.4V46.9z"/>
+			<path style="fill:none;stroke:#3872E9;stroke-linecap:round;stroke-linejoin:round;" d="M76,1.2V15l4.4-4.3V1.2H76z"/>
+			<path style="fill:none;stroke:#3872E9;stroke-linecap:round;stroke-linejoin:round;" d="M85.6,1.2v4.3l4.3-4.3H85.6z"/>
+			<path style="fill:none;stroke:#3872E9;stroke-linecap:round;stroke-linejoin:round;" d="M1.1,89.4l11.6-11.5V1.2H1.1V89.4z"/>
+			<path style="fill:none;stroke:#3872E9;stroke-linecap:round;stroke-linejoin:round;" d="M80.3,18.2L76,22.5v66.9h4.4V18.2z"/>
+			<path style="fill:none;stroke:#3872E9;stroke-linecap:round;stroke-linejoin:round;" d="M41.7,56.5l-4.4,4.3v28.5h4.4V56.5z"/>
+			<path style="fill:none;stroke:#3872E9;stroke-linecap:round;stroke-linejoin:round;" d="M61,37.3l-4.4,4.3v47.7H61V37.3z"/>
+			<path style="fill:none;stroke:#3872E9;stroke-linecap:round;stroke-linejoin:round;" d="M70.7,27.8l-4.4,4.3v57.3h4.4V27.8z"/>
+			<path style="fill:none;stroke:#3872E9;stroke-linecap:round;stroke-linejoin:round;" d="M231.4,1.2l11.8,11.7v76.5h-18.5H104.2
 				H85.6V12.9L97.4,1.2"/>
 		</g>
 	</g>
-	<line style="fill:none;stroke:#6161FF;" x1="-993" y1="88.5" x2="86" y2="88.5"/>
+	<line style="fill:none;stroke:#3872E9;" x1="-993" y1="88.5" x2="86" y2="88.5"/>
 </g>
 </svg>
