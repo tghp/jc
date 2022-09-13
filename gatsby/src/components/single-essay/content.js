@@ -15,7 +15,9 @@ const Content = ({
     let processedReferences = [];
 
     // Remove weird JS in content
-    content = content.replace(/<a href="javascript:\s*?void\(0?\);?">(.*?)<\/a>/g, '$1')
+    if (content) {
+        content = content.replace(/<a href="javascript:\s*?void\(0?\);?">(.*?)<\/a>/g, '$1')
+    }
 
     const latexErrorDisplay = (error) => {
         console.error(`LaTeX parse error:\n${error}`)
