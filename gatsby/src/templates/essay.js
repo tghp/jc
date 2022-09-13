@@ -15,6 +15,7 @@ import EssayLink from "../components/essay-link";
 import HeadingWithLink from "../components/heading-with-link";
 
 import '../styles/essay.scss';
+import 'katex/dist/katex.min.css';
 
 export default function Essay(
     {
@@ -24,6 +25,7 @@ export default function Essay(
             furtherReadingPostsOverride },
         pageContext: {
             referenceCount,
+            latexCount,
             hasPdf
         }
     }
@@ -177,6 +179,7 @@ export default function Essay(
                             <Content
                                 content={content}
                                 hasReferences={!!referenceCount}
+                                hasLatex={!!latexCount}
                                 mainContentMeasureRef={mainContentMeasureRef}
                                 referenceContentRefs={referenceContentRefs}
                             />

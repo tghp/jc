@@ -45,6 +45,7 @@ export const createPages = async ({ graphql, actions }) => {
             const postCategories = categories.nodes.map(item => item.slug)
             const furtherReadingPosts = tghpjcFurtherReadingPosts.map(item => Number(item))
             const references = (content || '').match(/class="article-reference"/g) || [];
+            const latexElements = (content || '').match(/\[latex\]/gi) || [];
 
             console.log(`🥃🏠️ Creating post gatsby page for ${slug}`);
             console.log(`🥃🏠️ References found: ${references.length}`);
@@ -73,6 +74,7 @@ export const createPages = async ({ graphql, actions }) => {
                     furtherReadingPosts,
                     hasPdf,
                     referenceCount: references.length,
+                    latexCount: latexElements.length,
                 },
             });
 

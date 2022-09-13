@@ -1,23 +1,64 @@
 import React from "react"
 import parse from 'html-react-parser'
+import { InlineMath, BlockMath } from 'react-katex'
 
 const Content = ({
     content,
     hasReferences,
+    hasLatex,
     mainContentMeasureRef,
     referenceContentRefs
 }) => {
     let processedReferences = [];
 
+    const latexErrorDisplay = (error) => {
+        console.error(`LaTeX parse error:\n${error}`);
+
+        return <code>{error.name}: {error.message}</code>
+    }
+
     return (
         <div className="single-essay__main-content" ref={mainContentMeasureRef}>
-            {!hasReferences &&
+            {!hasReferences && !hasLatex &&
                 <div dangerouslySetInnerHTML={{ __html: content }} />
             }
-            {hasReferences &&
+            {(hasReferences || hasLatex) &&
                 <div>
                     {parse(content, {
                         replace: domNode => {
+                            if (domNode.type === 'text' && domNode.data.match(/\[latex\]/)) {
+                                if (domNode.data.match(/^\[latex\]/) && domNode.data.match(/\[\/latex\]$/)) {
+                                    const latex = domNode.data.replace(/\[\/?latex\]/g, '');
+
+                                    return (
+                                        <BlockMath
+                                            math={latex}
+                                            renderError={latexErrorDisplay}
+                                        />
+                                    )
+                                } else {
+                                    const elems = domNode.data.split(/(\[latex\].*?\[\/latex\])/g).map(partContent => {
+                                        if (partContent.match(/\[latex\]/)) {
+                                            const latex = partContent.replace(/\[\/?latex\]/g, '');
+
+                                            return (
+                                                <InlineMath
+                                                    math={latex}
+                                                    renderError={latexErrorDisplay}
+                                                />
+                                            )
+                                        }
+
+                                        return partContent;
+                                    })
+
+                                    return (
+                                        <>
+                                            {elems}
+                                        </>
+                                    )
+                                }
+                            }
 
                             if (domNode.name === 'sup') {
                                 const referenceNumber = domNode.attribs['data-reference-number'];

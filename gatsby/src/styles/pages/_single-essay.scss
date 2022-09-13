@@ -246,6 +246,13 @@
             i, em {
                 font-style: italic;
             }
+
+            code:only-child {
+                display: block;
+                font-family: monospace;
+                border: 1px solid $color-jc-charcoal-grey;
+                padding: 1em;
+            }
         }
     }
 
