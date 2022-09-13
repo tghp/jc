@@ -9,27 +9,33 @@ import {
 } from './src/model/toc'
 const { createRemoteFileNode } = require(`gatsby-source-filesystem`) // For some reason `import { createRemoteFileNode } from 'gatsby-source-filesystem'` doesn't work
 
-export const createPages = ({ graphql, actions }) => {
+export const createPages = async ({ graphql, actions }) => {
     const { createPage } = actions
 
-    return graphql(`
-    {
-        allWpPost(sort: { fields: [date] }) {
-            nodes {
-                slug
-                date
-                content
-                categories {
-                    nodes {
-                        slug
+    /**
+     * Create post pages
+     */
+
+    const posts = await graphql(`
+        {
+            allWpPost(sort: { fields: [date] }) {
+                nodes {
+                    slug
+                    date
+                    content
+                    categories {
+                        nodes {
+                            slug
+                        }
                     }
+                    tghpjcFurtherReadingPosts
                 }
-                tghpjcFurtherReadingPosts
             }
         }
-    }
-    `).then((result) => {
-        result.data.allWpPost.nodes.forEach(({ slug, date, content, categories, tghpjcFurtherReadingPosts }) => {
+    `)
+
+    if (posts && posts.data && posts.data.allWpPost && posts.data.allWpPost.nodes) {
+        posts.data.allWpPost.nodes.forEach(({ slug, date, content, categories, tghpjcFurtherReadingPosts }) => {
             const postPath = getPostPath(slug, date);
             const postCategories = categories.nodes.map(item => item.slug)
             const furtherReadingPosts = tghpjcFurtherReadingPosts.map(item => Number(item))
@@ -52,7 +58,13 @@ export const createPages = ({ graphql, actions }) => {
 
             console.log('🥃🏠️ ✅');
         })
-    }).then(() => graphql(`
+    }
+
+    /**
+     * Create page pages
+     */
+
+    const pages = await graphql(`
         {
             allWpPage {
                 nodes {
@@ -60,20 +72,27 @@ export const createPages = ({ graphql, actions }) => {
                 }
             }
         }
-        `).then((result) => {
-            result.data.allWpPage.nodes.forEach(({ slug }) => {
-                console.log(`🥃🏠️ Creating page gatsby page for ${slug}`);
+    `)
 
-                createPage({
-                    path: `/${slug}/`,
-                    component: path.resolve(`./src/templates/page.js`),
-                    context: { slug },
-                });
+    if (pages && pages.data && pages.data.allWpPage && pages.data.allWpPage.nodes) {
+        pages.data.allWpPage.nodes.forEach(({ slug }) => {
+            console.log(`🥃🏠️ Creating page gatsby page for ${slug}`);
 
-                console.log('🥃🏠️ ✅');
-            })
+            createPage({
+                path: `/${slug}/`,
+                component: path.resolve(`./src/templates/page.js`),
+                context: { slug },
+            });
+
+            console.log('🥃🏠️ ✅');
         })
-    ).then(() => graphql(`
+    }
+
+    /**
+     * Create category pages
+     */
+
+    const categories = await graphql(`
         {
             allWpCategory {
                 nodes {
@@ -82,17 +101,21 @@ export const createPages = ({ graphql, actions }) => {
                 }
             }
         }
-        `).then((result) => {
-            result.data.allWpCategory.nodes.forEach(({ id, slug }) => {
+    `)
 
-                createPage({
-                    path: `/${categoryPageSlug}/${slug}/`,
-                    component: path.resolve(`./src/templates/category-page.js`),
-                    context: { id },
-                })
+    if (categories && categories.data && categories.data.allWpCategory && categories.data.allWpCategory.nodes) {
+        categories.data.allWpCategory.nodes.forEach(({ id, slug }) => {
+            console.log(`🥃🏠️ Creating category gatsby page for ${slug}`);
+
+            createPage({
+                path: `/${categoryPageSlug}/${slug}/`,
+                component: path.resolve(`./src/templates/category-page.js`),
+                context: { id },
             })
+
+            console.log('🥃🏠️ ✅');
         })
-    )
+    }
 }
 
 export const createSchemaCustomization = ({ actions }) => {
