@@ -124,5 +124,19 @@ module.exports = {
                 ]
             }
         },
+        {
+            resolve: 'gatsby-plugin-robots-txt',
+            options: {
+                host: process.env.GATSBY_SITE_URL,
+                env: {
+                    development: {
+                        policy: [
+                            { userAgent: 'Twitterbot', disallow: [''] },
+                            { userAgent: '*', disallow: ['/'] }
+                        ]
+                    },
+                }
+            }
+        }
     ]
 };
