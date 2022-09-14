@@ -131,7 +131,6 @@ module.exports = {
                 env: {
                     development: {
                         policy: [
-                            { userAgent: 'Twitterbot', allow: ['/'] },
                             { userAgent: '*', disallow: ['/'] }
                         ]
                     },
