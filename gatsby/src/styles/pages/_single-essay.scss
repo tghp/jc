@@ -246,6 +246,17 @@
             i, em {
                 font-style: italic;
             }
+
+            div[data-testid="react-katex"] {
+                margin-bottom: 20px;
+            }
+
+            code:only-child {
+                display: block;
+                font-family: monospace;
+                border: 1px solid $color-jc-charcoal-grey;
+                padding: 1em;
+            }
         }
     }
 
