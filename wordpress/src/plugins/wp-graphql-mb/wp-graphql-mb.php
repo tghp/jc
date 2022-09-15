@@ -278,10 +278,17 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
                         $group_fields = [];
                         foreach ($field['fields'] as $group_sub_field) {
                             if (in_array($group_sub_field['type'], self::$media_fields)) {
-                                $group_fields[self::_graphql_label($group_sub_field['id'])] = [
-                                    'type' => 'Media',
-                                    'description' => "Group field - {$group_sub_field['name']}",
-                                ];
+                                if (($group_sub_field['clone'] == true || $group_sub_field['multiple'] == true)) {
+                                    $group_fields[self::_graphql_label($group_sub_field['id'])] = [
+                                        'type' => ['list_of' => 'Media'],
+                                        'description' => "Group field - {$group_sub_field['name']}",
+                                    ];
+                                } else {
+                                    $group_fields[self::_graphql_label($group_sub_field['id'])] = [
+                                        'type' => 'Media',
+                                        'description' => "Group field - {$group_sub_field['name']}",
+                                    ];
+                                }
                             } else {
                                 $group_fields[self::_graphql_label($group_sub_field['id'])] = [
                                     'type' => 'String',
@@ -373,19 +380,6 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
                             ]);
                         }
                     } else {
-                        if ($field['clone'] == false && $field['multiple'] == false) {
-                            register_graphql_field($graphql_single_name, $field_name, [
-                                'type' => "string",
-                                'description' => $field['desc'],
-                                'resolve' => function ($object) use ($object_type, $field) {
-                                    $meta = self::_get_meta_value($field, $object, $object_type);
-                                    $meta = self::_convert_wp_internal($meta);
-
-                                    return $meta;
-                                },
-                            ]);
-                        }
-
                         if (($field['clone'] == true || $field['multiple'] == true)) {
                             register_graphql_field($graphql_single_name, $field_name, [
                                 'type' => ['list_of' => 'String'],
@@ -400,6 +394,17 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
                                     return $meta;
                                 },
 
+                            ]);
+                        } else {
+                            register_graphql_field($graphql_single_name, $field_name, [
+                                'type' => "string",
+                                'description' => $field['desc'],
+                                'resolve' => function ($object) use ($object_type, $field) {
+                                    $meta = self::_get_meta_value($field, $object, $object_type);
+                                    $meta = self::_convert_wp_internal($meta);
+
+                                    return $meta;
+                                },
                             ]);
                         }
                     }
@@ -658,4 +663,16 @@ if (!class_exists('\WPGraphQL\Extensions\MB')) {
 
 add_action('init_graphql_request', function () {
     new MB;
+});
+
+add_action('init', function () {
+    if (class_exists('\WPGatsby\ActionMonitor\ActionMonitor')) {
+        include 'wp-graphql-mb-monitor.php';
+
+        add_filter('gatsby_action_monitors', function (array $monitors, \WPGatsby\ActionMonitor\ActionMonitor $action_monitor) {
+            $monitors['WpGraphqlMbMonitor'] = new \WpGraphqlMbMonitor($action_monitor);
+
+            return $monitors;
+        }, 10, 2);
+    }
 });
