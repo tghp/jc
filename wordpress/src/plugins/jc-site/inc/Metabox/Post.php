@@ -90,7 +90,7 @@ class Post extends AbstractMetabox implements MetaboxDefinerInterface
                 'fields' => [
                     [
                         'type' => 'heading',
-                        'desc' => 'Insert a reference into the main text by adding (ref x) where you want the footnote to appear. X refers to the number of the footnote determined by the order below. You can drag footnotes to rearrange them. e.g the first reference below would be inserted into the copy as (ref 1).',
+                        'desc' => 'Insert a reference into the main text by adding [ref x] where you want the footnote to appear. X refers to the number of the footnote determined by the order below. You can drag footnotes to rearrange them. e.g the first reference below would be inserted into the copy as [ref 1].',
                     ],
                     [
                         'id' => Metabox::generateKey('references'),
