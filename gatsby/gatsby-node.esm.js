@@ -29,6 +29,7 @@ export const createPages = async ({ graphql, actions }) => {
                         }
                     }
                     tghpjcFurtherReadingPosts
+                    tghpjcPdfUrl
                 }
             }
         }
@@ -36,7 +37,7 @@ export const createPages = async ({ graphql, actions }) => {
 
     if (posts && posts.data && posts.data.allWpPost && posts.data.allWpPost.nodes) {
         posts.data.allWpPost.nodes.forEach((
-            { slug, date, content, categories, tghpjcFurtherReadingPosts }
+            { slug, date, content, categories, tghpjcFurtherReadingPosts, tghpjcPdfUrl }
         ) => {
             const postPath = getPostPath(slug, date);
             const postCategories = categories.nodes.map(item => item.slug)
@@ -47,6 +48,21 @@ export const createPages = async ({ graphql, actions }) => {
             console.log(`🥃🏠️ Creating post gatsby page for ${slug}`);
             console.log(`🥃🏠️ References found: ${references.length}`);
 
+            const hasPdf = tghpjcPdfUrl;
+
+            if (hasPdf) {
+                console.log(`🥃🏠️ ↪️ Creating post PDF redirect for ${slug}`);
+
+                createRedirect({
+                    fromPath: `${postPath}/pdf/`,
+                    toPath: tghpjcPdfUrl,
+                    isPermanent: true,
+                    redirectInBrowser: true,
+                });
+
+                console.log(`🥃🏠️ ↪️  ${postPath}/pdf/ -> ${tghpjcPdfUrl}`);
+            }
+
             createPage({
                 path: postPath,
                 component: path.resolve(`./src/templates/essay.js`),
@@ -54,6 +70,7 @@ export const createPages = async ({ graphql, actions }) => {
                     slug,
                     postCategories,
                     furtherReadingPosts,
+                    hasPdf,
                     referenceCount: references.length,
                     latexCount: latexElements.length,
                 },
