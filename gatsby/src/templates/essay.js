@@ -38,7 +38,7 @@ export default function Essay(
         excerpt,
         guid,
         featuredImage,
-        tghpjcPdfUpload: pdfUrl,
+        tghpjcPdfUrl: pdfUrl,
         tghpjcAudioUrl: audioUrl,
         tghpjcVideoUrl: videoUrl,
         tghpjcSubstackUrl: substackUrl,
@@ -281,7 +281,7 @@ export const query = graphql`
                     sourceUrl
                 }
             }
-            tghpjcPdfUpload
+            tghpjcPdfUrl
             tghpjcAudioUrl
             tghpjcVideoUrl
             tghpjcSubstackUrl
