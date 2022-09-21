@@ -25,14 +25,12 @@ export default function Essay(
             furtherReadingPostsOverride },
         pageContext: {
             referenceCount,
-            latexCount,
-            hasPdf
+            latexCount
         }
     }
 ) {
     const {
         title,
-        slug,
         content,
         date,
         modified,
@@ -40,6 +38,7 @@ export default function Essay(
         excerpt,
         guid,
         featuredImage,
+        tghpjcPdfUpload: pdfUrl,
         tghpjcAudioUrl: audioUrl,
         tghpjcVideoUrl: videoUrl,
         tghpjcSubstackUrl: substackUrl,
@@ -152,10 +151,10 @@ export default function Essay(
                                 }
                                 {title}
                             </div>
-                            {hasPdf || audioUrl || videoUrl
+                            {pdfUrl || audioUrl || videoUrl
                                 ?
                                 <div className="single-essay__sidebar-media-links">
-                                    {hasPdf && <a href={`./${slug}/pdf/`} target={`_blank`} aria-label="Download PDF"><ImagePDFLink /></a>}
+                                    {pdfUrl && <a href={pdfUrl} target={`_blank`} aria-label="Download PDF"><ImagePDFLink /></a>}
                                     {audioUrl && <a href={audioUrl} target={`_blank`} aria-label="Audio link"><ImageAudioLink /></a>}
                                     {videoUrl && <a href={videoUrl} target={`_blank`} aria-label="Video link"><ImageVideoLink /></a>}
                                 </div>
@@ -282,6 +281,7 @@ export const query = graphql`
                     sourceUrl
                 }
             }
+            tghpjcPdfUpload
             tghpjcAudioUrl
             tghpjcVideoUrl
             tghpjcSubstackUrl

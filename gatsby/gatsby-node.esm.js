@@ -29,9 +29,6 @@ export const createPages = async ({ graphql, actions }) => {
                         }
                     }
                     tghpjcFurtherReadingPosts
-                    tghpjcPdfUpload {
-                        url
-                    }
                 }
             }
         }
@@ -39,7 +36,7 @@ export const createPages = async ({ graphql, actions }) => {
 
     if (posts && posts.data && posts.data.allWpPost && posts.data.allWpPost.nodes) {
         posts.data.allWpPost.nodes.forEach((
-            { slug, date, content, categories, tghpjcFurtherReadingPosts, tghpjcPdfUpload }
+            { slug, date, content, categories, tghpjcFurtherReadingPosts }
         ) => {
             const postPath = getPostPath(slug, date);
             const postCategories = categories.nodes.map(item => item.slug)
@@ -50,21 +47,6 @@ export const createPages = async ({ graphql, actions }) => {
             console.log(`🥃🏠️ Creating post gatsby page for ${slug}`);
             console.log(`🥃🏠️ References found: ${references.length}`);
 
-            const hasPdf = tghpjcPdfUpload && tghpjcPdfUpload[0] && tghpjcPdfUpload[0].url;
-
-            if (hasPdf) {
-                console.log(`🥃🏠️ ↪️ Creating post PDF redirect for ${slug}`);
-
-                createRedirect({
-                    fromPath: `${postPath}/pdf/`,
-                    toPath: tghpjcPdfUpload[0].url,
-                    isPermanent: true,
-                    redirectInBrowser: true,
-                });
-
-                console.log(`🥃🏠️ ↪️  ${postPath}/pdf/ -> ${tghpjcPdfUpload[0].url}`);
-            }
-
             createPage({
                 path: postPath,
                 component: path.resolve(`./src/templates/essay.js`),
@@ -72,7 +54,6 @@ export const createPages = async ({ graphql, actions }) => {
                     slug,
                     postCategories,
                     furtherReadingPosts,
-                    hasPdf,
                     referenceCount: references.length,
                     latexCount: latexElements.length,
                 },
