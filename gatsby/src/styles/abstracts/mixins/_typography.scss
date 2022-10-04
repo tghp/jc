@@ -97,6 +97,6 @@
 }
 
 @mixin font__size-single-essay-h3 {
-  @include font__family--inter-medium;
+  @include font__family--newsreader-regular;
   @include font__sizing(14px, 25.2px);
 }

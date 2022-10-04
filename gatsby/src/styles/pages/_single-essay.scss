@@ -193,8 +193,16 @@
             @include font__family--newsreader-medium;
             @include font__sizing(16px, 25.6px);
 
-            h2, h3, h4 {
+            h2, h3 {
                 color: $color-jc-blue;
+            }
+
+            h1 {
+                @include font__sizing(40px, 54px);
+
+                @include mq($until: m) {
+                    @include font__sizing(30px, 42px);
+                }
             }
 
             h2 {
@@ -205,7 +213,7 @@
                 scroll-margin-top: $header--height + $padding--xxsmall;
             }
 
-            h3 {
+            h3, h4 {
                 @include font__size-single-essay-h3;
                 margin-bottom: 10px;
                 scroll-margin-top: $header--height + $padding--ml;
