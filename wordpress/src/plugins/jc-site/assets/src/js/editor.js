@@ -7,6 +7,10 @@ wp.domReady(() => {
             isDefault: true,
         },
         {
+            name: 'large-text',
+            label: 'Large text',
+        },
+        {
             name: 'small-text',
             label: 'Small text',
         },

@@ -219,10 +219,6 @@
                 scroll-margin-top: $header--height + $padding--ml;
             }
 
-            div > p:first-child {
-                @include font__sizing(20px, 32px);
-            }
-
             sup {
                 vertical-align: super;
                 font-size: 0.8em;

@@ -70,6 +70,10 @@
     margin-top: $padding--mini;
 }
 
+.is-style-large-text {
+    @include font__sizing(20px, 32px);
+}
+
 .is-style-small-text {
     @include font__family--newsreader-light;
     @include font__sizing(14px, 22.4px);

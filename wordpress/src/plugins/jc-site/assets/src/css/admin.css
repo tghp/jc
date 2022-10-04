@@ -46,6 +46,10 @@
 /**
  * Editor
  */
+.is-style-large-text {
+    font-size: 20px;
+}
+
 .is-style-small-text {
     font-size: 14px;
 }
