@@ -174,11 +174,11 @@
                 .subnav {
                     padding-top: $padding--xxxsmall;
                     padding-left: $padding--xxsmall;
-                    display: none;
-
-                    &.is-open {
-                        display: block;
-                    }
+                    //display: none;
+                    //
+                    //&.is-open {
+                    //    display: block;
+                    //}
                 }
             }
         }

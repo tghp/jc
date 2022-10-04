@@ -1,23 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 
-const TocItem = ({ url, title, navItems }) => {
-    const [subMenuOpen, setSubMenuOpen] = useState(false);
-    const handleToggle = () => setSubMenuOpen(!subMenuOpen)
-
-    return (
-        <li>
-            <a href={url} onClick={navItems && handleToggle}>{title} <i className="arrow-right" /></a>
-            {navItems &&
-            <ul className={`subnav${subMenuOpen ? ' is-open' : ''}`}>
-                {navItems?.map(({ url, title }) => (
-                    <li key={url}>
-                        <a href={url}>{title} <i className="arrow-right" /></a>
-                    </li>
-                ))}
-            </ul>
-            }
-        </li>
-    )
-}
+const TocItem = ({ url, title, navItems }) => (
+    <li>
+        <a href={url}>{title} <i className="arrow-right" /></a>
+        {navItems &&
+        <ul className="subnav">
+            {navItems?.map(({ url, title, items }) => (
+                <li key={url}>
+                    <a href={url}>{title} <i className="arrow-right" /></a>
+                    {items &&
+                    <ul className="subnav">
+                        {items?.map(({ url, title }) => (
+                            <li key={url}>
+                                <a href={url}>{title} <i className="arrow-right" /></a>
+                            </li>
+                        ))}
+                    </ul>
+                    }
+                </li>
+            ))}
+        </ul>
+        }
+    </li>
+)
 
 export default TocItem
