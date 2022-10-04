@@ -40,7 +40,7 @@ export const createPages = async ({ graphql, actions }) => {
         ) => {
             const postPath = getPostPath(slug, date);
             const postCategories = categories.nodes.map(item => item.slug)
-            const furtherReadingPosts = tghpjcFurtherReadingPosts.map(item => Number(item))
+            const furtherReadingPosts = tghpjcFurtherReadingPosts ? tghpjcFurtherReadingPosts.map(item => Number(item)) : [0]
             const references = (content || '').match(/class="article-reference"/g) || [];
             const latexElements = (content || '').match(/\[latex\]/gi) || [];
 
