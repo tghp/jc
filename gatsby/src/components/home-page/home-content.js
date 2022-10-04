@@ -5,6 +5,7 @@ import HomeFeaturedEssays from "./home-featured-essays";
 import HomeEssayCategories from "./home-essay-categories";
 import FenceIllustration from "../../assets/footer-fence.svg";
 import WalkerIllustration from "../../assets/footer-walker.svg";
+import { GatsbyImage } from 'gatsby-plugin-image';
 
 const HomeContent = ({ homeMeta, allPosts, favouritePostIds }) => {
     /**
@@ -44,10 +45,13 @@ const HomeContent = ({ homeMeta, allPosts, favouritePostIds }) => {
                 <div className="intro-text__column-1" dangerouslySetInnerHTML={{ __html: homeMeta.tghpjcIntroColumn1}} />
                 <div className="intro-text__column-2" dangerouslySetInnerHTML={{ __html: homeMeta.tghpjcIntroColumn2}} />
                 <div className="intro-text__photo">
-                    {/* TODO: Work out how to get this image into Gatsby itself, rather than loading the WP image URL */}
-                    <img src={homeMeta.introPhoto.publicURL}
-                         sizes="200px"
-                         alt={homeMeta.tghpjcIntroPhoto.alt} />
+                    {homeMeta.tghpjcIntroPhoto?.nodes[0]?.gatsbyImage &&
+                        <GatsbyImage
+                            image={homeMeta.tghpjcIntroPhoto?.nodes[0]?.gatsbyImage}
+                            sizes="(min-width: 1024px) 200px, 50vw"
+                            alt=""
+                        />
+                    }
                 </div>
             </div>
         </div>

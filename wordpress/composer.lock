@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8f854a6121edcfd528a85df414d03ad2",
+    "content-hash": "513391e542bd43cb62b1988486e5beec",
     "packages": [
         {
             "name": "composer/installers",
@@ -1083,20 +1083,20 @@
         },
         {
             "name": "psr/container",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/container.git",
-                "reference": "8622567409010282b7aeebe4bb841fe98b58dcaf"
+                "reference": "513e0666f7216c7459170d56df27dfcefe1689ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/container/zipball/8622567409010282b7aeebe4bb841fe98b58dcaf",
-                "reference": "8622567409010282b7aeebe4bb841fe98b58dcaf",
+                "url": "https://api.github.com/repos/php-fig/container/zipball/513e0666f7216c7459170d56df27dfcefe1689ea",
+                "reference": "513e0666f7216c7459170d56df27dfcefe1689ea",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2.0"
+                "php": ">=7.4.0"
             },
             "type": "library",
             "autoload": {
@@ -1125,9 +1125,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-fig/container/issues",
-                "source": "https://github.com/php-fig/container/tree/1.1.1"
+                "source": "https://github.com/php-fig/container/tree/1.1.2"
             },
-            "time": "2021-03-05T17:36:06+00:00"
+            "time": "2021-11-05T16:50:12+00:00"
         },
         {
             "name": "psr/log",
@@ -1781,16 +1781,16 @@
         },
         {
             "name": "tghp/wp-gatsby-tghp",
-            "version": "0.2.0",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tghp/wp-gatsby-tghp.git",
-                "reference": "b97c174d83860fbd6848fc43329ede8b429a440c"
+                "reference": "c42395e7c4a0f1eb582d0465f08d22a237a068c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tghp/wp-gatsby-tghp/zipball/b97c174d83860fbd6848fc43329ede8b429a440c",
-                "reference": "b97c174d83860fbd6848fc43329ede8b429a440c",
+                "url": "https://api.github.com/repos/tghp/wp-gatsby-tghp/zipball/c42395e7c4a0f1eb582d0465f08d22a237a068c3",
+                "reference": "c42395e7c4a0f1eb582d0465f08d22a237a068c3",
                 "shasum": ""
             },
             "require": {
@@ -1802,31 +1802,31 @@
             "notification-url": "https://packagist.org/downloads/",
             "support": {
                 "issues": "https://github.com/tghp/wp-gatsby-tghp/issues",
-                "source": "https://github.com/tghp/wp-gatsby-tghp/tree/0.2.0"
+                "source": "https://github.com/tghp/wp-gatsby-tghp/tree/0.3.0"
             },
-            "time": "2022-09-22T20:30:38+00:00"
+            "time": "2022-09-26T21:28:23+00:00"
         },
         {
             "name": "tghp/wp-graphql-mb-tghp",
-            "version": "1.0.0",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tghp/wp-graphql-mb-tghp.git",
-                "reference": "7335785d454255863cce5cc22ff8adcb1e43d784"
+                "reference": "ac6c6393af9022763ea6084e92f8f08d454899f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tghp/wp-graphql-mb-tghp/zipball/7335785d454255863cce5cc22ff8adcb1e43d784",
-                "reference": "7335785d454255863cce5cc22ff8adcb1e43d784",
+                "url": "https://api.github.com/repos/tghp/wp-graphql-mb-tghp/zipball/ac6c6393af9022763ea6084e92f8f08d454899f6",
+                "reference": "ac6c6393af9022763ea6084e92f8f08d454899f6",
                 "shasum": ""
             },
             "type": "wordpress-plugin",
             "notification-url": "https://packagist.org/downloads/",
             "support": {
                 "issues": "https://github.com/tghp/wp-graphql-mb-tghp/issues",
-                "source": "https://github.com/tghp/wp-graphql-mb-tghp/tree/1.0.0"
+                "source": "https://github.com/tghp/wp-graphql-mb-tghp/tree/2.0.0"
             },
-            "time": "2022-09-22T21:57:16+00:00"
+            "time": "2022-09-29T20:13:29+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -1964,15 +1964,15 @@
         },
         {
             "name": "wpackagist-plugin/wordfence",
-            "version": "7.6.2",
+            "version": "7.7.1",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/wordfence/",
-                "reference": "tags/7.6.2"
+                "reference": "tags/7.7.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/wordfence.7.6.2.zip"
+                "url": "https://downloads.wordpress.org/plugin/wordfence.7.7.1.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
@@ -2058,5 +2058,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.3.0"
 }

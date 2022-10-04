@@ -28,8 +28,8 @@
         "wpackagist-plugin/wp-gatsby": "2.3.3",
         "wpackagist-plugin/wp-graphql": "1.8.6",
         "wpackagist-plugin/wp-rest-api-v2-menus": "0.10",
-        "tghp/wp-graphql-mb-tghp": "1.0.0",
-        "tghp/wp-gatsby-tghp": "0.2.0"
+        "tghp/wp-graphql-mb-tghp": "^2.0.0",
+        "tghp/wp-gatsby-tghp": "^0.3.0"
     },
     "config": {
         "vendor-dir": "wp-content/vendor",
