@@ -43,6 +43,11 @@ class Jc {
     public $essay;
 
     /**
+     * @var Url
+     */
+    public $url;
+
+    /**
      * @var Logger
      */
     protected $logger;
@@ -94,6 +99,7 @@ class Jc {
        $this->asset = new Asset($this);
        $this->util = new Util($this);
        $this->essay = new Essay($this);
+       $this->url = new Url($this);
    }
 
    /**

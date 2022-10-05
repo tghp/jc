@@ -134,6 +134,13 @@ if (isset($_ENV['EMAIL_SMTP_ALLOW_INVALID_SSL'])) {
     define('SAR_FSMTP_ALLOW_INVALID_SSL', 'off');
 }
 
+/**
+ * Gatsby stuff
+ */
+if (isset($_ENV['GATSBY_BASE_URL'])) {
+    define('GATSBY_BASE_URL', $_ENV['GATSBY_BASE_URL']);
+}
+
 /* That's all, stop editing! Happy publishing. */
 
 /** Absolute path to the WordPress directory. */
