@@ -35,7 +35,7 @@ export default function Essay(
         content,
         date,
         modified,
-        toc,
+        // toc,
         seo,
         tghpjcAudioUrl: audioUrl,
         tghpjcVideoUrl: videoUrl,
@@ -151,7 +151,7 @@ export default function Essay(
                             </div>
                             : null
                         }
-                        <TableOfContents navItems={toc?.items} />
+                        {/*<TableOfContents navItems={toc?.items} />*/}
                     </div>
 
                     <div className="single-essay__header">
@@ -263,7 +263,7 @@ export const query = graphql`
             date
             modified
             content
-            toc
+#            toc
             excerpt
             guid
             featuredImage {
