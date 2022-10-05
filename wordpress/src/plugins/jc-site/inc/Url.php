@@ -31,7 +31,7 @@ class Url extends AbstractJc
     public function redirectGatsbyUrls()
     {
         global $wp;
-        $url = $this->getGatsbyBaseUrl() . $wp->request;
+        $url = $this->getGatsbyBaseUrl() . '/' . $wp->request;
         wp_redirect($url, 301);
         exit;
     }
