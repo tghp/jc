@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "67d6983055e1d51dbca500c39f99aaf6",
+    "content-hash": "95dfa911c593e754f2c5764a03d01163",
     "packages": [
         {
             "name": "composer/installers",
@@ -1808,25 +1808,25 @@
         },
         {
             "name": "tghp/wp-graphql-mb-tghp",
-            "version": "2.1.0",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tghp/wp-graphql-mb-tghp.git",
-                "reference": "b08b3afa0f95fc2629144638739b20ace8da00fb"
+                "reference": "f431307929942476eb43eb78e52fa2a7788aed6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tghp/wp-graphql-mb-tghp/zipball/b08b3afa0f95fc2629144638739b20ace8da00fb",
-                "reference": "b08b3afa0f95fc2629144638739b20ace8da00fb",
+                "url": "https://api.github.com/repos/tghp/wp-graphql-mb-tghp/zipball/f431307929942476eb43eb78e52fa2a7788aed6c",
+                "reference": "f431307929942476eb43eb78e52fa2a7788aed6c",
                 "shasum": ""
             },
             "type": "wordpress-plugin",
             "notification-url": "https://packagist.org/downloads/",
             "support": {
                 "issues": "https://github.com/tghp/wp-graphql-mb-tghp/issues",
-                "source": "https://github.com/tghp/wp-graphql-mb-tghp/tree/2.1.0"
+                "source": "https://github.com/tghp/wp-graphql-mb-tghp/tree/2.3.0"
             },
-            "time": "2022-10-04T17:15:10+00:00"
+            "time": "2022-10-05T14:03:03+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

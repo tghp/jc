@@ -17,8 +17,6 @@ const IndexPage = ({
         }
     }) => {
 
-    console.log(homeMeta.seo)
-
     return (
         <Layout location={'home'} seoData={homeMeta.seo}>
             <HomeContent

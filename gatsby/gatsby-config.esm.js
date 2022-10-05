@@ -130,10 +130,11 @@ module.exports = {
                 host: process.env.GATSBY_SITE_URL,
                 env: {
                     development: {
-                        policy: [
-                            { userAgent: '*', disallow: ['/'] }
-                        ]
+                        policy: [{userAgent: '*', disallow: ['/']}]
                     },
+                    production: {
+                        policy: [{userAgent: '*', allow: '/'}]
+                    }
                 }
             }
         }
