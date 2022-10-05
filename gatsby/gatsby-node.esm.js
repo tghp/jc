@@ -7,7 +7,6 @@ import {
     createTableOfContents,
     getTableOfContentsFieldExtension
 } from './src/model/toc'
-const { createRemoteFileNode } = require(`gatsby-source-filesystem`) // For some reason `import { createRemoteFileNode } from 'gatsby-source-filesystem'` doesn't work
 
 export const createPages = async ({ graphql, actions }) => {
     const { createPage, createRedirect } = actions
@@ -41,7 +40,7 @@ export const createPages = async ({ graphql, actions }) => {
         ) => {
             const postPath = getPostPath(slug, date);
             const postCategories = categories.nodes.map(item => item.slug)
-            const furtherReadingPosts = tghpjcFurtherReadingPosts.map(item => Number(item))
+            const furtherReadingPosts = tghpjcFurtherReadingPosts ? tghpjcFurtherReadingPosts.map(item => Number(item)) : [0]
             const references = (content || '').match(/class="article-reference"/g) || [];
             const latexElements = (content || '').match(/\[latex\]/gi) || [];
 
@@ -151,10 +150,6 @@ export const createSchemaCustomization = ({ actions }) => {
       toc: JSON
       content: String @content
     }
-    
-    type WpPage implements Node {
-      introPhoto: File @link(from: "fields.pageIntroPhotoLocalFile")
-    }
     `
 
     createTypes(typeDefs)
@@ -168,30 +163,4 @@ export const createResolvers = ({ createResolvers, schema }) => {
             },
         },
     })
-}
-
-export const onCreateNode = async ({
-    node,
-    actions: { createNode, createNodeField },
-    createNodeId,
-    getCache,
-}) => {
-    if (node.internal.type === 'WpPage') {
-        console.log(`🥃🏠️ [Node ${node.slug}] Adding file node for tghpjcIntroPhoto`)
-
-        if (node.tghpjcIntroPhoto.url !== null) {
-            const fileNode = await createRemoteFileNode({
-                url: node.tghpjcIntroPhoto.url,
-                parentNodeId: node.id,
-                createNode,
-                createNodeId,
-                getCache,
-            })
-
-            // If the file was created, extend the node with "localFile"
-            if (fileNode) {
-                createNodeField({ node, name: "pageIntroPhotoLocalFile", value: fileNode.id })
-            }
-        }
-    }
 }

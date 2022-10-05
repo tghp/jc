@@ -36,10 +36,9 @@ export const indexQuery = graphql`
         tghpjcIntroColumn1
         tghpjcIntroColumn2
         tghpjcIntroPhoto {
-            alt
-        }
-        introPhoto {
-            publicURL
+            nodes {
+                gatsbyImage(layout: FULL_WIDTH, width: 400)
+            }
         }
         tghpjcHomeEssayCategories {
             id
