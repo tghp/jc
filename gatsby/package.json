@@ -33,6 +33,7 @@
     "gatsby-plugin-robots-txt": "^1.7.1",
     "gatsby-plugin-sass": "^5.17.0",
     "gatsby-plugin-sharp": "^4.19.0",
+    "gatsby-plugin-wpgraphql-seo": "^1.4.1",
     "gatsby-source-filesystem": "^4.20.0",
     "gatsby-source-wordpress": "^6.20.0",
     "gatsby-source-wordpress-menus": "^1.1.4",

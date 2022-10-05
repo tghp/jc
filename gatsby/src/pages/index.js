@@ -1,6 +1,5 @@
 import React from 'react'
 import { graphql } from 'gatsby'
-import { MetaData } from "../components/meta-data";
 import Layout from '../components/layout';
 import HomeContent from '../components/home-page/home-content';
 
@@ -18,17 +17,16 @@ const IndexPage = ({
         }
     }) => {
 
+    console.log(homeMeta.seo)
+
     return (
-        <>
-            <MetaData title={`Home`} />
-            <Layout location={'home'}>
-                <HomeContent
-                    homeMeta={homeMeta}
-                    allPosts={allPosts}
-                    favouritePostIds={favouritePostIds}
-                />
-            </Layout>
-        </>
+        <Layout location={'home'} seoData={homeMeta.seo}>
+            <HomeContent
+                homeMeta={homeMeta}
+                allPosts={allPosts}
+                favouritePostIds={favouritePostIds}
+            />
+        </Layout>
     );
 }
 
@@ -52,6 +50,7 @@ export const indexQuery = graphql`
         tghpjcAboutTextTitle
         tghpjcAboutTextColumn1
         tghpjcAboutTextColumn2
+        ...SeoData
     }   
   
     allPosts: allWpPost(

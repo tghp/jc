@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react"
 import { graphql } from "gatsby"
 import { useMeasure } from 'react-use';
 import { getPostDate, getPostPath } from "../model/post";
-import { MetaData } from "../components/meta-data";
 import Layout from "../components/layout"
 import TableOfContents from "../components/single-essay/table-of-contents"
 import Content from "../components/single-essay/content";
@@ -37,9 +36,7 @@ export default function Essay(
         date,
         modified,
         toc,
-        excerpt,
-        guid,
-        featuredImage,
+        seo,
         tghpjcAudioUrl: audioUrl,
         tghpjcVideoUrl: videoUrl,
         tghpjcSubstackUrl: substackUrl,
@@ -134,131 +131,123 @@ export default function Essay(
         : furtherReadingPostsOverride.posts
 
     return (
-        <>
-            <MetaData
-                title={title}
-                description={excerpt}
-                image={featuredImage?.node.sourceUrl}
-                url={guid}
-            />
-            <Layout location={'single-post'}>
-                <div className="single-essay">
-                    <div className="single-essay__grid">
+        <Layout location={'single-post'} seoData={seo}>
+            <div className="single-essay">
+                <div className="single-essay__grid">
 
-                        <div className="single-essay__sidebar">
-                            <div className="single-essay__sidebar-title" ref={sidebarTitle}>
-                                {seriesName &&
-                                    <div>{`${seriesName} / Part ${partNumber}`}</div>
-                                }
-                                {title}
-                            </div>
-                            {hasPdf || audioUrl || videoUrl
-                                ?
-                                <div className="single-essay__sidebar-media-links">
-                                    {hasPdf && <a href={`./${slug}/pdf/`} target={`_blank`} aria-label="Download PDF"><ImagePDFLink /></a>}
-                                    {audioUrl && <a href={audioUrl} target={`_blank`} aria-label="Audio link"><ImageAudioLink /></a>}
-                                    {videoUrl && <a href={videoUrl} target={`_blank`} aria-label="Video link"><ImageVideoLink /></a>}
-                                </div>
-                                : null
-                            }
-                            <TableOfContents navItems={toc?.items} />
-                        </div>
-
-                        <div className="single-essay__header">
-                            {modified && <div className="single-essay__header-update-date">Last updated: {getPostDate(modified)}</div>}
-                            {date && <div className="single-essay__header-publish-date">Published: {getPostDate(date)}</div>}
+                    <div className="single-essay__sidebar">
+                        <div className="single-essay__sidebar-title" ref={sidebarTitle}>
                             {seriesName &&
-                            <div className="single-essay__header-series">
-                                <div className="single-essay__header-series-name">
-                                    Series
-                                </div>
-                                <div className="single-essay__header-series-data">
-                                    {`${seriesName} / Part ${partNumber}`}
-                                </div>
+                            <div>{`${seriesName} / Part ${partNumber}`}</div>
+                            }
+                            {title}
+                        </div>
+                        {hasPdf || audioUrl || videoUrl
+                            ?
+                            <div className="single-essay__sidebar-media-links">
+                                {hasPdf && <a href={`./${slug}/pdf/`} target={`_blank`} aria-label="Download PDF"><ImagePDFLink /></a>}
+                                {audioUrl && <a href={audioUrl} target={`_blank`} aria-label="Audio link"><ImageAudioLink /></a>}
+                                {videoUrl && <a href={videoUrl} target={`_blank`} aria-label="Video link"><ImageVideoLink /></a>}
                             </div>
-                            }
-                            <h1 className="single-essay__header-title">{title}</h1>
-                        </div>
+                            : null
+                        }
+                        <TableOfContents navItems={toc?.items} />
+                    </div>
 
-                        <div className="single-essay__main" ref={mainContent}>
-                            <Content
-                                content={content}
-                                setImagesReady={setImagesReady}
-                                hasReferences={!!referenceCount}
-                                hasLatex={!!latexCount}
-                                mainContentRef={mainContent}
-                                mainContentMeasureRef={mainContentMeasureRef}
-                                referenceContentRefs={referenceContentRefs}
-                            />
+                    <div className="single-essay__header">
+                        {modified && <div className="single-essay__header-update-date">Last updated: {getPostDate(modified)}</div>}
+                        {date && <div className="single-essay__header-publish-date">Published: {getPostDate(date)}</div>}
+                        {seriesName &&
+                        <div className="single-essay__header-series">
+                            <div className="single-essay__header-series-name">
+                                Series
+                            </div>
+                            <div className="single-essay__header-series-data">
+                                {`${seriesName} / Part ${partNumber}`}
+                            </div>
                         </div>
+                        }
+                        <h1 className="single-essay__header-title">{title}</h1>
+                    </div>
 
-                        <div className="single-essay__extra-reading">
-                            {substackUrl || lessWrongUrl || eaForumUrl
-                                ?
-                                <div className="single-essay__extra-reading-comments post-comments">
-                                    <div className="post-comments__separator">
-                                        <CommentsIcon />
-                                    </div>
-                                    <div className="post-comments__options">
-                                        <div className="post-comments__options-text">Leave a comment</div>
-                                        <div className="post-comments__options-separator" />
-                                        {substackUrl &&
-                                            <a href={substackUrl} className="post-comments__options-system" target="_blank" rel="noreferrer">
-                                                Substack
-                                            </a>
-                                        }
-                                        {lessWrongUrl &&
-                                            <a href={lessWrongUrl} className="post-comments__options-system" target="_blank" rel="noreferrer">
-                                                LessWrong
-                                            </a>
-                                        }
-                                        {eaForumUrl &&
-                                            <a href={eaForumUrl} className="post-comments__options-system" target="_blank" rel="noreferrer">
-                                                EA Forum
-                                            </a>
-                                        }
-                                    </div>
+                    <div className="single-essay__main" ref={mainContent}>
+                        <Content
+                            content={content}
+                            setImagesReady={setImagesReady}
+                            hasReferences={!!referenceCount}
+                            hasLatex={!!latexCount}
+                            mainContentRef={mainContent}
+                            mainContentMeasureRef={mainContentMeasureRef}
+                            referenceContentRefs={referenceContentRefs}
+                        />
+                    </div>
+
+                    <div className="single-essay__extra-reading">
+                        {substackUrl || lessWrongUrl || eaForumUrl
+                            ?
+                            <div className="single-essay__extra-reading-comments post-comments">
+                                <div className="post-comments__separator">
+                                    <CommentsIcon />
                                 </div>
-                                : null
-                            }
-                            {nextSeriesPartObj &&
-                                <div className="single-essay__extra-reading-next-series">
-                                    <HeadingWithLink
-                                        title="Next up"
-                                        titleLink={true}
-                                        linkText="Read next in series"
-                                        linkTo={getPostPath(nextSeriesPartObj.slug, nextSeriesPartObj.date)}
-                                        linkArrow={true}
-                                    />
-                                    <div className="single-essay__extra-reading-next-series-essay">
-                                        <EssayLink post={nextSeriesPartObj} />
-                                    </div>
-                                </div>
-                            }
-                            {furtherReadingPosts.length !== 0 &&
-                                <div className="single-essay__extra-reading-further-reading">
-                                    <h2>Further reading</h2>
-                                    {furtherReadingPosts
-                                        .sort((postA, postB) => new Date(postB.date) - new Date(postA.date))
-                                        .slice(0, 3)
-                                        .map(post => <EssayLink post={post} key={post.slug} /> )
+                                <div className="post-comments__options">
+                                    <div className="post-comments__options-text">Leave a comment</div>
+                                    <div className="post-comments__options-separator" />
+                                    {substackUrl &&
+                                    <a href={substackUrl} className="post-comments__options-system" target="_blank" rel="noreferrer">
+                                        Substack
+                                    </a>
+                                    }
+                                    {lessWrongUrl &&
+                                    <a href={lessWrongUrl} className="post-comments__options-system" target="_blank" rel="noreferrer">
+                                        LessWrong
+                                    </a>
+                                    }
+                                    {eaForumUrl &&
+                                    <a href={eaForumUrl} className="post-comments__options-system" target="_blank" rel="noreferrer">
+                                        EA Forum
+                                    </a>
                                     }
                                 </div>
+                            </div>
+                            : null
+                        }
+                        {nextSeriesPartObj &&
+                        <div className="single-essay__extra-reading-next-series">
+                            <HeadingWithLink
+                                title="Next up"
+                                titleLink={true}
+                                linkText="Read next in series"
+                                linkTo={getPostPath(nextSeriesPartObj.slug, nextSeriesPartObj.date)}
+                                linkArrow={true}
+                            />
+                            <div className="single-essay__extra-reading-next-series-essay">
+                                <EssayLink post={nextSeriesPartObj} />
+                            </div>
+                        </div>
+                        }
+                        {furtherReadingPosts.length !== 0 &&
+                        <div className="single-essay__extra-reading-further-reading">
+                            <h2>Further reading</h2>
+                            {furtherReadingPosts
+                                .sort((postA, postB) => new Date(postB.date) - new Date(postA.date))
+                                .slice(0, 3)
+                                .map(post => <EssayLink post={post} key={post.slug} /> )
                             }
                         </div>
-
-                        {!!referenceCount &&
-                            <References
-                                references={references}
-                                referenceRowSizes={[referenceRowSizesDesktop, referenceRowSizesMobile]}
-                                referencesAreaMeasureRef={referencesAreaMeasureRef}
-                                referenceSidebarRefs={referenceSidebarRefs}
-                            />
                         }
                     </div>
+
+                    {!!referenceCount &&
+                    <References
+                        references={references}
+                        referenceRowSizes={[referenceRowSizesDesktop, referenceRowSizesMobile]}
+                        referencesAreaMeasureRef={referencesAreaMeasureRef}
+                        referenceSidebarRefs={referenceSidebarRefs}
+                    />
+                    }
                 </div>
-            </Layout>
-        </>
+            </div>
+        </Layout>
     )
 }
 
@@ -305,6 +294,7 @@ export const query = graphql`
             tghpjcReferences {
                 text
             }
+            ...SeoData
         } 
         
         furtherReadingPostsDefault: allWpPost(filter: {categories: {nodes: {elemMatch: {slug: {in: $postCategories}}}}}) {

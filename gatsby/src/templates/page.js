@@ -1,33 +1,30 @@
 import React from "react"
+import { graphql, Link } from "gatsby"
 import Layout from "../components/layout"
-import {graphql, Link} from "gatsby"
-import LinkArrow from "../assets/link-arrow.svg";
-import {MetaData} from "../components/meta-data";
+import LinkArrow from "../assets/link-arrow.svg"
 
 export default function Page({ data }) {
-    const { title, content } = data.allWpPage.nodes[0];
+    const wpPage = data.allWpPage.nodes[0]
+    const { title, content, seo } = wpPage
 
     return (
-        <>
-            <MetaData title={title} />
-            <Layout location={'default-page'}>
-                <div className="archive-posts">
-                    <div className="archive-posts__header">
-                        <div className="archive-posts__header-inner">
-                            <Link to={'/'} className="archive-posts__header-back-btn">
-                                <LinkArrow /> Back to homepage
-                            </Link>
-                            <h1 className="archive-posts__header-title">
-                                {title}
-                            </h1>
-                        </div>
+        <Layout location={'default-page'} seoData={seo}>
+            <div className="archive-posts">
+                <div className="archive-posts__header">
+                    <div className="archive-posts__header-inner">
+                        <Link to={'/'} className="archive-posts__header-back-btn">
+                            <LinkArrow /> Back to homepage
+                        </Link>
+                        <h1 className="archive-posts__header-title">
+                            {title}
+                        </h1>
                     </div>
                 </div>
-                <div className="default-page-content">
-                    <div dangerouslySetInnerHTML={{ __html: content }} />
-                </div>
-            </Layout>
-        </>
+            </div>
+            <div className="default-page-content">
+                <div dangerouslySetInnerHTML={{ __html: content }} />
+            </div>
+        </Layout>
     )
 }
 
@@ -39,6 +36,7 @@ export const query = graphql`
                 content
                 slug
                 date
+                ...SeoData
             }
         }
     }

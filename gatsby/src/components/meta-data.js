@@ -20,7 +20,7 @@ export const MetaData = ({ title, description, image, url }) => {
     return (
         <Helmet
             title={seo.title}
-            titleTemplate={`%s | ${defaultTitle}`}
+            titleTemplate={`%s - ${defaultTitle}`}
             meta={[
                 {
                     name: `description`,
