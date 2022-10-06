@@ -11,7 +11,7 @@ const siteMetaData = {
     siteUrl: process.env.GATSBY_SITE_URL,
     backgroundColor: `#F1EFEF`,
     themeColor:  `#FAF8F8`,
-    favicon: `src/images/favicon.png`,
+    favicon: `/images/favicon.png`,
 }
 
 module.exports = {
@@ -62,19 +62,6 @@ module.exports = {
             }
         },
         'gatsby-plugin-gatsby-cloud',
-        {
-            resolve: `gatsby-plugin-manifest`,
-            options: {
-                name: siteMetaData.title,
-                short_name: siteMetaData.title,
-                start_url: `/`,
-                background_color: siteMetaData.backgroundColor,
-                theme_color: siteMetaData.themeColor,
-                display: `standalone`,
-                icon: siteMetaData.favicon,
-            },
-        },
-        'gatsby-plugin-offline',
         {
             resolve: 'gatsby-plugin-feed',
             options: {

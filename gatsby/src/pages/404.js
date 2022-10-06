@@ -1,8 +1,9 @@
 import React from "react"
 import { Link } from "gatsby"
+import { HeadMeta } from "../components/meta-data-head";
+import { MetaData } from "../components/meta-data";
 import Layout from "../components/layout";
 import LinkArrow from "../assets/link-arrow.svg";
-import { MetaData } from "../components/meta-data";
 
 const NotFoundPage = () => {
     return (
@@ -31,3 +32,5 @@ const NotFoundPage = () => {
 }
 
 export default NotFoundPage
+
+export const Head = () => <HeadMeta />

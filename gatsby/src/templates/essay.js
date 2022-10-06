@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react"
 import { graphql } from "gatsby"
 import { useMeasure } from 'react-use';
+import { HeadMeta } from "../components/meta-data-head";
 import { getPostDate, getPostPath } from "../model/post";
 import Layout from "../components/layout"
 import TableOfContents from "../components/single-essay/table-of-contents"
@@ -328,3 +329,5 @@ export const query = graphql`
         }
     }
 `
+
+export const Head = () => <HeadMeta />

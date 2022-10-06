@@ -1,5 +1,6 @@
 import React from 'react'
 import { graphql } from 'gatsby'
+import { HeadMeta } from "../components/meta-data-head";
 import Layout from '../components/layout';
 import HomeContent from '../components/home-page/home-content';
 
@@ -81,3 +82,5 @@ export const indexQuery = graphql`
 `
 
 export default IndexPage
+
+export const Head = () => <HeadMeta />

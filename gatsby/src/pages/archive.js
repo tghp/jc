@@ -1,7 +1,8 @@
-import React, {useEffect, useRef} from 'react'
-import Layout from '../components/layout';
+import React, { useEffect, useRef } from 'react'
 import { graphql, Link } from 'gatsby'
+import { HeadMeta } from "../components/meta-data-head";
 import { MetaData } from "../components/meta-data";
+import Layout from '../components/layout';
 import EssayLink from "../components/essay-link";
 import PostArchive from "../components/post-archive";
 import ImageLinkArrow from "../assets/link-arrow.svg";
@@ -96,3 +97,5 @@ export const query = graphql`
         }
     }
 `
+
+export const Head = () => <HeadMeta />

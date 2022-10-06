@@ -1,5 +1,6 @@
 import React from "react"
 import { graphql, Link } from "gatsby"
+import { HeadMeta } from "../components/meta-data-head";
 import Layout from "../components/layout"
 import LinkArrow from "../assets/link-arrow.svg"
 
@@ -41,3 +42,5 @@ export const query = graphql`
         }
     }
 `
+
+export const Head = () => <HeadMeta />

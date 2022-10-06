@@ -1,5 +1,6 @@
 import React from 'react'
 import { graphql, Link } from 'gatsby'
+import { HeadMeta } from "../components/meta-data-head";
 import { MetaData } from '../components/meta-data';
 import { getFavouritePosts } from '../model/post';
 import Layout from '../components/layout';
@@ -75,3 +76,5 @@ export const query = graphql`
     }
 }
 `
+
+export const Head = () => <HeadMeta />
