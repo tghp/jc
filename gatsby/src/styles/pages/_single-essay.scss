@@ -59,7 +59,7 @@
         &-title {
             @include font__sizing(44px, 57.2px);
             margin-top: $padding--small;
-            margin-bottom: $padding--medium;
+            margin-bottom: 35px;
 
             @include mq($until: m) {
                 @include font__sizing(34px, 46px);

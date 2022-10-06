@@ -12,6 +12,14 @@
 /*
  * Quote block
  */
+.single-post .single-essay__main div > .wp-block-quote:first-child {
+    margin-top: 5px;
+}
+
+p + .wp-block-quote {
+    margin-top: $padding--xxsmall;
+}
+
 .wp-block-quote {
     display: inline-block;
     margin-top: $padding--medium;
