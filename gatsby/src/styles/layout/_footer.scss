@@ -30,7 +30,9 @@
             }
 
             @include mq($from: s) {
-                @include flex-space-between-center;
+                display: grid;
+                grid-template-columns: minmax(270px, auto) auto minmax(270px, auto);
+                gap: 10px;
             }
         }
 
@@ -43,6 +45,10 @@
         @include font__family--inter-light;
         display: flex;
         gap: 25px;
+
+        @include mq($from: s) {
+            justify-content: center;
+        }
     }
 
     &__copyright {
@@ -53,6 +59,10 @@
     &__built-by {
         @include font__family--inter-medium;
         color: $color-jc-blue;
+
+        @include mq($from: s) {
+            text-align: right;
+        }
     }
 
     @media print {
