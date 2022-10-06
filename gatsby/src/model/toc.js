@@ -30,7 +30,7 @@ const createId = ($, title) => {
     return id
 }
 
-const groupHeadings = (index, grouping, headings) => {
+export const groupHeadings = (index, grouping, headings) => {
     if (index < headings.length) {
         const nextHeading = headings[index]
 
@@ -66,19 +66,26 @@ const groupHeadings = (index, grouping, headings) => {
 
 export const createTableOfContents = async (source, args, context, info) => {
     if (source.content) {
-        const $ = cheerio.load(source.content)
-        const titles = $('h2,h3,h4,h5')
-        const getUniqueId = createUniqueIdFactory()
+        const $ = cheerio.load(source.content);
+        const titles = $('h2, h3, h4, h5');
+        const getUniqueId = createUniqueIdFactory();
 
         const headings = Array.from(titles).map(title => {
-            const depth = parseInt($(title).prop('tagName').substr(1), 10)
-            const id = createId($, title)
-            return {url: `#${getUniqueId(id)}`, title: $(title).text(), depth}
-        })
+            const $title = $(title);
+            const depth = parseInt($title.prop('tagName').substring(1), 10);
+            const id = createId($, title);
 
-        const reduced = groupHeadings(0, [], headings)
-        return {items: reduced}
+            return {
+                url: `#${getUniqueId(id)}`,
+                title: $title.text(),
+                depth
+            };
+        });
+
+        return headings;
     }
+
+    return [];
 }
 
 export const getTableOfContentsFieldExtension = (options, prevFieldConfig) => {

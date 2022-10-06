@@ -138,18 +138,18 @@ export const createPages = async ({ graphql, actions }) => {
 }
 
 export const createSchemaCustomization = ({ actions }) => {
-    const { createTypes, createFieldExtension } = actions;
-
-    createFieldExtension({
-        name: "content",
-        extend: getTableOfContentsFieldExtension,
-    })
+    const { createTypes } = actions;
 
     const typeDefs = `
-    type WpPost implements Node {
-      toc: JSON
-      content: String @content
-    }
+        type TocItem {
+            url: String!
+            title: String!
+            depth: Int!
+        }
+        
+        type WpPost implements Node {
+            toc: [TocItem]
+        }
     `
 
     createTypes(typeDefs)
