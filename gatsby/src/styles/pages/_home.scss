@@ -16,9 +16,12 @@
         padding-top: $padding--xsmall;
         padding-bottom: $padding--xsmall;
 
+        @include mq($from: s) {
+            column-gap: $padding--xsmall;
+        }
+
         @include mq($from: s, $until: xl) {
             grid-template-columns: auto 40%;
-            column-gap: $padding--xxxsmall;
             grid-template-rows: repeat(2, auto);
         }
 
