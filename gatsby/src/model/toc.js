@@ -67,7 +67,7 @@ export const groupHeadings = (index, grouping, headings) => {
 export const createTableOfContents = async (source, args, context, info) => {
     if (source.content) {
         const $ = cheerio.load(source.content);
-        const titles = $('h2, h3, h4, h5');
+        const titles = $('h2,h3,h4');
         const getUniqueId = createUniqueIdFactory();
 
         const headings = Array.from(titles).map(title => {
@@ -93,7 +93,7 @@ export const getTableOfContentsFieldExtension = (options, prevFieldConfig) => {
         resolve(source) {
             if (source.content) {
                 const $ = cheerio.load(source.content)
-                const titles = $('h2,h3,h4,h5')
+                const titles = $('h2,h3,h4')
                 const getUniqueId = createUniqueIdFactory()
 
                 Array.from(titles).forEach(title => {

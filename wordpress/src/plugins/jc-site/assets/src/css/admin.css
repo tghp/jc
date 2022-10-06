@@ -37,7 +37,7 @@
     color: #3872e9;
 }
 
-    /* Block settings panel */
+/* Block settings panel */
 .color-block-support-panel,
 .typography-block-support-panel {
     display: none !important;
@@ -60,4 +60,12 @@
 
 .is-style-indent-twice {
     padding-left: 60px;
+}
+
+h4, h5, h6 {
+    font-size: 18px !important;
+    font-style: italic;
+    line-height: 27px !important;
+    margin-top: 23px !important;
+    margin-bottom: 23px !important;
 }
