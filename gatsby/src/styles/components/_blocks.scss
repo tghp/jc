@@ -12,12 +12,8 @@
 /*
  * Quote block
  */
-.single-post .single-essay__main div > .wp-block-quote:first-child {
-    margin-top: 5px;
-}
-
 p + .wp-block-quote {
-    margin-top: $padding--xxsmall;
+    margin-top: $padding--xsmall;
 }
 
 .wp-block-quote {

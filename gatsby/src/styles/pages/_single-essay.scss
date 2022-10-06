@@ -59,7 +59,7 @@
         &-title {
             @include font__sizing(44px, 57.2px);
             margin-top: $padding--small;
-            margin-bottom: 35px;
+            margin-bottom: $padding--xsmall;
 
             @include mq($until: m) {
                 @include font__sizing(34px, 46px);
@@ -190,6 +190,19 @@
 
             section [data-section-index] a {
                 scroll-margin-top: $header--height + $padding--xxsmall;
+            }
+
+            /*
+             * First content dependant styles
+             */
+            div {
+                > .wp-block-quote:first-child {
+                    margin-top: $padding--xsmall;
+                }
+
+                > .is-style-large-text:first-child {
+                    margin-top: $padding--xxsmall;
+                }
             }
         }
     }

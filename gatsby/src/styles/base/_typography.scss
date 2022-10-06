@@ -40,9 +40,8 @@ p strong {
     @include font__family--newsreader-regular;
 }
 
-.single-post .single-essay__main,
+.single-essay__main,
 .default-page-content {
-
     h1 {
         @include font__sizing(44px, 57.2px);
 
