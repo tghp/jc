@@ -20,9 +20,7 @@ class Category extends AbstractMetabox implements MetaboxDefinerInterface
                         'id' => Metabox::generateKey('category_content'),
                         'name' => 'Content',
                         'type' => 'wysiwyg',
-                        'options' => [
-                            'textarea_rows' => 10
-                        ]
+                        'options' => $this->getCategoriesWysiwygOptionsConfig(),
                     ],
                 ]
             ],

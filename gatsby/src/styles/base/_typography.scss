@@ -41,7 +41,8 @@ p strong {
 }
 
 .single-essay__main,
-.default-page-content {
+.default-page-content,
+.archive-posts__posts-cat-excerpt {
     h1 {
         @include font__sizing(44px, 57.2px);
 
