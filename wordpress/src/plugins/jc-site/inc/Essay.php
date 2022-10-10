@@ -13,6 +13,7 @@ class Essay extends AbstractJc
         add_filter('the_content', [$this, 'addReferenceSups']);
         add_filter('rwmb_get_value', [$this, 'applyShortcodeToWysiwygMetabox'], 10, 4 );
         add_shortcode('subscribe_modal_button', [$this, 'subscribeModalTriggerShortcode']);
+        add_filter('init_graphql_request', [$this, 'addTableOfContentsToGraph']);
     }
 
     /**
@@ -141,6 +142,51 @@ class Essay extends AbstractJc
             $value = do_shortcode($value);
         }
         return $value;
+    }
+
+    public function addTableOfContentsToGraph()
+    {
+        register_graphql_object_type('TableOfContentsItem', [
+            'description' => 'Table of Contents object',
+            'fields' => [
+                'url' => [
+                    'type' => 'String',
+                    'description' => 'The URL of the object.',
+                ],
+                'title' => [
+                    'type' => 'String',
+                    'description' => 'The title of the object.',
+                ],
+                'depth' => [
+                    'type' => 'Int',
+                    'description' => 'The depth of the item within the contents.',
+                ],
+            ],
+        ]);
+
+        register_graphql_field('Post', 'tableOfContents', [
+            'type' => ['list_of' => 'TableOfContentsItem'],
+            'description' => 'Table of Contents for the Post',
+            'resolve' => function (\WPGraphQL\Model\Post $object) {
+                $content = get_the_content($object->ID);
+
+                if (preg_match_all('/<h(\d).*?>(.*?)<\/h2>/', $content, $matches, PREG_SET_ORDER)) {
+                    $items = [];
+
+                    foreach ($matches as $titleMatch) {
+                        $items[] = [
+                            'url' => '#' . $this->slugifySectionName($titleMatch[2]),
+                            'title' => strip_tags($titleMatch[2]),
+                            'depth' => $titleMatch[1],
+                        ];
+                    }
+
+                    return $items;
+                } else {
+                    return [];
+                }
+            },
+        ]);
     }
 
 }
