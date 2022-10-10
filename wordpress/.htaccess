@@ -1,5 +1,20 @@
 <IfModule mod_rewrite.c>
 RewriteEngine On
+RewriteCond %{HTTP_HOST} ^www.handsandcities.com$ [NC,OR]
+RewriteCond %{HTTP_HOST} ^handsandcities.com$ [NC]
+RewriteRule ^about/?$ https://joecarlsmith.com/#about-section [L,R=301,NC,NE]
+
+RewriteCond %{HTTP_HOST} ^www.josephcarlsmith.com$ [NC,OR]
+RewriteCond %{HTTP_HOST} ^josephcarlsmith.com$ [NC]
+RewriteRule ^(.*?)$ https://joecarlsmith.com/$1 [L,R=301,NC]
+
+RewriteCond %{HTTP_HOST} ^www.handsandcities.com$ [NC,OR]
+RewriteCond %{HTTP_HOST} ^handsandcities.com$ [NC]
+RewriteRule ^(.*?)$ https://joecarlsmith.com/$1 [L,R=301,NC]
+</IfModule>
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 RewriteBase /
 RewriteRule ^index\.php$ - [L]
