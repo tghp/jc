@@ -330,8 +330,10 @@
             scroll-margin-top: $header--height;
 
             &__text {
-                p {
-                    margin-bottom: 10px;
+                p:not(:last-child),
+                ul,
+                ol {
+                    margin-bottom: $padding--xxsmall;
                 }
 
                 p:last-child,
@@ -348,6 +350,10 @@
                 ol {
                     list-style: decimal;
                     padding-left: 15px;
+                }
+
+                em {
+                    font-style: italic;
                 }
             }
 

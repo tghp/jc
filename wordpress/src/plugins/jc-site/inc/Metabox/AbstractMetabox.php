@@ -14,7 +14,7 @@ abstract class AbstractMetabox extends AbstractJc
             'media_buttons' => false,
             'tinymce' => [
                 'block_formats' => 'Paragraph=p; Heading=h5',
-                'toolbar1' => 'formatselect, bold, bullist, link, unlink, blockquote',
+                'toolbar1' => 'formatselect, bold, italic, bullist, link, unlink, blockquote',
                 'toolbar2' => '',
                 'toolbar3' => '',
             ],
@@ -27,7 +27,7 @@ abstract class AbstractMetabox extends AbstractJc
             'textarea_rows' => 5,
             'media_buttons' => false,
             'tinymce' => [
-                'toolbar1' => 'bold, bullist, numlist, italic, link, unlink',
+                'toolbar1' => 'bold, italic, bullist, numlist, link, unlink',
                 'toolbar2' => '',
                 'toolbar3' => '',
             ],
@@ -40,7 +40,7 @@ abstract class AbstractMetabox extends AbstractJc
             'textarea_rows' => 20,
             'media_buttons' => false,
             'tinymce' => [
-                'toolbar1' => 'bold, bullist, numlist, italic, outdent, indent link, unlink',
+                'toolbar1' => 'bold, italic, bullist, numlist, outdent, indent link, unlink',
                 'toolbar2' => '',
                 'toolbar3' => '',
             ],
