@@ -48,14 +48,17 @@ export const groupHeadings = (index, grouping, headings) => {
                     grouping.push({ ...nextHeading })
                     return groupHeadings(++index, grouping, headings)
                 } else {
-                    throw { index: index, heading: nextHeading }
+                    const headingErr = new Error('');
+                    headingErr.headingData = { index: index, heading: nextHeading };
+                    throw headingErr;
                 }
-            } catch (higherHeading) {
+            } catch (caughtHeadingErr) {
+                const higherHeading = caughtHeadingErr.headingData;
                 if (higherHeading.heading.depth === prevHeading.depth) {
                     grouping.push({ ...higherHeading.heading })
                     return groupHeadings(++higherHeading.index, grouping, headings)
                 } else {
-                    throw higherHeading
+                    throw caughtHeadingErr
                 }
             }
         } else {
