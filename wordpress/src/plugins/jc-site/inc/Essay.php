@@ -95,6 +95,9 @@ class Essay extends AbstractJc
     {
         $divider = '-';
 
+        // strip any tags that may be in the title
+        $sectionName = strip_tags($sectionName);
+
         // replace non letter or digits by divider
         $sectionName = preg_replace('~[^\pL\d]+~u', $divider, $sectionName);
 

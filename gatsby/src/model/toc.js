@@ -23,8 +23,11 @@ const createId = ($, title) => {
         id = $(title)
             .text()
             .toLowerCase()
+            .trim()
             .replace(/[^a-z_0-9]+/gi, '-')
             .replace(/-+/g, '-')
+            .replace(/^-+/g, '')
+            .replace(/-+$/g, '')
     }
 
     return id
