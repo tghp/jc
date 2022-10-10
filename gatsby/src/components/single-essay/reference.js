@@ -33,9 +33,6 @@ const Reference = ({ reference, index, referenceSidebarRefs }) => {
             <button className="reference__index reference__index--link" onClick={jumpToContentRef}>
                 {index+1}
             </button>
-            <div className="reference__index reference__index--text">
-                {index+1}
-            </div>
             <div className="reference__text" dangerouslySetInnerHTML={{ __html: content }} />
             {isLongText &&
                 <button

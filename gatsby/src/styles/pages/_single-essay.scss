@@ -390,18 +390,6 @@
                     flex-direction: column;
                     color: $color-jc-blue;
                     cursor: pointer;
-
-                    @include mq($from: m) {
-                        display: none;
-                    }
-                }
-
-                &--text {
-                    display: none;
-
-                    @include mq($from: m) {
-                        display: block;
-                    }
                 }
             }
         }
