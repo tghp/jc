@@ -24,6 +24,18 @@ wp.domReady(() => {
         },
     ]);
 
+    wp.blocks.registerBlockStyle('core/list', [
+        {
+            name: 'default',
+            label: 'Default List',
+            isDefault: true,
+        },
+        {
+            name: 'large-text',
+            label: 'Large text',
+        },
+    ]);
+
     wp.blocks.unregisterBlockType('core/media-text');
     wp.blocks.unregisterBlockType('core/search');
     wp.blocks.unregisterBlockType('core/verse');
