@@ -14,8 +14,10 @@ const siteMetaData = {
     favicon: `/images/favicon.png`,
 }
 
+// @ts-ignore
 module.exports = {
     siteMetadata: siteMetaData,
+    graphqlTypegen: true,
     plugins: [
         {
             resolve: 'gatsby-source-wordpress',
@@ -79,7 +81,9 @@ module.exports = {
                 `,
                 feeds: [
                     {
+                        // @ts-ignore
                         serialize: ({ query: { site, allWpPost } }) => {
+                            // @ts-ignore
                             return allWpPost.nodes.map(post => {
                                 const url = site.siteMetadata.siteUrl + getPostPath(post.slug, post.date);
 
