@@ -1,38 +1,3 @@
-import * as cheerio from 'cheerio';
-
-const createUniqueIdFactory = () => {
-    const tempMap = {}
-
-    return el => {
-        if (tempMap[el]) {
-            tempMap[el] = tempMap[el] + 1
-            const result = `${el}-${tempMap[el]}`
-            tempMap[result] = 1
-            return result
-        } else {
-            tempMap[el] = 1
-            return el
-        }
-    }
-}
-
-const createId = ($, title) => {
-    let id = $(title).attr('id')
-
-    if (!id) {
-        id = $(title)
-            .text()
-            .toLowerCase()
-            .trim()
-            .replace(/[^a-z_0-9]+/gi, '-')
-            .replace(/-+/g, '-')
-            .replace(/^-+/g, '')
-            .replace(/-+$/g, '')
-    }
-
-    return id
-}
-
 export const groupHeadings = (index, grouping, headings) => {
     if (index < headings.length) {
         const nextHeading = headings[index]
@@ -68,47 +33,4 @@ export const groupHeadings = (index, grouping, headings) => {
     }
 
     return grouping
-}
-
-export const createTableOfContents = async (source, args, context, info) => {
-    if (source.content) {
-        const $ = cheerio.load(source.content);
-        const titles = $('h2,h3,h4');
-        const getUniqueId = createUniqueIdFactory();
-
-        const headings = Array.from(titles).map(title => {
-            const $title = $(title);
-            const depth = parseInt($title.prop('tagName').substring(1), 10);
-            const id = createId($, title);
-
-            return {
-                url: `#${getUniqueId(id)}`,
-                title: $title.text(),
-                depth
-            };
-        });
-
-        return headings;
-    }
-
-    return [];
-}
-
-export const getTableOfContentsFieldExtension = (options, prevFieldConfig) => {
-    return {
-        resolve(source) {
-            if (source.content) {
-                const $ = cheerio.load(source.content)
-                const titles = $('h2,h3,h4')
-                const getUniqueId = createUniqueIdFactory()
-
-                Array.from(titles).forEach(title => {
-                    const id = createId($, title)
-                    $(title).attr('id', getUniqueId(id))
-                })
-
-                return $('body').html()
-            }
-        },
-    }
 }

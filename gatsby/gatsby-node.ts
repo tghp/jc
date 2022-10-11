@@ -5,9 +5,6 @@ import {
     categoryPageSlug,
     getPostPath
 } from './src/model/post'
-import {
-    createTableOfContents
-} from './src/model/toc'
 
 export const createPages: GatsbyNode['createPages'] = async (
     { graphql, actions }
@@ -137,36 +134,4 @@ export const createPages: GatsbyNode['createPages'] = async (
             })
         }
     }
-}
-
-export const createSchemaCustomization: GatsbyNode['createSchemaCustomization'] = (
-    { actions }
-) => {
-    const { createTypes } = actions;
-
-    const typeDefs = `
-        type TocItem {
-            url: String!
-            title: String!
-            depth: Int!
-        }
-        
-        type WpPost implements Node {
-            toc: [TocItem]
-        }
-    `
-
-    createTypes(typeDefs)
-}
-
-export const createResolvers: GatsbyNode['createResolvers'] = (
-    { createResolvers, schema }
-) => {
-    createResolvers({
-        WpPost: {
-            toc: {
-                resolve: createTableOfContents,
-            },
-        },
-    })
 }
