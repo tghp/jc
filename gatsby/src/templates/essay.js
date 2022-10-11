@@ -36,7 +36,7 @@ export default function Essay(
         content,
         date,
         modified,
-        toc,
+        tableOfContents: toc,
         seo,
         tghpjcAudioUrl: audioUrl,
         tghpjcVideoUrl: videoUrl,
@@ -264,7 +264,7 @@ export const query = graphql`
             date
             modified
             content
-            toc {
+            tableOfContents {
                 url
                 title
                 depth
