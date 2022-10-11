@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 
-const Reference = ({ reference, index, referenceSidebarRefs }) => {
+const Reference = ({ reference, index, referenceSidebarRefs, openIndexes, toggleOpenIndex, clearOpenIndexes }) => {
     let shortenedText
     const characterCount = 270
     const fullText = reference.text
@@ -11,13 +11,18 @@ const Reference = ({ reference, index, referenceSidebarRefs }) => {
         shortenedText = fullText
     }
 
-    const [seeMoreText, setSeeMoreText] = useState(false)
-    const setStateHandler = () => setSeeMoreText(!seeMoreText)
+    const isOpen = openIndexes.includes(index)
 
-    const content = seeMoreText ? fullText : shortenedText
+    const content = isOpen ? fullText : shortenedText
 
-    function jumpToContentRef() {
+    const jumpToContentRef = () => {
         document.getElementById(`ref-${index+1}`).scrollIntoView();
+
+        clearOpenIndexes()
+    }
+
+    const handleReferenceToggleClick = () => {
+        toggleOpenIndex(index)
     }
 
     return (
@@ -36,9 +41,9 @@ const Reference = ({ reference, index, referenceSidebarRefs }) => {
             <div className="reference__text" dangerouslySetInnerHTML={{ __html: content }} />
             {isLongText &&
                 <button
-                    className={`reference__more-link${seeMoreText ? ' reference__more-link--less' : ''}`}
-                    onClick={setStateHandler}>
-                        {seeMoreText ? 'Less' : 'More'}
+                    className={`reference__more-link${isOpen ? ' reference__more-link--less' : ''}`}
+                    onClick={handleReferenceToggleClick}>
+                        {isOpen ? 'Less' : 'More'}
                 </button>
             }
         </div>
