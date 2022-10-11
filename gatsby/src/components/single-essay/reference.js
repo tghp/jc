@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 
 const Reference = ({ reference, index, referenceSidebarRefs, openIndexes, toggleOpenIndex, clearOpenIndexes }) => {
     let shortenedText
