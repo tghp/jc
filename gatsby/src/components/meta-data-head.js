@@ -4,8 +4,10 @@ export const HeadMeta = () => {
 
     return (
         <>
-            <link rel="icon" href="/images/favicon.png" type="image/png" />
-            <link rel="apple-touch-icon" href="/images/favicon.png" sizes="170x170" />
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+            <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png" />
+            <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" />
+            <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
         </>
     )
 }
