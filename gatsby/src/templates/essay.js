@@ -149,6 +149,24 @@ export default function Essay(
         setOpenIndexes([]);
     }
 
+    /**
+     * Check URL for hash and scroll anchor tag
+     */
+    useEffect(() => {
+        const scrollToHashElement = () => {
+            const { hash } = window.location;
+            const elementToScroll = document.querySelector(`[name="${hash?.replace("#", "")}"]`);
+
+            if (!elementToScroll) return;
+
+            elementToScroll.scrollIntoView()
+        };
+
+        scrollToHashElement();
+        window.addEventListener("hashchange", scrollToHashElement);
+        return window.removeEventListener("hashchange", scrollToHashElement);
+    }, []);
+
     return (
         <Layout location={'single-post'} seoData={seo}>
             <div className="single-essay">
