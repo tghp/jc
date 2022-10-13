@@ -1,31 +1,22 @@
-import React, { useState } from "react"
+import React from "react"
 import classnames from "classnames"
 import Reference from "./reference"
 
-const References = ({ references, referenceRowSizes, referencesAreaMeasureRef, referenceSidebarRefs }) => {
+const References = ({
+        references,
+        referenceRowSizes,
+        referencesAreaMeasureRef,
+        referenceSidebarRefs,
+        openIndexes,
+        onReferenceToggleOpenIndex,
+        onReferenceClearOpenIndexes
+    }) => {
     const [referenceRowSizesDesktop, referenceRowSizesMobile] = referenceRowSizes;
 
     const classNames = [
         'single-essay__references',
         referenceRowSizesDesktop.length && 'single-essay__references--visible',
     ];
-
-    const [openIndexes, setOpenIndexes] = useState([])
-
-    const toggleOpenIndex = (index) => {
-        if (openIndexes.includes(index)) {
-            setOpenIndexes(openIndexes.filter(val => val !== index))
-        } else {
-            setOpenIndexes([
-                ...openIndexes,
-                index
-            ])
-        }
-    }
-
-    const clearOpenIndexes = () => {
-        setOpenIndexes([]);
-    }
 
     return (
         <div
@@ -43,8 +34,8 @@ const References = ({ references, referenceRowSizes, referencesAreaMeasureRef, r
                     index={index}
                     referenceSidebarRefs={referenceSidebarRefs}
                     openIndexes={openIndexes}
-                    toggleOpenIndex={toggleOpenIndex}
-                    clearOpenIndexes={clearOpenIndexes}
+                    toggleOpenIndex={onReferenceToggleOpenIndex}
+                    clearOpenIndexes={onReferenceClearOpenIndexes}
                 />
             )}
         </div>

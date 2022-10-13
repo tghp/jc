@@ -57,6 +57,7 @@ export default function Essay(
     const [referenceRowSizesDesktop, setReferenceRowSizesDesktop] = useState([]);
     const [referenceRowSizesMobile, setReferenceRowSizesMobile] = useState([]);
     const [imagesReady, setImagesReady] = useState(!content || !content.match(/<img/g));
+    const [openIndexes, setOpenIndexes] = useState([])
 
     const onScroll = () => {
         const mainContentWindowTop = mainContent.current.getBoundingClientRect().top
@@ -131,6 +132,23 @@ export default function Essay(
         ? furtherReadingPostsDefault.posts
         : furtherReadingPostsOverride.posts
 
+    /**
+     * References more/less button management
+     */
+    const onReferenceToggleOpenIndex = (index) => {
+        if (openIndexes.includes(index)) {
+            setOpenIndexes(openIndexes.filter(val => val !== index))
+        } else {
+            setOpenIndexes([
+                ...openIndexes,
+                index
+            ])
+        }
+    }
+    const onReferenceClearOpenIndexes = () => {
+        setOpenIndexes([]);
+    }
+
     return (
         <Layout location={'single-post'} seoData={seo}>
             <div className="single-essay">
@@ -180,6 +198,8 @@ export default function Essay(
                             mainContentRef={mainContent}
                             mainContentMeasureRef={mainContentMeasureRef}
                             referenceContentRefs={referenceContentRefs}
+                            referenceSidebarRefs={referenceSidebarRefs}
+                            onReferenceClearOpenIndexes={onReferenceClearOpenIndexes}
                         />
                     </div>
 
@@ -244,6 +264,9 @@ export default function Essay(
                         referenceRowSizes={[referenceRowSizesDesktop, referenceRowSizesMobile]}
                         referencesAreaMeasureRef={referencesAreaMeasureRef}
                         referenceSidebarRefs={referenceSidebarRefs}
+                        openIndexes={openIndexes}
+                        onReferenceToggleOpenIndex={onReferenceToggleOpenIndex}
+                        onReferenceClearOpenIndexes={onReferenceClearOpenIndexes}
                     />
                     }
                 </div>

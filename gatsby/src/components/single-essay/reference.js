@@ -1,6 +1,13 @@
 import React from "react"
 
-const Reference = ({ reference, index, referenceSidebarRefs, openIndexes, toggleOpenIndex, clearOpenIndexes }) => {
+const Reference = ({
+        reference,
+        index,
+        referenceSidebarRefs,
+        openIndexes,
+        toggleOpenIndex,
+        clearOpenIndexes
+    }) => {
     let shortenedText
     const characterCount = 270
     const fullText = reference.text

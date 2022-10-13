@@ -9,7 +9,9 @@ const Content = ({
     hasLatex,
     mainContentRef,
     mainContentMeasureRef,
-    referenceContentRefs
+    referenceContentRefs,
+    referenceSidebarRefs,
+    onReferenceClearOpenIndexes
 }) => {
     const imagesLoadedRef = useRef(0);
     let processedReferences = [];
@@ -132,8 +134,9 @@ const Content = ({
                                     processedReferences.push(referenceNumber);
                                 }
 
-                                function jumpToSidebarRef() {
-                                    document.getElementById(`reference-item-${referenceNumber}`).scrollIntoView();
+                                const jumpToSidebarRef = async () => {
+                                    await onReferenceClearOpenIndexes()
+                                    referenceSidebarRefs.current[Number(referenceNumber)-1].scrollIntoView()
                                 }
 
                                 return (
