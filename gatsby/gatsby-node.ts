@@ -133,5 +133,11 @@ export const createPages: GatsbyNode['createPages'] = async (
                 console.log('🥃🏠️ ✅');
             })
         }
+
+        createRedirect({
+            fromPath: `/pdf/*`,
+            toPath: 'https://jc.gatspress.com/pdf/*',
+            isPermanent: true,
+        });
     }
 }
