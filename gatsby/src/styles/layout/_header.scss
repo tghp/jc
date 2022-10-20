@@ -58,6 +58,7 @@
         position: sticky;
         top: 0;
         transition: transform 0.4s;
+        will-change: transform;
 
         a {
             color: $color-jc-charcoal !important;
