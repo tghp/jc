@@ -57,7 +57,7 @@
     .single-post & {
         position: sticky;
         top: 0;
-        transition: transform 0.4s;
+        transition: transform 500ms ease;
         will-change: transform;
         -webkit-backface-visibility: hidden;
 
