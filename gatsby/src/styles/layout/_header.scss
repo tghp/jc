@@ -54,12 +54,12 @@
     /*
      * Sticky header
      */
-    .single-post & {
-        position: sticky;
-        top: 0;
-        transition: transform 500ms ease;
-        will-change: transform;
-        -webkit-backface-visibility: hidden;
+        .single-post & {
+            position: sticky;
+            top: 0;
+            transition: transform 500ms ease;
+            will-change: transform;
+            -webkit-backface-visibility: hidden;
 
         a {
             color: $color-jc-charcoal !important;

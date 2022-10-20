@@ -1,6 +1,21 @@
 import React, {useEffect, useRef} from "react"
 import { graphql, useStaticQuery, Link } from "gatsby";
 
+const debounce = (func, wait, immediate) => {
+    let timeout;
+    return function() {
+        const context = this, args = arguments;
+        const later = function() {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        const callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
+}
+
 const Header = ({ siteTitle, location }) => {
     const {
         menu: {
@@ -34,15 +49,19 @@ const Header = ({ siteTitle, location }) => {
 
         body.classList.remove(scrollDown, scrollUp)
 
-        const onScroll = () => {
+        let onScroll = () => {
             if (location === 'home') {
                 return
             }
 
             const currentScroll = window.pageYOffset
 
+            console.log({ currentScroll, 'header.current.offsetHeight': header.current.offsetHeight, lastScroll });
+            console.log(currentScroll <= header.current.offsetHeight);
+
             if (currentScroll <= header.current.offsetHeight) {
                 body.classList.remove(scrollUp)
+                body.classList.remove(scrollDown)
                 return
             }
 
@@ -56,6 +75,11 @@ const Header = ({ siteTitle, location }) => {
                 body.classList.add(scrollUp)
             }
             lastScroll = currentScroll
+        }
+
+        // Ugly chrome hack. Sorry.
+        if(/CriOS/i.test(navigator.userAgent) && /iphone|ipod|ipad/i.test(navigator.userAgent)) {
+            onScroll = debounce(onScroll, 150);
         }
 
         window.addEventListener('scroll', onScroll)
