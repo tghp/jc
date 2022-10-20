@@ -59,6 +59,7 @@
         top: 0;
         transition: transform 0.4s;
         will-change: transform;
+        -webkit-backface-visibility: hidden;
 
         a {
             color: $color-jc-charcoal !important;
