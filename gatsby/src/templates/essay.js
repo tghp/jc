@@ -276,7 +276,7 @@ export default function Essay(
                         }
                     </div>
 
-                    {!!referenceCount &&
+                    {!!referenceCount && !!referenceRowSizesDesktop && !!referenceRowSizesMobile &&
                     <References
                         references={references}
                         referenceRowSizes={[referenceRowSizesDesktop, referenceRowSizesMobile]}
