@@ -8,10 +8,16 @@ const Reference = ({
         toggleOpenIndex,
         clearOpenIndexes
     }) => {
-    let shortenedText
     const characterCount = 270
-    const fullText = reference.text
+    const { text: fullText } = reference
+
+    if (!fullText) {
+        return <></>
+    }
+
     const isLongText = fullText.length > characterCount + 20
+
+    let shortenedText
     if (isLongText) {
         shortenedText = `${fullText.substring(0, characterCount)} ...`
     } else {
@@ -19,8 +25,6 @@ const Reference = ({
     }
 
     const isOpen = openIndexes.includes(index)
-
-    const content = isOpen ? fullText : shortenedText
 
     const jumpToContentRef = () => {
         document.getElementById(`ref-${index+1}`).scrollIntoView();
@@ -45,7 +49,7 @@ const Reference = ({
             <button className="reference__index reference__index--link" onClick={jumpToContentRef}>
                 {index+1}
             </button>
-            <div className="reference__text" dangerouslySetInnerHTML={{ __html: content }} />
+            <div className="reference__text" dangerouslySetInnerHTML={{ __html: isOpen ? fullText : shortenedText }} />
             {isLongText &&
                 <button
                     className={`reference__more-link${isOpen ? ' reference__more-link--less' : ''}`}
