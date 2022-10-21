@@ -2,6 +2,8 @@
 
 namespace TGHP\Jc;
 
+use WP_Post;
+
 class Url extends AbstractJc
 {
 
@@ -10,6 +12,7 @@ class Url extends AbstractJc
         parent::__construct($jc);
         add_action('template_redirect', [$this, 'redirectGatsbyUrls']);
         add_filter('post_link', [$this, 'matchGatsbyUrls'], 10, 3);
+        add_filter('preview_post_link', [$this, 'restoreWpUrlToGatsbyPReviewUrl'], 100, 2);
     }
 
     public function getGatsbyBaseUrl()
@@ -52,6 +55,21 @@ class Url extends AbstractJc
         // Replace path based on post here if needed
 
         return $this->getGatsbyBaseUrl() . $path;
+    }
+
+    /**
+     * Rewrite back post link to WordPress for Gatsby preview URLs, so that wp-gatsby template logic
+     * can take place
+     *
+     * @param string $link
+     * @param WP_Post $post
+     * @return void
+     */
+    public function restoreWpUrlToGatsbyPReviewUrl ($link, $post)
+    {
+        $path = str_replace($this->getGatsbyBaseUrl(), '', $link);
+
+        return home_url() . $path;
     }
 
 }
