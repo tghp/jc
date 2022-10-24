@@ -56,9 +56,6 @@ const Header = ({ siteTitle, location }) => {
 
             const currentScroll = window.pageYOffset
 
-            console.log({ currentScroll, 'header.current.offsetHeight': header.current.offsetHeight, lastScroll });
-            console.log(currentScroll <= header.current.offsetHeight);
-
             if (currentScroll <= header.current.offsetHeight) {
                 body.classList.remove(scrollUp)
                 body.classList.remove(scrollDown)
