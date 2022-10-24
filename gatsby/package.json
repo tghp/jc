@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "classnames": "^2.3.1",
+    "copy-to-clipboard": "^3.3.2",
     "gatsby": "^4.23.0",
     "gatsby-plugin-feed": "^4.21.0",
     "gatsby-plugin-gatsby-cloud": "^4.20.0",

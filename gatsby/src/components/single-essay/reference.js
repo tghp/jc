@@ -1,4 +1,7 @@
-import React from "react"
+import React, { useState } from 'react'
+import copy from "copy-to-clipboard"
+import IconCopy from "../../assets/copy.svg"
+import IconCheck from "../../assets/check.svg"
 
 const Reference = ({
         reference,
@@ -8,8 +11,16 @@ const Reference = ({
         toggleOpenIndex,
         clearOpenIndexes
     }) => {
-    const characterCount = 270
+    const [showCopiedFeedback, setShowCopiedFeedback] = useState(false)
+
     const { text: fullText } = reference
+    const characterCount = 270
+    const hash = `ref-${index+1}`
+    const hashedUrl = (() => {
+        const url = new URL(window.location.href)
+        url.hash = hash
+        return url.toString()
+    })()
 
     if (!fullText) {
         return <></>
@@ -26,14 +37,24 @@ const Reference = ({
 
     const isOpen = openIndexes.includes(index)
 
-    const jumpToContentRef = () => {
-        document.getElementById(`ref-${index+1}`).scrollIntoView();
+    const jumpToContentRef = (e) => {
+        e.preventDefault()
+        document.getElementById(hash).scrollIntoView();
 
         clearOpenIndexes()
     }
 
     const handleReferenceToggleClick = () => {
         toggleOpenIndex(index)
+    }
+
+    const handleCopyClick = () => {
+        copy(hashedUrl)
+        setShowCopiedFeedback(true)
+
+        setTimeout(() => {
+            setShowCopiedFeedback(false)
+        }, 2000)
     }
 
     return (
@@ -46,9 +67,9 @@ const Reference = ({
             }}
             id={`reference-item-${index+1}`}
         >
-            <button className="reference__index reference__index--link" onClick={jumpToContentRef}>
+            <a href={hashedUrl} className="reference__index reference__index--link" onClick={jumpToContentRef}>
                 {index+1}
-            </button>
+            </a>
             <div className="reference__text" dangerouslySetInnerHTML={{ __html: isOpen ? fullText : shortenedText }} />
             {isLongText &&
                 <button
@@ -57,6 +78,9 @@ const Reference = ({
                         {isOpen ? 'Less' : 'More'}
                 </button>
             }
+            <button className={`reference__copy ${showCopiedFeedback && 'reference__copy--copy-feedback'}`} onClick={handleCopyClick}>
+                {!showCopiedFeedback ? <IconCopy /> : <IconCheck />}
+            </button>
         </div>
     )
 }

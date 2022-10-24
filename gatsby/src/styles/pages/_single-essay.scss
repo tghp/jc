@@ -323,13 +323,25 @@
         }
 
         .reference {
+            $self-reference: '.reference';
             @include font__sizing(12px, 24px);
             display: grid;
-            grid-template-columns: 1.4em 1fr;
+            grid-template-columns: 1.4em 1fr auto;
+            grid-template-areas:
+                "index text text"
+                "index more copy";
             font-weight: 400;
             scroll-margin-top: $header--height;
 
+            &:hover {
+                #{$self-reference}__copy {
+                    opacity: 1;
+                }
+            }
+
             &__text {
+                grid-area: text;
+
                 p:not(:last-child),
                 ul,
                 ol {
@@ -385,11 +397,42 @@
             }
 
             &__index {
+                grid-area: index;
+
                 &--link {
                     display: flex;
                     flex-direction: column;
                     color: $color-jc-blue;
                     cursor: pointer;
+                }
+            }
+
+            &__copy {
+                grid-area: copy;
+                cursor: pointer;
+                opacity: 0;
+                padding: $padding--xxxsmall;
+                margin: -$padding--xxxsmall;
+
+                &--copy-feedback {
+                    opacity: 1;
+                }
+
+                svg {
+                    display: block;
+                    height: 16px;
+                    width: auto;
+
+                    // Copy icon
+                    rect,
+                    path {
+                        stroke: $color-jc-grey-4;
+                    }
+
+                    // Checkmark icon
+                    polyline {
+                        stroke: $color-jc-blue;
+                    }
                 }
             }
         }
