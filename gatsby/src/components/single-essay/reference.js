@@ -15,11 +15,16 @@ const Reference = ({
 
     const { text: fullText } = reference
     const characterCount = 270
+
     const hash = `ref-${index+1}`
     const hashedUrl = (() => {
-        const url = new URL(window.location.href)
-        url.hash = hash
-        return url.toString()
+        if (typeof window !== 'undefined') {
+            const url = new URL(window.location.href)
+            url.hash = hash
+            return url.toString()
+        }
+
+        return '';
     })()
 
     if (!fullText) {
