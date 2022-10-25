@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
-import copy from "copy-to-clipboard"
-import IconCopy from "../../assets/copy.svg"
-import IconCheck from "../../assets/check.svg"
+import React, { useEffect, useState } from 'react'
+
+let didInit = false
 
 const Reference = ({
         reference,
@@ -11,21 +10,20 @@ const Reference = ({
         toggleOpenIndex,
         clearOpenIndexes
     }) => {
-    const [showCopiedFeedback, setShowCopiedFeedback] = useState(false)
+    const hash = `ref-${index+1}`
+    const [hashedUrl, setHashedUrl] = useState('')
 
     const { text: fullText } = reference
     const characterCount = 270
 
-    const hash = `ref-${index+1}`
-    const hashedUrl = (() => {
-        if (typeof window !== 'undefined') {
+    useEffect(() => {
+        if (!didInit && typeof window !== 'undefined') {
+            didInit = true
             const url = new URL(window.location.href)
             url.hash = hash
-            return url.toString()
+            setHashedUrl(url.toString())
         }
-
-        return '';
-    })()
+    }, []);
 
     if (!fullText) {
         return <></>
@@ -53,15 +51,6 @@ const Reference = ({
         toggleOpenIndex(index)
     }
 
-    const handleCopyClick = () => {
-        copy(hashedUrl)
-        setShowCopiedFeedback(true)
-
-        setTimeout(() => {
-            setShowCopiedFeedback(false)
-        }, 2000)
-    }
-
     return (
         <div
             className="single-essay__references-item reference"
@@ -83,9 +72,6 @@ const Reference = ({
                         {isOpen ? 'Less' : 'More'}
                 </button>
             }
-            <button className={`reference__copy ${showCopiedFeedback && 'reference__copy--copy-feedback'}`} onClick={handleCopyClick}>
-                {!showCopiedFeedback ? <IconCopy /> : <IconCheck />}
-            </button>
         </div>
     )
 }
