@@ -46,6 +46,15 @@ module.exports = {
             __key: "images"
         },
         {
+            resolve: `gatsby-plugin-google-analytics`,
+            options: {
+                // The property ID; the tracking code won't be generated without it
+                trackingId: 'G-M2H2CBE33Z',
+                head: false,
+                respectDNT: true,
+            },
+        },
+        {
             resolve: "gatsby-source-wordpress-menus",
             options: {
                 wordpressUrl: process.env.WP_URL,
