@@ -121,9 +121,11 @@ const Content = ({
                                     return
                                 }
 
+                                const hash = `ref-${referenceNumber}`
+
                                 const supProps = {
                                     className: 'article-reference',
-                                    id: `ref-${referenceNumber}`
+                                    id: hash
                                 };
 
                                 if (processedReferences.indexOf(referenceNumber) === -1) {
@@ -134,16 +136,17 @@ const Content = ({
                                     processedReferences.push(referenceNumber);
                                 }
 
-                                const jumpToSidebarRef = async () => {
+                                const jumpToSidebarRef = async (e) => {
+                                    e.preventDefault()
                                     await onReferenceClearOpenIndexes()
                                     referenceSidebarRefs.current[Number(referenceNumber)-1].scrollIntoView()
                                 }
 
                                 return (
                                     <sup {...supProps}>
-                                        <button onClick={jumpToSidebarRef}>
+                                        <a href={`#${hash}`} onClick={jumpToSidebarRef}>
                                             {domNode.children[0].data}
-                                        </button>
+                                        </a>
                                     </sup>
                                 );
                             }

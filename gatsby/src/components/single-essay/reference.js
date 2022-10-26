@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
 
-let didInit = false
-
 const Reference = ({
         reference,
         index,
@@ -11,19 +9,9 @@ const Reference = ({
         clearOpenIndexes
     }) => {
     const hash = `ref-${index+1}`
-    const [hashedUrl, setHashedUrl] = useState('')
 
     const { text: fullText } = reference
     const characterCount = 270
-
-    useEffect(() => {
-        if (!didInit && typeof window !== 'undefined') {
-            didInit = true
-            const url = new URL(window.location.href)
-            url.hash = hash
-            setHashedUrl(url.toString())
-        }
-    }, []);
 
     if (!fullText) {
         return <></>
@@ -61,7 +49,7 @@ const Reference = ({
             }}
             id={`reference-item-${index+1}`}
         >
-            <a href={hashedUrl} className="reference__index reference__index--link" onClick={jumpToContentRef}>
+            <a href={`#${hash}`} className="reference__index reference__index--link" onClick={jumpToContentRef}>
                 {index+1}
             </a>
             <div className="reference__text" dangerouslySetInnerHTML={{ __html: isOpen ? fullText : shortenedText }} />
