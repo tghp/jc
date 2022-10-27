@@ -170,7 +170,7 @@ class Essay extends AbstractJc
             'resolve' => function (\WPGraphQL\Model\Post $object) {
                 $content = get_the_content($object->ID);
 
-                if (preg_match_all('/<h(\d).*?>(.*?)<\/h2>/', $content, $matches, PREG_SET_ORDER)) {
+                if (preg_match_all('/<h(\d).*?>(.*?)<\/h\d>/', $content, $matches, PREG_SET_ORDER)) {
                     $items = [];
 
                     foreach ($matches as $titleMatch) {
