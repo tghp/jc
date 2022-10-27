@@ -46,12 +46,13 @@ module.exports = {
             __key: "images"
         },
         {
-            resolve: `gatsby-plugin-google-analytics`,
+            resolve: 'gatsby-plugin-google-gtag',
             options: {
-                // The property ID; the tracking code won't be generated without it
-                trackingId: 'G-M2H2CBE33Z',
-                head: false,
-                respectDNT: true,
+                trackingIds: ['G-M2H2CBE33Z'],
+                pluginConfig: {
+                    head: false,
+                    respectDNT: true,
+                }
             },
         },
         {
