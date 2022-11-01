@@ -18,7 +18,8 @@ const TocItem = ({ url, title, navItems }) => (
                 {items?.map(({ url, title }) => (
                   <li key={url}>
                     <a href={url}>
-                      {decode(title)} <i className="arrow-right" />
+                      <span>{decode(title, { level: 'html5' })}</span>{' '}
+                      <i className="arrow-right" />
                     </a>
                   </li>
                 ))}
