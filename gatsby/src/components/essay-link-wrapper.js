@@ -1,20 +1,20 @@
-import React from "react"
-import { Link } from "gatsby";
+import React from 'react';
+import { Link } from 'gatsby';
 
 const EssayLinkWrapper = ({ externalUrl, className, postPath, children }) => {
-    if (externalUrl) {
-        return (
-            <a href={externalUrl} className={className} target={`_blank`}>
-                {children}
-            </a>
-        )
-    } else {
-        return (
-            <Link to={postPath} className={className}>
-                {children}
-            </Link>
-        )
-    }
-}
+  if (externalUrl) {
+    return (
+      <a href={externalUrl} className={className} target={`_blank`}>
+        {children}
+      </a>
+    );
+  } else {
+    return (
+      <Link to={postPath} className={className}>
+        {children}
+      </Link>
+    );
+  }
+};
 
-export default EssayLinkWrapper
+export default EssayLinkWrapper;
