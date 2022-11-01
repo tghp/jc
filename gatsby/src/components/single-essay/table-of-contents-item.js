@@ -1,4 +1,5 @@
 import React from "react";
+import {decode} from 'html-entities';
 
 const TocItem = ({ url, title, navItems }) => (
     <li>
@@ -12,7 +13,7 @@ const TocItem = ({ url, title, navItems }) => (
                     <ul className="subnav">
                         {items?.map(({ url, title }) => (
                             <li key={url}>
-                                <a href={url}>{title} <i className="arrow-right" /></a>
+                                <a href={url}>{decode(title)} <i className="arrow-right" /></a>
                             </li>
                         ))}
                     </ul>
