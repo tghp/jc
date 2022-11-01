@@ -4,14 +4,16 @@ import { decode } from 'html-entities';
 const TocItem = ({ url, title, navItems }) => (
   <li>
     <a href={url}>
-      {title} <i className="arrow-right" />
+      <span>{decode(title, { level: 'html5' })}</span>{' '}
+      <i className="arrow-right" />
     </a>
     {navItems && (
       <ul className="subnav">
         {navItems?.map(({ url, title, items }) => (
           <li key={url}>
             <a href={url}>
-              {title} <i className="arrow-right" />
+              <span>{decode(title, { level: 'html5' })}</span>{' '}
+              <i className="arrow-right" />
             </a>
             {items && (
               <ul className="subnav">
