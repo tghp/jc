@@ -12,6 +12,13 @@ class Asset extends AbstractInheritingThemeFile
      */
     protected $cache = [];
 
+    public function __construct(Jc $jc)
+    {
+        add_filter('wp_lazy_loading_enabled', '__return_false');
+
+        parent::__construct($jc);
+    }
+
     public function getSearchSubPath($locationType)
     {
         return 'assets';
