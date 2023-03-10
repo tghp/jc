@@ -98,6 +98,7 @@ module.exports = {
                                 const url = site.siteMetadata.siteUrl + getPostPath(post.slug, post.date);
 
                                 return {
+                                    title: post.title,
                                     description: post.excerpt,
                                     date: post.date,
                                     url,
