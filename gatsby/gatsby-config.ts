@@ -79,17 +79,17 @@ module.exports = {
       resolve: 'gatsby-plugin-feed',
       options: {
         query: `
-                    {
-                        site {
-                            siteMetadata {
-                                title
-                                description
-                                siteUrl
-                                site_url: siteUrl
-                            }
-                        }
-                    }
-                `,
+          {
+            site {
+              siteMetadata {
+                title
+                description
+                siteUrl
+                site_url: siteUrl
+              }
+            }
+          }
+        `,
         feeds: [
           {
             // @ts-ignore
@@ -123,6 +123,40 @@ module.exports = {
               }
             `,
             output: '/rss.xml',
+            title: `${siteMetaData.title} RSS Feed`,
+          },
+          {
+            // @ts-ignore
+            serialize: ({ query: { site, allWpPost } }) => {
+              // @ts-ignore
+              return allWpPost.nodes.map((post) => {
+                const url =
+                  site.siteMetadata.siteUrl + getPostPath(post.slug, post.date);
+
+                return {
+                  title: post.title,
+                  description: post.excerpt,
+                  date: post.date,
+                  url,
+                };
+              });
+            },
+            query: `
+              {
+                allWpPost(
+                  sort: {fields: [date], 
+                  order: DESC}
+                ) {
+                  nodes {
+                    title
+                    slug
+                    date
+                    excerpt
+                  }
+                }
+              }
+            `,
+            output: '/posts-rss.xml',
             title: `${siteMetaData.title} RSS Feed`,
           },
         ],
