@@ -36,6 +36,7 @@
 @mixin font__family--newsreader-medium {
   font-family: 'Newsreader', serif;
   font-weight: 400;
+  -webkit-font-smoothing: initial;
 }
 
 @mixin font__family--newsreader-light {
