@@ -72,10 +72,14 @@ p strong {
     margin-bottom: $padding--mini;
   }
 
-  sup {
-    vertical-align: super;
+  sup,
+  sub {
     font-size: 0.8em;
     font-weight: 400;
+  }
+
+  sup {
+    vertical-align: super;
     scroll-margin-top: $header--height + 5px;
 
     &.article-reference {
@@ -85,6 +89,10 @@ p strong {
         cursor: pointer;
       }
     }
+  }
+
+  sub {
+    vertical-align: sub;
   }
 
   ul, ol {
