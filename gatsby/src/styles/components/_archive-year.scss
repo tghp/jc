@@ -1,20 +1,20 @@
 .archive-year {
-    grid-column: 2;
-    margin-bottom: $padding--medium;
+  grid-column: 2;
+  margin-bottom: $padding--medium;
 
-    &__post {
-        display: grid;
-        grid-template-columns: 50px auto;
-        gap: $padding--xxxsmall;
-        margin-bottom: $padding--mini;
+  &__post {
+    display: grid;
+    grid-template-columns: 50px auto;
+    gap: $padding--xxxsmall;
+    margin-bottom: $padding--mini;
 
-        &-date {
-            @include font__family--inter-light;
-            color: rgba($color-jc-charcoal, 0.4);
-        }
-
-        &-title {
-            color: $color-jc-charcoal;
-        }
+    &-date {
+      @include font__family--inter-light;
+      color: rgba($color-jc-charcoal, 0.4);
     }
+
+    &-title {
+      color: $color-jc-charcoal;
+    }
+  }
 }

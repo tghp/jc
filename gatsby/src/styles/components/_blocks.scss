@@ -2,207 +2,207 @@
  * Separator block
  */
 .wp-block-separator {
-    background-color: $color-jc-blue;
-    width: 100%;
-    height: 1px;
-    margin-top: $padding--medium;
-    margin-bottom: $padding--medium;
+  background-color: $color-jc-blue;
+  width: 100%;
+  height: 1px;
+  margin-top: $padding--medium;
+  margin-bottom: $padding--medium;
 }
 
 /*
  * Quote block
  */
 p + .wp-block-quote {
-    margin-top: $padding--xsmall;
+  margin-top: $padding--xsmall;
 }
 
 .wp-block-quote {
-    display: inline-block;
-    margin-top: $padding--medium;
-    margin-bottom: $padding--medium;
+  display: inline-block;
+  margin-top: $padding--medium;
+  margin-bottom: $padding--medium;
 
-    p {
-        @include font__family--newsreader-light;
-        @include font__sizing(20px, 28px);
-        margin-bottom: 0;
-        position: relative;
+  p {
+    @include font__family--newsreader-light;
+    @include font__sizing(20px, 28px);
+    margin-bottom: 0;
+    position: relative;
+  }
+
+  cite {
+    @include font__family--inter-light;
+    @include font__sizing(12px, 19.2px);
+    position: relative;
+    color: $color-jc-grey-4;
+
+    &:before {
+      content: '\2014\00a0';
+      display: contents;
+      position: absolute;
+      top: -2px;
+    }
+  }
+
+  &:not(&.is-style-plain) {
+    padding-left: $padding--medium;
+    padding-right: $padding--medium;
+
+    p:first-of-type:before,
+    p:last-of-type:after {
+      @include pseudo-element-create;
+      background-image: url('../images/quote-mark.svg');
+      width: 28px;
+      height: 24px;
+      position: absolute;
     }
 
-    cite {
-        @include font__family--inter-light;
-        @include font__sizing(12px, 19.2px);
-        position: relative;
-        color: $color-jc-grey-4;
-
-        &:before {
-            content: '\2014\00a0';
-            display: contents;
-            position: absolute;
-            top: -2px;
-        }
+    p:first-of-type:before {
+      left: -35px;
+      top: 0;
     }
 
-    &:not(&.is-style-plain) {
-        padding-left: $padding--medium;
-        padding-right: $padding--medium;
-
-        p:first-of-type:before,
-        p:last-of-type:after {
-            @include pseudo-element-create;
-            background-image: url('../images/quote-mark.svg');
-            width: 28px;
-            height: 24px;
-            position: absolute;
-        }
-
-        p:first-of-type:before {
-            left: -35px;
-            top: 0;
-        }
-
-        p:last-of-type:after {
-            transform: rotate(180deg);
-            right: -35px;
-            bottom: 2px;
-        }
+    p:last-of-type:after {
+      transform: rotate(180deg);
+      right: -35px;
+      bottom: 2px;
     }
+  }
 }
 
 .wp-block-separator + .wp-block-quote,
 .wp-block-quote + .wp-block-separator,
 .wp-block-quote + .wp-block-quote {
-    margin-top: $padding--mini;
+  margin-top: $padding--mini;
 }
 
 .is-style-large-text {
-    @include font__sizing(20px, 32px);
+  @include font__sizing(20px, 32px);
 }
 
 .is-style-small-text {
-    @include font__family--newsreader-light;
-    @include font__sizing(14px, 22.4px);
+  @include font__family--newsreader-light;
+  @include font__sizing(14px, 22.4px);
 }
 
 .is-style-indent-once {
-    padding-left: $padding--medium;
+  padding-left: $padding--medium;
 }
 
 .is-style-indent-twice {
-    padding-left: $padding--medium*2;
+  padding-left: $padding--medium*2;
 }
 
 /*
  * Table block
  */
 .wp-block-table {
-    margin-top: $padding--xsmall;
-    margin-bottom: $padding--small;
-    overflow-x: auto;
+  margin-top: $padding--xsmall;
+  margin-bottom: $padding--small;
+  overflow-x: auto;
 
-    table.has-fixed-layout {
-        width: 100%;
+  table.has-fixed-layout {
+    width: 100%;
 
-        @include mq($until: xxl) {
-            width: 150%;
-        }
+    @include mq($until: xxl) {
+      width: 150%;
     }
+  }
 
-    thead {
-        @include font__family--newsreader-regular;
-        background-color: rgba($color-jc-blue, 0.1);
-    }
+  thead {
+    @include font__family--newsreader-regular;
+    background-color: rgba($color-jc-blue, 0.1);
+  }
 
-    tr {
-        border-bottom: 1px solid $color-jc-grey-1;
-    }
+  tr {
+    border-bottom: 1px solid $color-jc-grey-1;
+  }
 
-    th, td {
-        padding: 8px;
-    }
+  th, td {
+    padding: 8px;
+  }
 
-    &.is-style-stripes {
-        tbody tr:nth-child(odd) {
-            background-color: rgba($color-jc-grey-1, 0.6);
-        }
+  &.is-style-stripes {
+    tbody tr:nth-child(odd) {
+      background-color: rgba($color-jc-grey-1, 0.6);
     }
+  }
 
-    strong {
-        @include font__family--newsreader-regular;
-    }
+  strong {
+    @include font__family--newsreader-regular;
+  }
 
-    &.alignright table {
-        margin-left: auto;
-    }
+  &.alignright table {
+    margin-left: auto;
+  }
 
-    &.aligncenter table {
-        margin-left: auto;
-        margin-right: auto;
-    }
+  &.aligncenter table {
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 /*
  * Audio block
  */
 .wp-block-audio {
-    padding-top: 5px;
-    padding-bottom: $padding--small;
+  padding-top: 5px;
+  padding-bottom: $padding--small;
 
-    audio {
-        width: 100%;
-        height: revert;
-    }
+  audio {
+    width: 100%;
+    height: revert;
+  }
 
-    figcaption {
-        @include font__sizing(12px, 12px);
-        text-align: center;
-    }
+  figcaption {
+    @include font__sizing(12px, 12px);
+    text-align: center;
+  }
 }
 
 /*
  * Embed/YouTube/Vimeo block
  */
 .wp-block-embed {
-    display: flex;
-    justify-content: center;
-    padding-top: 5px;
-    padding-bottom: $padding--small;
+  display: flex;
+  justify-content: center;
+  padding-top: 5px;
+  padding-bottom: $padding--small;
 }
 
 .wp-block-image {
-    margin-top: $padding--small;
-    margin-bottom: $padding--small;
+  margin-top: $padding--small;
+  margin-bottom: $padding--small;
 
-    figcaption {
-        @include font__family--newsreader-light;
-        @include font__sizing(12px, 21.6px);
-        color: rgba($color-jc-charcoal, 0.85);
-        margin-top: 5px;
-    }
+  figcaption {
+    @include font__family--newsreader-light;
+    @include font__sizing(12px, 21.6px);
+    color: rgba($color-jc-charcoal, 0.85);
+    margin-top: 5px;
+  }
 }
 
 /*
  * Gutenberg styles
  */
 .has-text-align-left {
-    text-align: left;
+  text-align: left;
 }
 
 .has-text-align-right {
-    text-align: right;
+  text-align: right;
 }
 
 .has-text-align-center {
-    text-align: center;
+  text-align: center;
 }
 
 .aligncenter {
-    display: table;
-    margin-left: auto;
-    margin-right: auto;
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .alignright {
-    display: table;
-    margin-left: auto;
+  display: table;
+  margin-left: auto;
 }
 

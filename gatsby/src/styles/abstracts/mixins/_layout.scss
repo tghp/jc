@@ -1,131 +1,131 @@
 @use 'sass:math';
 
 @mixin max-width-element($applyMargin: true) {
-    max-width: $size__max-width;
+  max-width: $size__max-width;
 
-    @if $applyMargin {
-        margin-left: auto;
-        margin-right: auto;
-    }
+  @if $applyMargin {
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 @mixin main-padding-value($property, $negative: false) {
-    $factor: 1;
-    @if $negative != false and $negative != true {
-        $factor: $negative;
-    }  @else if $negative {
-        $factor: -1;
-    }
+  $factor: 1;
+  @if $negative != false and $negative != true {
+    $factor: $negative;
+  } @else if $negative {
+    $factor: -1;
+  }
 
-    @include mq($until: m) {
-        #{$property}: ($size__main-padding * 0.3) * $factor;
-    }
+  @include mq($until: m) {
+    #{$property}: ($size__main-padding * 0.3) * $factor;
+  }
 
-    @include mq($from: m, $until: xl) {
-        #{$property}: ($size__main-padding * 0.6) * $factor;
-    }
+  @include mq($from: m, $until: xl) {
+    #{$property}: ($size__main-padding * 0.6) * $factor;
+  }
 
-    @include mq($from: xl) {
-        #{$property}: ($size__main-padding) * $factor;
-    }
+  @include mq($from: xl) {
+    #{$property}: ($size__main-padding) * $factor;
+  }
 }
 
 @mixin main-padding {
-    @include main-padding-value('padding-left');
-    @include main-padding-value('padding-right');
+  @include main-padding-value('padding-left');
+  @include main-padding-value('padding-right');
 }
 
 @mixin main-padding-negative {
-    @include main-padding-value('margin-left', true);
-    @include main-padding-value('margin-right', true);
+  @include main-padding-value('margin-left', true);
+  @include main-padding-value('margin-right', true);
 }
 
 @mixin full-bleed($accountForBlockEditor: false) {
-    width: 100vw;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
 
-    @if $accountForBlockEditor {
-        body.wp-admin .block-editor & {
-            max-width: 100%;
-            margin: 0;
-            left: auto;
-            right: auto;
-        }
+  @if $accountForBlockEditor {
+    body.wp-admin .block-editor & {
+      max-width: 100%;
+      margin: 0;
+      left: auto;
+      right: auto;
     }
+  }
 }
 
 @mixin full-bleed-content {
-    width: 100vw;
-    max-width: calc(var(--vw, 1vw) * 100);
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
+  width: 100vw;
+  max-width: calc(var(--vw, 1vw) * 100);
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
 }
 
 @mixin full-bleed-background($background) {
-    position: relative;
+  position: relative;
 
-    &:before {
-        @include pseudo-element-create;
-        @include full-bleed;
-        background: $background;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        z-index: -1;
-    }
+  &:before {
+    @include pseudo-element-create;
+    @include full-bleed;
+    background: $background;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+  }
 }
 
 @mixin aspect-sized-padding($ratio: 1 1, $max: false, $min: false) {
-    &:before {
-        @if $max {
-            padding-top: max(#{$max}, #{percentage(math.div(nth($ratio, 2), nth($ratio, 1)))});
-        } @else if $min {
-            padding-top: min(#{$min}, #{percentage(math.div(nth($ratio, 2), nth($ratio, 1)))});
-        } @else {
-            padding-top: percentage(math.div(nth($ratio, 2), nth($ratio, 1)));
-        }
+  &:before {
+    @if $max {
+      padding-top: max(#{$max}, #{percentage(math.div(nth($ratio, 2), nth($ratio, 1)))});
+    } @else if $min {
+      padding-top: min(#{$min}, #{percentage(math.div(nth($ratio, 2), nth($ratio, 1)))});
+    } @else {
+      padding-top: percentage(math.div(nth($ratio, 2), nth($ratio, 1)));
     }
+  }
 }
 
 @mixin aspect-sized-element($ratio: 1 1, $selector) {
-    position: relative;
+  position: relative;
 
-    &:before {
-        @include pseudo-element-create;
-    }
+  &:before {
+    @include pseudo-element-create;
+  }
 
-    @if $ratio {
-        @include aspect-sized-padding($ratio);
-    }
+  @if $ratio {
+    @include aspect-sized-padding($ratio);
+  }
 
-    #{$selector} {
-        display: block;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+  #{$selector} {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
 
 @mixin aspect-sized-image($ratio: 1 1) {
-    @include aspect-sized-element($ratio, 'img');
+  @include aspect-sized-element($ratio, 'img');
 }
 
 @mixin first-last-no-margins {
-    &:first-child {
-        margin-top: 0;
-    }
+  &:first-child {
+    margin-top: 0;
+  }
 
-    &:last-child {
-        margin-bottom: 0;
-    }
+  &:last-child {
+    margin-bottom: 0;
+  }
 }

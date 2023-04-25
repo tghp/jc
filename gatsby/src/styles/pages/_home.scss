@@ -2,219 +2,219 @@
 .featured-essays,
 .essay-categories,
 .about-text {
-    &__inner {
-        @include max-width-element;
-        @include main-padding;
-        display: grid;
-    }
+  &__inner {
+    @include max-width-element;
+    @include main-padding;
+    display: grid;
+  }
 }
 
 .intro-text {
-    background-color: $color-jc-grey-1;
+  background-color: $color-jc-grey-1;
 
-    &__inner {
-        padding-top: $padding--xsmall;
-        padding-bottom: $padding--xsmall;
+  &__inner {
+    padding-top: $padding--xsmall;
+    padding-bottom: $padding--xsmall;
 
-        @include mq($from: s) {
-            column-gap: $padding--xsmall;
-        }
-
-        @include mq($from: s, $until: xl) {
-            grid-template-columns: auto 40%;
-            grid-template-rows: repeat(2, auto);
-        }
-
-        @include mq($from: xl) {
-            grid-template-columns: 50% auto 200px;
-        }
+    @include mq($from: s) {
+      column-gap: $padding--xsmall;
     }
 
-    &__column-1 {
-        @include mq($from: s, $until: xl) {
-            grid-row: 1;
-        }
+    @include mq($from: s, $until: xl) {
+      grid-template-columns: auto 40%;
+      grid-template-rows: repeat(2, auto);
     }
 
-    &__column-2 {
-        @include mq($from: s, $until: xl) {
-            grid-area: 2/1/-1/2;
-        }
+    @include mq($from: xl) {
+      grid-template-columns: 50% auto 200px;
     }
+  }
 
-    &__photo {
-        @include mq($from: s, $until: xl) {
-            grid-area: 1/2/-1/2;
-        }
+  &__column-1 {
+    @include mq($from: s, $until: xl) {
+      grid-row: 1;
     }
+  }
+
+  &__column-2 {
+    @include mq($from: s, $until: xl) {
+      grid-area: 2/1/-1/2;
+    }
+  }
+
+  &__photo {
+    @include mq($from: s, $until: xl) {
+      grid-area: 1/2/-1/2;
+    }
+  }
 }
 
 .featured-essays {
-    background-color: $color-jc-grey-2;
+  background-color: $color-jc-grey-2;
 
-    &__inner {
-        padding-top: $padding--large;
+  &__inner {
+    padding-top: $padding--large;
 
-        @include mq($from: s) {
-            grid-template-columns: repeat(2, 1fr);
-            column-gap: $padding--xsmall;
-        }
+    @include mq($from: s) {
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: $padding--xsmall;
+    }
+  }
+
+  &__essay {
+    color: $color-black;
+    display: grid;
+    gap: $padding--xsmall;
+    padding-bottom: $padding--xxxsmall;
+    margin-bottom: $padding--small;
+
+    @include mq($from: l) {
+      grid-template-columns: 200px auto;
     }
 
-    &__essay {
-        color: $color-black;
-        display: grid;
-        gap: $padding--xsmall;
-        padding-bottom: $padding--xxxsmall;
-        margin-bottom: $padding--small;
-
-        @include mq($from: l) {
-            grid-template-columns: 200px auto;
-        }
-
-        @include mq($from: xxl) {
-            padding-right: $padding--xsmall;
-        }
-
-        &-title {
-            @include font__size-medium-title;
-        }
-
-        &-excerpt {
-            @include font__size-regular-alt;
-        }
+    @include mq($from: xxl) {
+      padding-right: $padding--xsmall;
     }
+
+    &-title {
+      @include font__size-medium-title;
+    }
+
+    &-excerpt {
+      @include font__size-regular-alt;
+    }
+  }
 }
 
 .essay-categories {
-    padding-top: $padding--ml;
-    padding-bottom: $padding--large;
-    background-color: $color-white;
+  padding-top: $padding--ml;
+  padding-bottom: $padding--large;
+  background-color: $color-white;
 
-    &__inner {
-        @include mq($until: s) {
-            gap: $padding--large;
-        }
-
-        @include mq($from: s) {
-            grid-template-columns: repeat(2, 1fr);
-            column-gap: $padding--medium;
-            row-gap: $padding--xlarge;
-        }
-
-        @include mq($from: l) {
-            grid-template-columns: repeat(3, 1fr);
-        }
+  &__inner {
+    @include mq($until: s) {
+      gap: $padding--large;
     }
 
-    @include mq($from: s, $until: l) {
-        &__category {
-            &:last-child {
-                grid-column: 1/-1;
+    @include mq($from: s) {
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: $padding--medium;
+      row-gap: $padding--xlarge;
+    }
 
-                h2 {
-                    max-width: 70%;
-                }
-            }
+    @include mq($from: l) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @include mq($from: s, $until: l) {
+    &__category {
+      &:last-child {
+        grid-column: 1/-1;
+
+        h2 {
+          max-width: 70%;
         }
+      }
     }
+  }
 
-    &__category-title a {
-        color: $color-black;
-    }
+  &__category-title a {
+    color: $color-black;
+  }
 
-    &__category-link {
-        @include font__family--inter-regular;
-    }
+  &__category-link {
+    @include font__family--inter-regular;
+  }
 }
 
 .about-text {
-    background-color: $color-jc-grey-1;
-    border-top: 1px solid $color-jc-blue;
+  background-color: $color-jc-grey-1;
+  border-top: 1px solid $color-jc-blue;
+  position: relative;
+  margin-top: 100px;
+
+  &:before {
+    @include pseudo-element-create;
+    position: absolute;
+    left: 50%;
+    top: $padding--xxsmall + 1px;
+    height: 1px;
+    width: 50%;
+    background: $color-jc-blue;
+  }
+
+  &__inner {
+    padding-top: $padding--xxsmall;
+    padding-bottom: $padding--medium;
     position: relative;
-    margin-top: 100px;
+  }
 
-    &:before {
-        @include pseudo-element-create;
-        position: absolute;
-        left: 50%;
-        top: $padding--xxsmall + 1px;
-        height: 1px;
-        width: 50%;
-        background: $color-jc-blue;
+  &__pre-illustration {
+    @include main-padding-value('right');
+    position: absolute;
+    bottom: 100%;
+    width: 377px;
+    height: 101px;
+  }
+
+  &__header {
+    display: grid;
+    grid-template-columns: auto min-content;
+    overflow: hidden;
+
+    &-title {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      border-color: $color-jc-blue;
+      margin-top: -2px;
+      margin-bottom: 0;
+      padding-bottom: $padding--xxsmall;
+      background: $color-jc-grey-1;
+      z-index: 1;
     }
 
-    &__inner {
-        padding-top: $padding--xxsmall;
-        padding-bottom: $padding--medium;
-        position: relative;
+    &-illustration {
+      display: flex;
+      justify-self: end;
+      width: 388px;
+      height: 89px;
+      z-index: 2;
+
+      @include mq($until: s) {
+        display: none;
+      }
+    }
+  }
+
+  &__columns {
+    padding-top: $padding--xsmall;
+
+    @include mq($from: s) {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: $padding--medium;
+      padding-top: $padding--xxxsmall;
     }
 
-    &__pre-illustration {
-        @include main-padding-value('right');
-        position: absolute;
-        bottom: 100%;
-        width: 377px;
-        height: 101px;
+    ul {
+      margin-bottom: 20px;
+      list-style: disc;
+      padding-left: $padding--xxxsmall;
     }
 
-    &__header {
-        display: grid;
-        grid-template-columns: auto min-content;
-        overflow: hidden;
-
-        &-title {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            border-color: $color-jc-blue;
-            margin-top: -2px;
-            margin-bottom: 0;
-            padding-bottom: $padding--xxsmall;
-            background: $color-jc-grey-1;
-            z-index: 1;
-        }
-
-        &-illustration {
-            display: flex;
-            justify-self: end;
-            width: 388px;
-            height: 89px;
-            z-index: 2;
-
-            @include mq($until: s) {
-                display: none;
-            }
-        }
+    h5 {
+      @include font__family--newsreader-regular;
+      margin-bottom: 2px;
     }
 
-    &__columns {
-        padding-top: $padding--xsmall;
+    blockquote {
+      padding-left: $padding--xxsmall;
 
-        @include mq($from: s) {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            column-gap: $padding--medium;
-            padding-top: $padding--xxxsmall;
-        }
-
-        ul {
-            margin-bottom: 20px;
-            list-style: disc;
-            padding-left: $padding--xxxsmall;
-        }
-
-        h5 {
-            @include font__family--newsreader-regular;
-            margin-bottom: 2px;
-        }
-
-        blockquote {
-            padding-left: $padding--xxsmall;
-
-            + p {
-                padding-left: $padding--ml;
-            }
-        }
+      + p {
+        padding-left: $padding--ml;
+      }
     }
+  }
 }

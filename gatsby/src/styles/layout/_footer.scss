@@ -1,71 +1,71 @@
 .site-footer {
-    background-color: $color-jc-grey-1;
-    padding-top: $padding--small;
+  background-color: $color-jc-grey-1;
+  padding-top: $padding--small;
 
-    .single-post &,
-    .archive &,
-    .category & {
-        background-color: $color-white;
-    }
+  .single-post &,
+  .archive &,
+  .category & {
+    background-color: $color-white;
+  }
 
-    .default-page &,
-    .error-404 &,
-    .favourites & {
-        background-color: $color-jc-grey-2;
-    }
+  .default-page &,
+  .error-404 &,
+  .favourites & {
+    background-color: $color-jc-grey-2;
+  }
 
-    &__inner {
-        @include max-width-element;
-        @include main-padding;
-        @include font__sizing(10px, 14px);
+  &__inner {
+    @include max-width-element;
+    @include main-padding;
+    @include font__sizing(10px, 14px);
 
-        &-content {
-            padding-top: $padding--small;
-            padding-bottom: $padding--medium;
+    &-content {
+      padding-top: $padding--small;
+      padding-bottom: $padding--medium;
 
-            @include mq($until: s) {
-                display: flex;
-                flex-direction: column;
-                gap: $padding--xxsmall;
-            }
-
-            @include mq($from: s) {
-                display: grid;
-                grid-template-columns: minmax(270px, auto) auto minmax(270px, auto);
-                gap: 10px;
-            }
-        }
-
-        &-boat-illustration {
-            overflow: hidden;
-        }
-    }
-
-    &__nav {
-        @include font__family--inter-light;
+      @include mq($until: s) {
         display: flex;
-        gap: 25px;
+        flex-direction: column;
+        gap: $padding--xxsmall;
+      }
 
-        @include mq($from: s) {
-            justify-content: center;
-        }
+      @include mq($from: s) {
+        display: grid;
+        grid-template-columns: minmax(270px, auto) auto minmax(270px, auto);
+        gap: 10px;
+      }
     }
 
-    &__copyright {
-        @include font__family--inter-medium;
-        color: $color-jc-blue;
+    &-boat-illustration {
+      overflow: hidden;
     }
+  }
 
-    &__built-by {
-        @include font__family--inter-medium;
-        color: $color-jc-blue;
+  &__nav {
+    @include font__family--inter-light;
+    display: flex;
+    gap: 25px;
 
-        @include mq($from: s) {
-            text-align: right;
-        }
+    @include mq($from: s) {
+      justify-content: center;
     }
+  }
 
-    @media print {
-        display: none;
+  &__copyright {
+    @include font__family--inter-medium;
+    color: $color-jc-blue;
+  }
+
+  &__built-by {
+    @include font__family--inter-medium;
+    color: $color-jc-blue;
+
+    @include mq($from: s) {
+      text-align: right;
     }
+  }
+
+  @media print {
+    display: none;
+  }
 }

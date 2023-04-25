@@ -1,49 +1,49 @@
 :root {
-    --padding--xlarge: #{$padding--xlarge};
-    --padding--large: #{$padding--large};
-    --padding--ml: #{$padding--ml};
-    --padding--medium: #{$padding--medium};
-    --padding--small: #{$padding--small};
-    --padding--xsmall: #{$padding--xsmall};
-    --padding--xxsmall: #{$padding--xxsmall};
-    --padding--xxxsmall: #{$padding--xxxsmall};
-    --padding--mini: #{$padding--mini};
+  --padding--xlarge: #{$padding--xlarge};
+  --padding--large: #{$padding--large};
+  --padding--ml: #{$padding--ml};
+  --padding--medium: #{$padding--medium};
+  --padding--small: #{$padding--small};
+  --padding--xsmall: #{$padding--xsmall};
+  --padding--xxsmall: #{$padding--xxsmall};
+  --padding--xxxsmall: #{$padding--xxxsmall};
+  --padding--mini: #{$padding--mini};
 }
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html {
-    height: 100%;
+  height: 100%;
 }
 
 body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100%;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-    background-color: $color-jc-grey-2;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  background-color: $color-jc-grey-2;
 
-    &.site-nav-open,
-    &.no-scroll {
-        overflow: hidden;
-    }
+  &.site-nav-open,
+  &.no-scroll {
+    overflow: hidden;
+  }
 
-    .home,
-    .single-post {
-        background-color: $color-white;
-    }
+  .home,
+  .single-post {
+    background-color: $color-white;
+  }
 }
 
 img {
-    display: block;
-    height: auto;
+  display: block;
+  height: auto;
 }
 
 a {
-    text-decoration: none;
-    transition: all 0.15s ease-in-out;
-    color: $color-jc-blue;
+  text-decoration: none;
+  transition: all 0.15s ease-in-out;
+  color: $color-jc-blue;
 }

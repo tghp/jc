@@ -1,6 +1,6 @@
 .default-page-content {
-    @include max-width-element;
-    @include main-padding;
-    padding-top: $padding--large;
-    padding-bottom: $padding--large;
+  @include max-width-element;
+  @include main-padding;
+  padding-top: $padding--large;
+  padding-bottom: $padding--large;
 }

@@ -1,89 +1,89 @@
 .site-header {
-    $self: &;
-    background-color: $color-jc-grey-1;
-    z-index: 100;
+  $self: &;
+  background-color: $color-jc-grey-1;
+  z-index: 100;
 
-    &__inner {
-        @include max-width-element;
-        @include main-padding;
+  &__inner {
+    @include max-width-element;
+    @include main-padding;
 
-        &-content {
-            @include flex-space-between-center;
-            border-bottom: 1px solid $color-black;
-            height: $header--height;
-        }
+    &-content {
+      @include flex-space-between-center;
+      border-bottom: 1px solid $color-black;
+      height: $header--height;
+    }
+  }
+
+  &__logo {
+    @include font__sizing(26px, 28px);
+
+    a {
+      color: $color-jc-charcoal;
+    }
+  }
+
+  &__nav {
+    display: flex;
+    gap: 25px;
+
+    li a {
+      @include font__sizing(16px, 22.4px);
+      color: $color-jc-charcoal;
+    }
+  }
+
+  /*
+   * Archive/Category pages
+   */
+  .archive &,
+  .category &,
+  .default-page &,
+  .error-404 &,
+  .favourites & {
+    background-color: $color-jc-blue;
+
+    a {
+      color: $color-white;
     }
 
-    &__logo {
-        @include font__sizing(26px, 28px);
+    &__inner-content {
+      border-color: $color-white;
+    }
+  }
 
-        a {
-            color: $color-jc-charcoal;
-        }
+  /*
+   * Sticky header
+   */
+  .single-post & {
+    position: sticky;
+    top: 0;
+    transition: transform 500ms ease;
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+
+    a {
+      color: $color-jc-charcoal !important;
     }
 
-    &__nav {
-        display: flex;
-        gap: 25px;
-
-        li a {
-            @include font__sizing(16px, 22.4px);
-            color: $color-jc-charcoal;
-        }
+    #{$self}__inner-content {
+      border: none;
+      border-bottom: 1px solid $color-jc-charcoal;
     }
+  }
 
-    /*
-     * Archive/Category pages
-     */
-    .archive &,
-    .category &,
-    .default-page &,
-    .error-404 &,
-    .favourites & {
-        background-color: $color-jc-blue;
+  .scroll-down & {
+    transform: translateY(-100%);
+  }
 
-        a {
-            color: $color-white;
-        }
+  /*
+   * Single pages
+   */
+  .single-post & {
+    background-color: $color-white;
+  }
 
-        &__inner-content {
-            border-color: $color-white;
-        }
-    }
-
-    /*
-     * Sticky header
-     */
-        .single-post & {
-            position: sticky;
-            top: 0;
-            transition: transform 500ms ease;
-            will-change: transform;
-            -webkit-backface-visibility: hidden;
-
-        a {
-            color: $color-jc-charcoal !important;
-        }
-
-        #{$self}__inner-content {
-            border: none;
-            border-bottom: 1px solid $color-jc-charcoal;
-        }
-    }
-
-    .scroll-down & {
-        transform: translateY(-100%);
-    }
-
-    /*
-     * Single pages
-     */
-    .single-post & {
-        background-color: $color-white;
-    }
-
-    @media print {
-        display: none;
-        border-bottom: 1px solid green;
-    }
+  @media print {
+    display: none;
+    border-bottom: 1px solid green;
+  }
 }
