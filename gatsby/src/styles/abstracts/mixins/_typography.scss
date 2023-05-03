@@ -36,7 +36,10 @@
 @mixin font__family--newsreader-medium {
   font-family: 'Newsreader', serif;
   font-weight: 400;
-  -webkit-font-smoothing: initial;
+
+  @supports (overflow:-webkit-marquee) and (-webkit-text-size-adjust:none) and (justify-content:inherit) {
+    font-weight: 600;
+  }
 }
 
 @mixin font__family--newsreader-light {
