@@ -5,7 +5,7 @@
     margin-bottom: $padding--small;
 
     &-title {
-      @include font__size-medium-title;
+      @include font__size-regular-title;
       grid-column: 1/3;
       margin-bottom: 10px;
     }
@@ -52,7 +52,7 @@
     }
 
     &-essay-title {
-      @include font__size-medium-subtitle;
+      @include font__size-regular-subtitle;
       padding-left: $padding--xxsmall;
       color: $color-black;
       margin-bottom: $padding--mini;
