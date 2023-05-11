@@ -55,7 +55,7 @@ const HomeContent = ({ homeMeta, allPosts, favouritePostIds }) => {
           <div className="intro-text__photo">
             {/*{homeMeta.tghpjcIntroPhoto?.nodes[0]?.gatsbyImage &&*/}
             <StaticImage
-              src="../../images/jc-photo--updated.jpg"
+              src="../../images/jc-photo--new.jpg"
               sizes="(min-width: 1024px) 200px, 50vw"
               alt=""
             />
