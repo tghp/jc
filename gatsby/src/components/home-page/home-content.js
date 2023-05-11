@@ -5,7 +5,7 @@ import HomeFeaturedEssays from './home-featured-essays';
 import HomeEssayCategories from './home-essay-categories';
 import FenceIllustration from '../../assets/footer-fence.svg';
 import WalkerIllustration from '../../assets/footer-walker.svg';
-import { GatsbyImage, StaticImage } from 'gatsby-plugin-image';
+import { StaticImage } from 'gatsby-plugin-image';
 
 const HomeContent = ({ homeMeta, allPosts, favouritePostIds }) => {
   /**
@@ -58,6 +58,7 @@ const HomeContent = ({ homeMeta, allPosts, favouritePostIds }) => {
               src="../../images/jc-photo--new.jpg"
               sizes="(min-width: 1024px) 200px, 50vw"
               alt=""
+              quality={"100"}
             />
             {/*}*/}
           </div>
