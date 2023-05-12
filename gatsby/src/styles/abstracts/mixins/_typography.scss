@@ -1,8 +1,6 @@
 @use 'sass:math';
 
-//@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
-//@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Newsreader:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&display=swap');
 
 @mixin font__sizing($font-size-px, $line-height-px: false) {
   $font-size: math.div($font-size-px, $font__base-size);
@@ -37,7 +35,6 @@
 @mixin font__family--newsreader-regular {
   font-family: 'Newsreader', serif;
   font-weight: 400;
-  font-optical-sizing: auto;
 }
 
 @mixin font__family--newsreader-light {
@@ -58,6 +55,7 @@
 @mixin h3 {
   @include font__family--newsreader-regular;
   @include font__sizing(24px, 28.8px);
+  font-variation-settings: 'opsz' 24;
 }
 
 @mixin h4 {
@@ -76,11 +74,13 @@
 @mixin font__newsreader-title {
   @include font__family--newsreader-regular;
   @include font__sizing(18px, 21.6px);
+  font-variation-settings: 'opsz' 18;
 }
 
 @mixin font__newsreader-subtitle {
   @include font__family--newsreader-regular;
   @include font__sizing(16px, 19.2px);
+  font-variation-settings: 'opsz' 16;
 }
 
 @mixin font__size-editor-h2 {
