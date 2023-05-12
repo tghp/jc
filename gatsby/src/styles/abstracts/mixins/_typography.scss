@@ -12,12 +12,12 @@
   }
 }
 
-@mixin font__family--inter-regular {
+@mixin font__family--inter-medium {
   font-family: 'Inter', serif;
   font-weight: 500;
 }
 
-@mixin font__family--inter-medium {
+@mixin font__family--inter-regular {
   font-family: 'Inter', serif;
   font-weight: 400;
 }

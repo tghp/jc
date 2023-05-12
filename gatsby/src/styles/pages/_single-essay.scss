@@ -126,7 +126,7 @@
       height: 100%;
 
       &-title {
-        @include font__family--inter-regular;
+        @include font__family--inter-medium;
         @include font__size-regular-alt;
         height: $post-sidebar--height-menuTitle;
       }
