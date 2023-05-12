@@ -81,7 +81,7 @@
     }
 
     &-title {
-      @include font__size-regular-title;
+      @include font__newsreader-title;
     }
 
     &-excerpt {
@@ -215,7 +215,7 @@
     }
 
     h5 {
-      @include font__family--newsreader-regular;
+      @include font__family--newsreader-medium;
       margin-bottom: 2px;
     }
 
