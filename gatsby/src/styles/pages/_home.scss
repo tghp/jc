@@ -81,7 +81,7 @@
     }
 
     &-title {
-      @include font__size-medium-title;
+      @include font__newsreader-title;
     }
 
     &-excerpt {
@@ -134,7 +134,7 @@
   }
 
   &__category-link {
-    @include font__family--inter-regular;
+    @include font__family--inter-medium;
   }
 }
 
@@ -215,7 +215,7 @@
     }
 
     h5 {
-      @include font__family--newsreader-regular;
+      @include font__family--newsreader-medium;
       margin-bottom: 2px;
     }
 

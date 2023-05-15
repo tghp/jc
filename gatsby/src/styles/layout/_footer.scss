@@ -52,12 +52,12 @@
   }
 
   &__copyright {
-    @include font__family--inter-medium;
+    @include font__family--inter-regular;
     color: $color-jc-blue;
   }
 
   &__built-by {
-    @include font__family--inter-medium;
+    @include font__family--inter-regular;
     color: $color-jc-blue;
 
     @include mq($from: s) {

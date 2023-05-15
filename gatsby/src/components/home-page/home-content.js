@@ -5,7 +5,7 @@ import HomeFeaturedEssays from './home-featured-essays';
 import HomeEssayCategories from './home-essay-categories';
 import FenceIllustration from '../../assets/footer-fence.svg';
 import WalkerIllustration from '../../assets/footer-walker.svg';
-import { GatsbyImage, StaticImage } from 'gatsby-plugin-image';
+import { StaticImage } from 'gatsby-plugin-image';
 
 const HomeContent = ({ homeMeta, allPosts, favouritePostIds }) => {
   /**

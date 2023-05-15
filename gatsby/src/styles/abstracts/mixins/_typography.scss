@@ -1,7 +1,6 @@
 @use 'sass:math';
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&display=swap');
 
 @mixin font__sizing($font-size-px, $line-height-px: false) {
   $font-size: math.div($font-size-px, $font__base-size);
@@ -13,12 +12,12 @@
   }
 }
 
-@mixin font__family--inter-regular {
+@mixin font__family--inter-medium {
   font-family: 'Inter', serif;
   font-weight: 500;
 }
 
-@mixin font__family--inter-medium {
+@mixin font__family--inter-regular {
   font-family: 'Inter', serif;
   font-weight: 400;
 }
@@ -28,18 +27,14 @@
   font-weight: 300;
 }
 
-@mixin font__family--newsreader-regular {
+@mixin font__family--newsreader-medium {
   font-family: 'Newsreader', serif;
   font-weight: 500;
 }
 
-@mixin font__family--newsreader-medium {
+@mixin font__family--newsreader-regular {
   font-family: 'Newsreader', serif;
   font-weight: 400;
-
-  @supports (overflow:-webkit-marquee) and (-webkit-text-size-adjust:none) and (justify-content:inherit) {
-    font-weight: 600;
-  }
 }
 
 @mixin font__family--newsreader-light {
@@ -58,12 +53,13 @@
 }
 
 @mixin h3 {
-  @include font__family--newsreader-medium;
+  @include font__family--newsreader-regular;
   @include font__sizing(24px, 28.8px);
+  font-variation-settings: 'opsz' 24;
 }
 
 @mixin h4 {
-  @include font__family--newsreader-regular;
+  @include font__family--newsreader-medium;
   @include font__sizing(20px, 27px);
 }
 
@@ -75,24 +71,16 @@
   @include font__sizing(14px, 18.9px);
 }
 
-@mixin font__size-regular-title {
+@mixin font__newsreader-title {
   @include font__family--newsreader-regular;
   @include font__sizing(18px, 21.6px);
+  font-variation-settings: 'opsz' 18;
 }
 
-@mixin font__size-regular-subtitle {
+@mixin font__newsreader-subtitle {
   @include font__family--newsreader-regular;
   @include font__sizing(16px, 19.2px);
-}
-
-@mixin font__size-medium-title {
-  @include font__family--newsreader-medium;
-  @include font__sizing(18px, 21.6px);
-}
-
-@mixin font__size-medium-subtitle {
-  @include font__family--newsreader-medium;
-  @include font__sizing(16px, 19.2px);
+  font-variation-settings: 'opsz' 16;
 }
 
 @mixin font__size-editor-h2 {
