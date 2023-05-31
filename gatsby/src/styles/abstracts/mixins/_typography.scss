@@ -15,31 +15,37 @@
 @mixin font__family--inter-medium {
   font-family: 'Inter', serif;
   font-weight: 500;
+  font-variation-settings: "wght" 510;
 }
 
 @mixin font__family--inter-regular {
   font-family: 'Inter', serif;
   font-weight: 400;
+  font-variation-settings: "wght" 410;
 }
 
 @mixin font__family--inter-light {
   font-family: 'Inter', serif;
   font-weight: 300;
+  font-variation-settings: "wght" 310;
 }
 
 @mixin font__family--newsreader-medium {
   font-family: 'Newsreader', serif;
   font-weight: 500;
+  font-variation-settings: "wght" 510;
 }
 
 @mixin font__family--newsreader-regular {
   font-family: 'Newsreader', serif;
   font-weight: 400;
+  font-variation-settings: "wght" 410;
 }
 
 @mixin font__family--newsreader-light {
   font-family: 'Newsreader', serif;
   font-weight: 300;
+  font-variation-settings: "wght" 310;
 }
 
 @mixin h1 {
