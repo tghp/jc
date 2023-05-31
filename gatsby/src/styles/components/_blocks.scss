@@ -31,14 +31,11 @@ p + .wp-block-quote {
   cite {
     @include font__family--inter-light;
     @include font__sizing(12px, 19.2px);
-    position: relative;
     color: $color-jc-grey-4;
 
     &:before {
       content: '\2014\00a0';
       display: contents;
-      position: absolute;
-      top: -2px;
     }
   }
 
