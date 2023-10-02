@@ -31,11 +31,12 @@ export const indexQuery = graphql`
     homeMeta: wpPage(isFrontPage: { eq: true }) {
       tghpjcIntroColumn1
       tghpjcIntroColumn2
-      #        tghpjcIntroPhoto {
-      #            nodes {
-      #                gatsbyImage(layout: FULL_WIDTH, width: 400, placeholder: NONE)
-      #            }
-      #        }
+      tghpjcIntroPhoto {
+          nodes {
+              gatsbyImage(layout: FULL_WIDTH, width: 400, placeholder: NONE, quality: 90)
+              altText
+          }
+      }
       tghpjcHomeEssayCategories {
         id
         name

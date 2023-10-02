@@ -5,7 +5,7 @@ import HomeFeaturedEssays from './home-featured-essays';
 import HomeEssayCategories from './home-essay-categories';
 import FenceIllustration from '../../assets/footer-fence.svg';
 import WalkerIllustration from '../../assets/footer-walker.svg';
-import { StaticImage } from 'gatsby-plugin-image';
+import { GatsbyImage } from 'gatsby-plugin-image';
 
 const HomeContent = ({ homeMeta, allPosts, favouritePostIds }) => {
   /**
@@ -53,14 +53,13 @@ const HomeContent = ({ homeMeta, allPosts, favouritePostIds }) => {
             dangerouslySetInnerHTML={{ __html: homeMeta.tghpjcIntroColumn2 }}
           />
           <div className="intro-text__photo">
-            {/*{homeMeta.tghpjcIntroPhoto?.nodes[0]?.gatsbyImage &&*/}
-            <StaticImage
-              src="../../images/jc-photo--new.jpg"
-              sizes="(min-width: 1024px) 200px, 50vw"
-              alt=""
-              quality={"100"}
-            />
-            {/*}*/}
+            {homeMeta.tghpjcIntroPhoto?.nodes[0]?.gatsbyImage &&
+              <GatsbyImage
+                image={homeMeta.tghpjcIntroPhoto?.nodes[0]?.gatsbyImage}
+                sizes="(min-width: 1024px) 200px, 50vw"
+                alt={homeMeta.tghpjcIntroPhoto?.nodes[0]?.altText}
+              />
+            }
           </div>
         </div>
       </div>
