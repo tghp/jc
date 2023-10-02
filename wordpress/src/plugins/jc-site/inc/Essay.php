@@ -95,12 +95,17 @@ class Essay extends AbstractJc
     public function slugifySectionName($sectionName)
     {
         $divider = '-';
+        $unicodeArr = ['8220', '8221', '8217'];
 
         // strip any tags that may be in the title
         $sectionName = strip_tags($sectionName);
 
         // replace non letter or digits by divider
         $sectionName = preg_replace('~[^\pL\d]+~u', $divider, $sectionName);
+
+        // strip unicodes created by the preg_replace above
+        // TODO: correct preg_replace above so that this step is unnecessary, more unicodes can still get through
+        $sectionName = str_replace($unicodeArr, '', $sectionName);
 
         // transliterate
         $sectionName = iconv('utf-8', 'us-ascii//TRANSLIT', $sectionName);
