@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4c2ca49fe1db6b5be8dc331f735b6a68",
+    "content-hash": "8773d1bc82b296d98f8a0e02815bebbe",
     "packages": [
         {
             "name": "composer/installers",
@@ -1719,16 +1719,16 @@
         },
         {
             "name": "tghp/wp-gatsby-tghp",
-            "version": "0.4.0",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tghp/wp-gatsby-tghp.git",
-                "reference": "8010e839f07f478293563100629092622b4d44b3"
+                "reference": "c48d36beb15b2f64371185c35751508fef7fbaae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tghp/wp-gatsby-tghp/zipball/8010e839f07f478293563100629092622b4d44b3",
-                "reference": "8010e839f07f478293563100629092622b4d44b3",
+                "url": "https://api.github.com/repos/tghp/wp-gatsby-tghp/zipball/c48d36beb15b2f64371185c35751508fef7fbaae",
+                "reference": "c48d36beb15b2f64371185c35751508fef7fbaae",
                 "shasum": ""
             },
             "require": {
@@ -1740,9 +1740,9 @@
             "notification-url": "https://packagist.org/downloads/",
             "support": {
                 "issues": "https://github.com/tghp/wp-gatsby-tghp/issues",
-                "source": "https://github.com/tghp/wp-gatsby-tghp/tree/0.4.0"
+                "source": "https://github.com/tghp/wp-gatsby-tghp/tree/1.0.0"
             },
-            "time": "2022-10-05T21:33:51+00:00"
+            "time": "2023-09-27T14:21:53+00:00"
         },
         {
             "name": "tghp/wp-graphql-mb-tghp",
