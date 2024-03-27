@@ -17,7 +17,6 @@
         "vlucas/phpdotenv": "^5",
         "wpackagist-plugin/meta-box": "5.6.7",
         "wpackagist-plugin/wordfence": "^7",
-        "wpackagist-plugin/sar-friendly-smtp": "^1",
         "wpackagist-plugin/svg-support": "^2.3",
         "monolog/monolog": "^2",
         "wpackagist-plugin/wp-gatsby": "2.3.3",

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1206a15db702261f839495690037ccd3",
+    "content-hash": "e08de8aecd9f51d592b5d5c938c03e08",
     "packages": [
         {
             "name": "composer/installers",
@@ -1886,24 +1886,6 @@
             },
             "type": "wordpress-plugin",
             "homepage": "https://wordpress.org/plugins/meta-box/"
-        },
-        {
-            "name": "wpackagist-plugin/sar-friendly-smtp",
-            "version": "1.2.6",
-            "source": {
-                "type": "svn",
-                "url": "https://plugins.svn.wordpress.org/sar-friendly-smtp/",
-                "reference": "tags/1.2.6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/sar-friendly-smtp.1.2.6.zip"
-            },
-            "require": {
-                "composer/installers": "^1.0 || ^2.0"
-            },
-            "type": "wordpress-plugin",
-            "homepage": "https://wordpress.org/plugins/sar-friendly-smtp/"
         },
         {
             "name": "wpackagist-plugin/svg-support",
