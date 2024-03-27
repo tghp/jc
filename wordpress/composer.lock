@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8773d1bc82b296d98f8a0e02815bebbe",
+    "content-hash": "1206a15db702261f839495690037ccd3",
     "packages": [
         {
             "name": "composer/installers",
@@ -841,18 +841,6 @@
             "time": "2020-04-07T20:44:10+00:00"
         },
         {
-            "name": "meta-box/meta-box-aio",
-            "version": "master",
-            "dist": {
-                "type": "zip",
-                "url": "https://metabox.io/?action=download&product=meta-box-aio&api_key=0f8f7fc3bd035b4a4f17b480eaf0434b"
-            },
-            "require": {
-                "composer/installers": "~1.0 || ~2.0"
-            },
-            "type": "wordpress-plugin"
-        },
-        {
             "name": "monolog/monolog",
             "version": "2.9.1",
             "source": {
@@ -1685,6 +1673,19 @@
             }
         },
         {
+            "name": "tghp/metabox-aio",
+            "version": "1.15.8",
+            "dist": {
+                "type": "path",
+                "url": "./src/plugins/meta-box-aio",
+                "reference": "4f90937f1a0c5ed59734d61b28aebf0a1d5dee75"
+            },
+            "type": "wordpress-plugin",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "tghp/wp-composer-clean",
             "version": "2.1.0",
             "source": {
@@ -2029,9 +2030,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "meta-box/meta-box-aio": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

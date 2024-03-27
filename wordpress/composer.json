@@ -9,10 +9,6 @@
         {
             "type": "composer",
             "url": "https://wpackagist.org"
-        },
-        {
-            "type": "composer",
-            "url": "https://packages.metabox.io/0f8f7fc3bd035b4a4f17b480eaf0434b"
         }
     ],
     "require": {
@@ -23,7 +19,6 @@
         "wpackagist-plugin/wordfence": "^7",
         "wpackagist-plugin/sar-friendly-smtp": "^1",
         "wpackagist-plugin/svg-support": "^2.3",
-        "meta-box/meta-box-aio": "dev-master",
         "monolog/monolog": "^2",
         "wpackagist-plugin/wp-gatsby": "2.3.3",
         "wpackagist-plugin/wp-graphql": "1.8.6",
