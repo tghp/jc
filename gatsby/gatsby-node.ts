@@ -69,17 +69,24 @@ export const createPages: GatsbyNode['createPages'] = async (
                 const hasPdf = tghpjcPdfUrl;
 
                 if (hasPdf) {
-                    console.log(`🥃🏠️ ↪️ Creating post PDF redirect for ${slug}`);
+                    console.log(`🥃🏠️ ↪️ Creating post PDF redirect page for ${slug} (${postPath}/pdf/ -> ${tghpjcPdfUrl})`);
 
-                    createRedirect({
-                        fromPath: `${postPath}/pdf/`,
-                        toPath: tghpjcPdfUrl,
-                        isPermanent: true,
-                        redirectInBrowser: true,
+                    // createRedirect({
+                    //     fromPath: `${postPath}/pdf/`,
+                    //     toPath: tghpjcPdfUrl,
+                    //     isPermanent: true,
+                    //     redirectInBrowser: true,
+                    // });
+
+                    createPage({
+                        path: `${postPath}/pdf/`,
+                        component: path.resolve(`./src/templates/essay-pdf.js`),
+                        context: {
+                            toPath: tghpjcPdfUrl
+                        },
                     });
-
-                    console.log(`🥃🏠️ ↪️  ${postPath}/pdf/ -> ${tghpjcPdfUrl}`);
                 }
+
 
                 createPage({
                     path: postPath,
