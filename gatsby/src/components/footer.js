@@ -42,14 +42,6 @@ const Footer = ({ siteTitle }) => {
             <a href="https://and-now.co.uk/" target="_blank" rel="noreferrer">
               Designed by And–Now
             </a>
-            , with support from the{' '}
-            <a
-              href="https://effectiveideas.org/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Blog Prize
-            </a>
           </div>
         </div>
       </div>
