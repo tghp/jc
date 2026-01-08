@@ -9,7 +9,7 @@ export default function EssayPdf({
 }) {
   useEffect(() => {
     window.location.replace(toPath);
-  }, []);
+  }, [toPath]);
 
   return (
     <Layout location={'single-post'}>

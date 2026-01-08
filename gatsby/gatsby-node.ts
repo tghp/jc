@@ -13,7 +13,7 @@ export const createPages: GatsbyNode['createPages'] = async (
 
     const wordpressData = await graphql<Queries.GatsbyNodeDataQuery>(`
         query GatsbyNodeData {
-            posts: allWpPost(sort: { fields: [date] }) {
+            posts: allWpPost(sort: { date: DESC }) {
                 nodes {
                     slug
                     date

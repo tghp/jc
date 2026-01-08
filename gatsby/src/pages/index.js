@@ -49,7 +49,7 @@ export const indexQuery = graphql`
       ...SeoData
     }
 
-    allPosts: allWpPost(sort: { fields: [date], order: DESC }) {
+    allPosts: allWpPost(sort: { date: DESC }) {
       nodes {
         title
         slug

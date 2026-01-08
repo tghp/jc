@@ -93,7 +93,7 @@ export default function ArchivePage({ data }) {
 
 export const query = graphql`
   {
-    allWpPost(sort: { fields: [date], order: DESC }) {
+    allWpPost(sort: { date: DESC }) {
       nodes {
         title
         slug

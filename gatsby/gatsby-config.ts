@@ -107,21 +107,16 @@ module.exports = {
                 };
               });
             },
-            query: `
-              {
-                allWpPost(
-                  sort: {fields: [date], 
-                  order: DESC}
-                ) {
-                  nodes {
-                    title
-                    slug
-                    date
-                    excerpt
-                  }
+            query: `{
+              allWpPost(sort: {date: DESC}) {
+                nodes {
+                  title
+                  slug
+                  date
+                  excerpt
                 }
               }
-            `,
+            }`,
             output: '/rss.xml',
             title: `${siteMetaData.title} RSS Feed`,
           },
@@ -141,21 +136,16 @@ module.exports = {
                 };
               });
             },
-            query: `
-              {
-                allWpPost(
-                  sort: {fields: [date], 
-                  order: DESC}
-                ) {
-                  nodes {
-                    title
-                    slug
-                    date
-                    excerpt
-                  }
+            query: `{
+              allWpPost(sort: {date: DESC}) {
+                nodes {
+                  title
+                  slug
+                  date
+                  excerpt
                 }
               }
-            `,
+            }`,
             output: '/posts-rss.xml',
             title: `${siteMetaData.title} RSS Feed`,
           },
