@@ -48,7 +48,7 @@ class MetaBox extends \RW_Meta_Box {
 			return get_current_user_id();
 		}
 		if ( in_array( $screen->id, ['user-edit', 'user-edit-network'], true ) ) {
-			return isset( $_REQUEST['user_id'] ) ? absint( $_REQUEST['user_id'] ) : false;
+			return isset( $_REQUEST['user_id'] ) ? absint( $_REQUEST['user_id'] ) : false;  // phpcs:ignore WordPress.Security.NonceVerification
 		}
 		return false;
 	}

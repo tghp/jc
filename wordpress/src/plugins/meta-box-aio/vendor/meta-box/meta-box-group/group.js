@@ -1,6 +1,8 @@
 ( function( $, _, document, window, rwmb, i18n ) {
 	'use strict';
 
+	rwmb.hooks = rwmb.hooks || wp.hooks.createHooks();
+
 	var group = {
 		toggle: {}, // Toggle module for handling collapsible/expandable groups.
 		clone: {}   // Clone module for handling clone groups.
@@ -32,10 +34,35 @@
 	 * @param state  Force group to have a state.
 	 */
 	group.toggle.updateState = function( $group, state ) {
-		var $input = $group.find( '.rwmb-group-state' ).last().find( 'input' );
+		let $input;
+
+		// If meta box column is enabled, the group state is stored in > .rwmb-row > ... > .rwmb-group-state.
+		// Cloneable groups.
+		if ( $group.children( '.rwmb-row' ).length ) {
+			$input = $group.children( '.rwmb-row' )
+						.last()
+						.children( '.rwmb-column' )
+						.children( '.rwmb-group-state' )
+						.find( 'input' );
+		}
+		// Non-cloneable groups.
+		else if ( $group.children( '.rwmb-input' ).first().children( '.rwmb-row' ).length ) {
+			$input = $group.children( '.rwmb-input' )
+						.first()
+						.children( '.rwmb-row' )
+						.last()
+						.children( '.rwmb-column' )
+						.children( '.rwmb-group-state' )
+						.find( 'input' );
+		}
+		// Without meta box column.
+		else {
+			$input = $group.children( '.rwmb-group-state' ).last().find( 'input' );
+		}
+
 		if ( ! $input.length && ! state ) {
 			return;
-		}
+        }
 		if ( state ) {
 			$input.val( state );
 		} else {
@@ -57,7 +84,7 @@
 	 */
 	group.toggle.updateTitle = function ( index, element ) {
 		var $group = $( element ),
-			$title = $group.find( '> .rwmb-group-title-wrapper > .rwmb-group-title, > .rwmb-input > .rwmb-group-title-wrapper > .rwmb-group-title' ),
+			$title = getGroupTitleElement( $group ),
 			options = $title.data( 'options' );
 
 		if ( 'undefined' === typeof options ) {
@@ -72,17 +99,37 @@
 				return;
 			}
 
-			var selectors = 'input[name*="[' + field + ']"], textarea[name*="[' + field + ']"], select[name*="[' + field + ']"], button[name*="[' + field + ']"]',
+			const selectors = 'input[name*="[' + field + ']"], textarea[name*="[' + field + ']"], select[name*="[' + field + ']"], button[name*="[' + field + ']"]',
 				$field = $group.find( selectors );
-
 			if ( ! $field.length ) {
 				return;
 			}
 
-			var fieldValue = $field.val() || '';
+			let fieldValue = $field.val() || '';
+
+			// Select: get the option label instead of value.
 			if ( $field.is( 'select' ) && fieldValue ) {
 				fieldValue = $field.find( 'option:selected' ).text();
 			}
+
+			// Radio: get the checked option label instead of value.
+			if ( $field.is( 'input' ) && 'radio' === $field.attr( 'type' ) ) {
+				fieldValue = $field.filter( ':checked' ).parent().text();
+			}
+
+			// Checkbox: get the checked option label instead of value.
+			if ( $field.hasClass( 'rwmb-checkbox' ) ) {
+				fieldValue = $field.prop( 'checked' ) ? i18n.yes : i18n.no;
+			}
+
+			// Switch: show field's custom on/off labels and fallback to the default ones.
+			if ( $field.hasClass( 'rwmb-switch' ) ) {
+				fieldValue = $field.parent().find( '.rwmb-switch-off' ).text() || i18n.off;
+				if ( $field.prop( 'checked' ) ) {
+					fieldValue = $field.parent().find( '.rwmb-switch-on' ).text() || i18n.on;
+				}
+			}
+
 			content = content.replace( '{' + field + '}', fieldValue );
 
 			// Update title when field's value is changed.
@@ -93,8 +140,10 @@
 			}
 		}
 
-		content = content.replace( '{#}', index );
+		content = content.replace( '{#}', index - 1 );
 		fields.forEach( processField );
+
+		content = rwmb.hooks.applyFilters( 'group.title', content );
 
 		$title.text( content );
 	};
@@ -157,8 +206,8 @@
 			$clones = $( this ).parents( '.rwmb-group-clone' ),
 			totalLevel = $clones.length;
 		$clones.each( function ( i, clone ) {
-			var index = parseInt( $( clone ).parent().data( 'next-index' ) ) - 1,
-				level = totalLevel - i;
+			const index = parseInt( $( clone ).parent().data( 'next-index' ) ) - 1;
+			const level = totalLevel - i;
 
 			group.clone.replaceName.call( that, level, index );
 
@@ -183,8 +232,8 @@
 			return;
 		}
 
-		var index = parseInt( $this.closest( '.rwmb-input' ).data( 'next-index' ) ) - 1,
-			level = $this.parents( '.rwmb-clone' ).length;
+		const index = parseInt( $this.closest( '.rwmb-input' ).data( 'next-index' ) ) - 1;
+		const level = $this.parents( '.rwmb-clone' ).length;
 
 		group.clone.replaceName.call( this, level, index );
 
@@ -219,7 +268,19 @@
 	group.clone.replaceId = function ( level, index ) {
 		var $input = $( this ),
 			id = $input.attr( 'id' );
-		if ( ! id ) {
+
+		// Update index only for sub fields in a group
+		if ( ! $input.closest( '.rwmb-group-clone' ).length ) {
+			return;
+		}
+
+		if ( ! id || index === 0 ) {
+			return;
+		}
+
+		if ( index === 1 ) {
+			id = id.replace( '_rwmb_template', '' );
+			$input.attr( 'id', id );
 			return;
 		}
 
@@ -233,6 +294,7 @@
 		}
 
 		$input.attr( 'id', id );
+		$input.closest( '.rwmb-field' ).find( '.rwmb-label label' ).attr( 'for', id );
 	};
 
 	/**
@@ -259,7 +321,9 @@
 			.data( 'clone-group-new', true )
 			// Remove clones, and keep only their first clone. Reset [data-next-index] to 1
 			.find( '.rwmb-input' ).each( function () {
-				$( this ).data( 'next-index', 1 ).children( '.rwmb-clone:gt(0)' ).remove();
+				const gt = $( this ).attr( 'data-clone-empty-start' ) == 0 ? 1 : 0;
+				const nextIndex = gt === 0 ? 1 : 2;
+				$( this ).data( 'next-index', nextIndex ).children( `.rwmb-clone:gt(${gt})` ).remove();
 			} );
 
 		// Update [group index] for inputs
@@ -290,12 +354,19 @@
 	group.clone.remove = function( event ) {
 		event.preventDefault();
 		event.stopPropagation();
-		var ok = confirm( i18n.confirmRemove );
-		if ( ! ok ) {
-			return;
+
+		// Get group title to put into the confirm message.
+		const $group = $( this ).closest( '.rwmb-clone' ),
+			$title = getGroupTitleElement( $group ),
+			title = $title.length > 0 ? $title.text() : i18n.defaultTitle,
+			message = i18n.confirmRemove.replace( '%s', title );
+
+		if ( confirm( message ) ) {
+			$group.find( '.remove-clone' ).trigger( 'click' );
 		}
-		$( this ).parent().siblings( '.remove-clone' ).trigger( 'click' );
 	}
+
+	const getGroupTitleElement = $group => $group.find( '> .rwmb-group-title-wrapper > .rwmb-group-title, > .rwmb-input > .rwmb-group-title-wrapper > .rwmb-group-title' );
 
 	function init() {
 		group.toggle.initState();
@@ -306,7 +377,10 @@
 	}
 
 	rwmb.$document
-		.on( 'mb_ready', init )
+		.on( 'mb_ready', () => {
+			// Use timeout to make the group.title filter works on first run.
+			setTimeout( init, 0 );
+		} )
 		.on( 'click', '.rwmb-group-title-wrapper, .rwmb-group-toggle-handle', group.toggle.handle )
 		.on( 'clone_instance', '.rwmb-clone', group.clone.processGroup )
 		.on( 'update_index', rwmb.inputSelectors, group.clone.replaceId )

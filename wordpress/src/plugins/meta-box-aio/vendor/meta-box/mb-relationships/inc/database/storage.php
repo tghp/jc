@@ -2,6 +2,8 @@
 class MBR_Storage {
 	/**
 	 * Relationship factory.
+	 *
+	 * @var MBR_Relationship_Factory
 	 */
 	private $factory;
 
@@ -30,6 +32,7 @@ class MBR_Storage {
 		$relationship = $this->factory->get( $type );
 
 		if ( $relationship->reciprocal ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$results = $wpdb->get_results( $wpdb->prepare(
 				"SELECT `to`, `ID`, `order_from` AS `order`
 				FROM {$wpdb->mb_relationships}
@@ -45,7 +48,7 @@ class MBR_Storage {
 				$type
 			), ARRAY_N );
 
-			return array_map( function( $pair ) {
+			return array_map( function ( $pair ) {
 				return reset( $pair );
 			}, $results );
 		}
@@ -53,8 +56,9 @@ class MBR_Storage {
 		$target = $this->get_target( $meta_key );
 		$source = $this->get_source( $meta_key );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_col( $wpdb->prepare(
-			"SELECT `$target` FROM {$wpdb->mb_relationships} WHERE `$source`=%d AND `type`=%s ORDER BY order_$source",
+			"SELECT `$target` FROM {$wpdb->mb_relationships} WHERE `$source`=%d AND `type`=%s ORDER BY order_$source", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$object_id,
 			$type
 		) );
@@ -98,15 +102,17 @@ class MBR_Storage {
 
 		$x = 0;
 		foreach ( $meta_value as $id ) {
-			$x++;
+			++$x;
 			$order = isset( $orders[ $id ] ) ? $orders[ $id ] : 0;
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->insert( $wpdb->mb_relationships, [
 				$source         => $object_id,
 				$target         => $id,
 				'type'          => $type,
 				"order_$source" => $x,
 				"order_$target" => $order,
-			], ['%d', '%d', '%s', '%d', '%d'] );
+			], [ '%d', '%d', '%s', '%d', '%d' ] );
 		}
 		return true;
 	}
@@ -133,6 +139,7 @@ class MBR_Storage {
 		$type   = $this->get_type( $meta_key );
 		$source = $this->get_source( $meta_key );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->delete( $wpdb->mb_relationships, [
 			$source => $object_id,
 			'type'  => $type,
@@ -141,6 +148,7 @@ class MBR_Storage {
 		$relationship = $this->factory->get( $type );
 		if ( $relationship->reciprocal ) {
 			$target = $this->get_target( $meta_key );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->delete( $wpdb->mb_relationships, [
 				$target => $object_id,
 				'type'  => $type,
@@ -188,9 +196,11 @@ class MBR_Storage {
 	private function get_target_orders( $object_id, $type, $source, $target ) {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$items = $wpdb->get_results( $wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			"SELECT `$target` AS `id`, `order_$target` AS `order` FROM {$wpdb->mb_relationships} WHERE `$source` = %d AND `type` = %s
-			UNION SELECT `$source` AS `id`, `order_$source` AS `order` FROM {$wpdb->mb_relationships} WHERE `$target` = %d AND `type` = %s",
+			UNION SELECT `$source` AS `id`, `order_$source` AS `order` FROM {$wpdb->mb_relationships} WHERE `$target` = %d AND `type` = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$object_id,
 			$type,
 			$object_id,

@@ -12,14 +12,7 @@ abstract class Base {
 	protected $localize_data = [];
 	protected $type;
 
-	/**
-	 * Constructor.
-	 *
-	 * @param array                     $meta_boxes Meta box settings.
-	 * @param \MetaBox\UserProfile\User $user       User object.
-	 * @param array                     $config     Form configuration.
-	 */
-	public function __construct( $meta_boxes, $user, $config ) {
+	public function __construct( array $meta_boxes, $user, array $config ) {
 		$this->meta_boxes = array_filter( $meta_boxes );
 		$this->user       = $user;
 		$this->config     = $config;
@@ -63,12 +56,13 @@ abstract class Base {
 
 		// Register wp color picker scripts for frontend.
 		$this->register_scripts();
-		wp_localize_jquery_ui_datepicker();
 
 		foreach ( $this->meta_boxes as $meta_box ) {
 			$meta_box->enqueue();
 			$meta_box->show();
 		}
+
+		wp_localize_jquery_ui_datepicker();
 
 		do_action( 'rwmb_profile_before_submit_button', $this->config );
 		$this->submit_button();
@@ -81,9 +75,7 @@ abstract class Base {
 
 	/**
 	 * Process the form.
-	 * Meta box auto hooks to 'save_post' action to save its data, so we only need to save the post.
-	 *
-	 * @return int User ID.
+	 * Meta Box auto hooks to 'save_post' action to save its data, so we only need to save the post.
 	 */
 	public function process() {
 		$this->check_recaptcha();
@@ -107,7 +99,7 @@ abstract class Base {
 		return $user_id;
 	}
 
-	protected function has_privilege() {
+	protected function has_privilege() : bool {
 		return true;
 	}
 
@@ -129,7 +121,7 @@ abstract class Base {
 			'jquery-ui-slider',
 			'jquery-touch-punch',
 		], '1.0.7', true );
-		wp_register_script( 'wp-color-picker', admin_url( 'js/color-picker.min.js' ), ['iris', 'wp-i18n'], '', true );
+		wp_register_script( 'wp-color-picker', admin_url( 'js/color-picker.min.js' ), [ 'iris', 'wp-i18n' ], '', true );
 		wp_localize_script( 'wp-color-picker', 'wpColorPickerL10n', [
 			'clear'            => __( 'Clear', 'mb-user-profile' ),
 			'clearAriaLabel'   => __( 'Clear color', 'mb-user-profile' ),
@@ -144,17 +136,24 @@ abstract class Base {
 		if ( ! isset( $this->config['password_strength'] ) || 'false' === $this->config['password_strength'] ) {
 			return;
 		}
-		wp_enqueue_script( 'mbup', MBUP_URL . 'assets/user-profile.js', ['jquery', 'password-strength-meter'], MBUP_VER, true );
+		wp_enqueue_script( 'mbup', MBUP_URL . 'assets/user-profile.js', [ 'jquery', 'password-strength-meter' ], MBUP_VER, true );
 
 		$this->localize_data = array_merge( $this->localize_data, [
-			'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
-			'very-weak' => __( 'Very weak', 'mb-user-profile' ),
-			'weak'      => __( 'Weak', 'mb-user-profile' ),
-			'medium'    => _x( 'Medium', 'password strength', 'mb-user-profile' ),
-			'strong'    => __( 'Strong', 'mb-user-profile' ),
-			'mismatch'  => __( 'Mismatch', 'mb-user-profile' ),
-			'strength'  => $this->config['password_strength'],
+			'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
+			'very-weak'    => __( 'Very weak', 'mb-user-profile' ),
+			'weak'         => __( 'Weak', 'mb-user-profile' ),
+			'medium'       => _x( 'Medium', 'password strength', 'mb-user-profile' ),
+			'strong'       => __( 'Strong', 'mb-user-profile' ),
+			'mismatch'     => __( 'Mismatch', 'mb-user-profile' ),
+			'id_password'  => $this->config['id_password'],
+			'strength'     => $this->config['password_strength'],
 		] );
+
+		if ( isset( $this->config['id_password2'] ) ) {
+			$this->localize_data = array_merge( $this->localize_data, [
+				'id_password2' => $this->config['id_password2'],
+			] );
+		}
 	}
 
 	protected function enqueue_recaptcha() {
@@ -162,7 +161,7 @@ abstract class Base {
 			return;
 		}
 
-		wp_enqueue_script( 'mbup', MBUP_URL . 'assets/user-profile.js', ['jquery', 'password-strength-meter'], MBUP_VER, true );
+		wp_enqueue_script( 'mbup', MBUP_URL . 'assets/user-profile.js', [ 'jquery', 'password-strength-meter' ], MBUP_VER, true );
 		wp_enqueue_script( 'google-recaptcha', 'https://www.google.com/recaptcha/api.js?render=' . $this->config['recaptcha_key'], [], '3', true );
 
 		$this->localize_data = array_merge( $this->localize_data, [
@@ -180,8 +179,8 @@ abstract class Base {
 		$key = ConfigStorage::store( $this->config );
 		echo '<input type="hidden" name="mbup_key" value="', esc_attr( $key ), '">';
 		echo '<input type="hidden" name="mbup_type" value="', esc_attr( $this->type ), '">';
-		// add hidden input if has recaptcha v3
-		if ( $this->config[ 'recaptcha_key' ] ) {
+
+		if ( $this->config['recaptcha_key'] ) {
 			echo '<input type="hidden" name="mbup_recaptcha_token" value="">';
 		}
 	}
@@ -193,8 +192,7 @@ abstract class Base {
 
 		$token = (string) rwmb_request()->post( 'mbup_recaptcha_token' );
 		if ( ! $token ) {
-			$error = __( 'Invalid captcha token', 'mb-user-profile' );
-			wp_die( $error );
+			wp_die( esc_html__( 'Invalid captcha token', 'mb-user-profile' ) );
 		}
 
 		$url = 'https://www.google.com/recaptcha/api/siteverify';
@@ -206,13 +204,12 @@ abstract class Base {
 		$response = wp_remote_retrieve_body( wp_remote_get( $url ) );
 		$response = json_decode( $response, true );
 
-		if ( empty( $response[ 'success' ] ) || empty( $response['action'] ) || 'mbup' !== $response[ 'action' ] ) {
-			$error = __( 'Cannot verify captcha', 'mb-user-profile' );
-			wp_die( $error );
+		if ( empty( $response['success'] ) || empty( $response['action'] ) || 'mbup' !== $response['action'] ) {
+			wp_die( esc_html__( 'Cannot verify captcha', 'mb-user-profile' ) );
 		}
 	}
 
-	protected function is_processed() {
+	protected function is_processed() : bool {
 		return ConfigStorage::get_key( $this->config ) === filter_input( INPUT_GET, 'rwmb-form-submitted' );
 	}
 

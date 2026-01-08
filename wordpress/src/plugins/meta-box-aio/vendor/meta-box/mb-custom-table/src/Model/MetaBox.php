@@ -11,21 +11,26 @@ class MetaBox extends \RW_Meta_Box {
 	protected function object_hooks() {
 		add_action( 'mbct_model_edit_load', [ $this, 'load' ] );
 		add_action( 'mbct_model_edit_load', [ $this, 'save_model' ] );
+		add_action( 'rwmb_frontend_save_model', [ $this, 'frontend_save_model' ], 10, 1 );
 
 		// Hide meta box if it's set 'default_hidden'.
 		add_filter( 'default_hidden_meta_boxes', array( $this, 'hide' ), 10, 2 );
 	}
 
-	public function enqueue() {
-		if ( ! $this->is_edit_screen() ) {
-			return;
+	public function enqueue( $args = [] ) {
+		$args = wp_parse_args( $args, [
+			'for' => 'admin',
+		] );
+
+		if ( $this->is_edit_screen() ) {
+			wp_enqueue_script( 'common' );
+			wp_enqueue_script( 'wp-lists' );
+			wp_enqueue_script( 'postbox' );
 		}
 
-		wp_enqueue_script( 'common' );
-		wp_enqueue_script( 'wp-lists' );
-		wp_enqueue_script( 'postbox' );
-
-		parent::enqueue();
+		if ( $this->is_edit_screen() || $args['for'] === 'frontend' ) {
+			parent::enqueue();
+		}
 	}
 
 	public function load() {
@@ -54,11 +59,27 @@ class MetaBox extends \RW_Meta_Box {
 		}
 
 		// Get the correct inserted ID when add new model.
-		global $wpdb;
 		$object_id = rwmb_request()->filter_get( 'model-id', FILTER_SANITIZE_NUMBER_INT );
-		if ( 'add' === rwmb_request()->get( 'model-action' ) && $wpdb->insert_id ) {
-			$object_id = $wpdb->insert_id;
+		if ( 'add' === rwmb_request()->get( 'model-action' ) ) {
+			$object_id = -1; // A fake ID to store data in the cache.
 		}
+		$this->save_post( $object_id );
+	}
+
+	/**
+	 * Save model data from frontend submission.
+	 *
+	 * @return void
+	 */
+	public function frontend_save_model( $config ) {
+		// Save.
+		if ( empty( rwmb_request()->post( 'action' ) ) || 'mbfs_submit' !== rwmb_request()->post( 'action' ) ) {
+			return;
+		}
+
+		// Get the correct inserted ID when add new model.
+		$object_id = empty( $config['object_id'] ) ? -1 : $config['object_id'];
+
 		$this->save_post( $object_id );
 	}
 
@@ -67,7 +88,7 @@ class MetaBox extends \RW_Meta_Box {
 	}
 
 	public function is_edit_screen( $screen = null ) {
-		$page = rwmb_request()->get( 'page' );
+		$page = (string) rwmb_request()->get( 'page' );
 		if ( strpos( $page, 'model-' ) !== 0 ) {
 			return false;
 		}
@@ -75,7 +96,7 @@ class MetaBox extends \RW_Meta_Box {
 
 		$action = rwmb_request()->get( 'model-action' );
 
-		return in_array( $model, $this->models, true ) && in_array( $action, ['add', 'edit'] );
+		return in_array( $model, $this->models, true ) && in_array( $action, [ 'add', 'edit' ] );
 	}
 
 	public function register_fields() {

@@ -5,6 +5,7 @@
 		'mb-comment-meta'                  : [                      'data',                          , 'free'               ],
 		'mb-custom-post-type'              : [           'popular', 'data', 'ui', 'admin',           , 'free'               ],
 		'mb-custom-table'                  : ['premium',            'data'                                                  ],
+		'mb-divi-integrator'               : [                              'ui',          'frontend', 'free', 'integration'],
 		'mb-elementor-integrator'          : [                              'ui',          'frontend', 'free', 'integration'],
 		'mb-frontend-submission'           : ['premium', 'popular',         'ui',          'frontend'                       ],
 		'mb-relationships'                 : [           'popular', 'data',                          , 'free'               ],

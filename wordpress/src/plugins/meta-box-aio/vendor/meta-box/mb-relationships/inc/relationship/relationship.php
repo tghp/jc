@@ -62,6 +62,7 @@ class MBR_Relationship {
 	public function has( $from, $to ) {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Error.
 		$rel_id = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT `ID` FROM {$wpdb->mb_relationships} WHERE `from`=%d AND `to`=%d AND `type`=%s",
@@ -91,22 +92,23 @@ class MBR_Relationship {
 			return false;
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Error.
 		$result = $wpdb->insert(
 			$wpdb->mb_relationships,
-			array(
+			[
 				'from'       => $from,
 				'to'         => $to,
 				'type'       => $this->id,
 				'order_from' => $order_from,
 				'order_to'   => $order_to,
-			),
-			array(
+			],
+			[
 				'%d',
 				'%d',
 				'%s',
 				'%d',
 				'%d',
-			)
+			]
 		);
 		do_action( 'mb_relationships_add', $from, $to, $this->id, $order_from, $order_to, $result );
 		return $result;
@@ -123,13 +125,14 @@ class MBR_Relationship {
 	public function delete( $from, $to ) {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Error.
 		$result = $wpdb->delete(
 			$wpdb->mb_relationships,
-			array(
+			[
 				'from' => $from,
 				'to'   => $to,
 				'type' => $this->id,
-			)
+			]
 		);
 		do_action( 'mb_relationships_delete', $from, $to, $this->id, $result );
 		return $result;

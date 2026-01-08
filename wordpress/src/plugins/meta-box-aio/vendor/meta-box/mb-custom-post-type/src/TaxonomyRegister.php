@@ -7,7 +7,7 @@ class TaxonomyRegister extends Register {
 	public function __construct() {
 		parent::__construct();
 
-		add_filter( 'rest_prepare_taxonomy', array( $this, 'hide_taxonomy_meta_box' ), 10, 3 );
+		add_filter( 'rest_prepare_taxonomy', [ $this, 'hide_taxonomy_meta_box' ], 10, 3 );
 	}
 
 	/**
@@ -42,7 +42,7 @@ class TaxonomyRegister extends Register {
 			'parent_item_colon'  => __( 'Parent Taxonomy:', 'mb-custom-post-type' ),
 			'all_items'          => __( 'Taxonomies', 'mb-custom-post-type' ),
 			'add_new_item'       => __( 'Add New Taxonomy', 'mb-custom-post-type' ),
-			'add_new'            => __( 'Add New', 'mb-custom-post-type' ),
+			'add_new'            => __( 'New Taxonomy', 'mb-custom-post-type' ),
 			'new_item'           => __( 'New Taxonomy', 'mb-custom-post-type' ),
 			'edit_item'          => __( 'Edit Taxonomy', 'mb-custom-post-type' ),
 			'update_item'        => __( 'Update Taxonomy', 'mb-custom-post-type' ),
@@ -52,18 +52,18 @@ class TaxonomyRegister extends Register {
 			'not_found_in_trash' => __( 'Not found in Trash', 'mb-custom-post-type' ),
 		];
 		$args   = [
-			'label'         => __( 'Taxonomies', 'mb-custom-post-type' ),
-			'labels'        => $labels,
-			'supports'      => false,
-			'public'        => false,
-			'show_ui'       => true,
-			'show_in_menu'  => defined( 'RWMB_VER' ) ? 'meta-box' : 'edit.php?post_type=mb-post-type',
-			'menu_icon'     => 'dashicons-exerpt-view',
-			'can_export'    => true,
-			'rewrite'       => false,
-			'query_var'     => false,
-			'map_meta_cap'    => true,
-			'capabilities'    => [
+			'label'        => __( 'Taxonomies', 'mb-custom-post-type' ),
+			'labels'       => $labels,
+			'supports'     => false,
+			'public'       => false,
+			'show_ui'      => true,
+			'show_in_menu' => defined( 'RWMB_VER' ) ? 'meta-box' : 'edit.php?post_type=mb-post-type',
+			'menu_icon'    => 'dashicons-exerpt-view',
+			'can_export'   => true,
+			'rewrite'      => false,
+			'query_var'    => false,
+			'map_meta_cap' => true,
+			'capabilities' => [
 				// Meta capabilities.
 				'edit_post'              => 'edit_mb_taxonomy',
 				'read_post'              => 'read_mb_taxonomy',
@@ -86,8 +86,8 @@ class TaxonomyRegister extends Register {
 				'create_posts'           => 'manage_options',
 			],
 		];
-		
-			register_post_type( 'mb-taxonomy', $args );
+
+		register_post_type( 'mb-taxonomy', $args );
 
 		// Get all registered custom taxonomies.
 		$taxonomies = $this->get_taxonomies();
@@ -96,6 +96,7 @@ class TaxonomyRegister extends Register {
 				unset( $args['meta_box_cb'] );
 			}
 			$types = empty( $args['types'] ) ? [] : $args['types'];
+
 			register_taxonomy( $slug, $types, $args );
 		}
 	}
@@ -114,6 +115,13 @@ class TaxonomyRegister extends Register {
 
 		foreach ( $posts as $post ) {
 			$data = $this->get_taxonomy_data( $post );
+			if ( empty( $data ) ) {
+				continue;
+			}
+
+			// Allow WPML to translate taxonomy labels.
+			$data = apply_filters( 'mbcpt_taxonomy', $data, $post );
+
 			$taxonomies[ $data['slug'] ] = $data;
 		}
 
@@ -121,7 +129,12 @@ class TaxonomyRegister extends Register {
 	}
 
 	public function get_taxonomy_data( WP_Post $post ) {
-		return empty( $post->post_content ) || isset( $_GET['mbcpt-force'] ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
+		// phpcs:ignore
+		$settings = empty( $post->post_content ) || isset( $_GET['mbcpt-force'] ) ? $this->migrate_data( $post ) : json_decode( $post->post_content, true );
+
+		$this->sanitize_labels( $settings );
+
+		return $settings;
 	}
 
 	public function migrate_data( WP_Post $post ) {
@@ -136,20 +149,18 @@ class TaxonomyRegister extends Register {
 			$this->normalize_checkbox( $value );
 
 			if ( 0 === strpos( $key, 'label_' ) ) {
-				$key = str_replace( 'label_', '', $key );
+				$key                    = str_replace( 'label_', '', $key );
 				$args['labels'][ $key ] = $value;
 			} else {
-				$key = str_replace( 'args_', '', $key );
+				$key          = str_replace( 'args_', '', $key );
 				$args[ $key ] = $value;
 			}
-
-			// delete_post_meta( $post->ID, $key );
 		}
 		$this->change_key( $args, 'taxonomy', 'slug' );
 		$this->change_key( $args, 'post_types', 'types' );
 
 		// Bypass new post types.
-		if ( isset( $_GET['mbcpt-force'] ) && empty( $args['slug'] ) ) {
+		if ( isset( $_GET['mbcpt-force'] ) && empty( $args['slug'] ) ) { // phpcs:ignore
 			return json_decode( $post->post_content, true );
 		}
 
@@ -158,9 +169,9 @@ class TaxonomyRegister extends Register {
 		if ( isset( $args['rewrite_slug'] ) ) {
 			$rewrite['slug'] = $args['rewrite_slug'];
 		}
-		$rewrite['with_front'] = isset( $args['rewrite_no_front'] ) ? ! $args['rewrite_no_front'] : true;
+		$rewrite['with_front']   = isset( $args['rewrite_no_front'] ) ? ! $args['rewrite_no_front'] : true;
 		$rewrite['hierarchical'] = isset( $args['rewrite_hierarchical'] ) ? (bool) $args['rewrite_hierarchical'] : false;
-		$args['rewrite'] = $rewrite;
+		$args['rewrite']         = $rewrite;
 		unset( $args['rewrite_slug'], $args['rewrite_no_front'], $args['rewrite_hierarchical'] );
 
 		wp_update_post( [
@@ -172,41 +183,73 @@ class TaxonomyRegister extends Register {
 
 	public function updated_message( $messages ) {
 		$post     = get_post();
-		$revision = filter_input( INPUT_GET, 'revision', FILTER_SANITIZE_NUMBER_INT );
+		$revision = (int) filter_input( INPUT_GET, 'revision' );
 
-		$messages['mb-taxonomy'] = array(
+		$add_fields_link = '';
+		$settings        = json_decode( $post->post_content, true );
+		if ( defined( 'MBB_VER' ) && is_array( $settings ) && ! empty( $settings['slug'] ) ) {
+			$link            = add_query_arg( [
+				'post_type'              => 'meta-box',
+				// Translators: %s - taxonomy singular label.
+				'post_title'             => sprintf( __( '%s Fields', 'mb-custom-post-type' ), $post->post_title ),
+				'settings[object_type]'  => 'term',
+				'settings[taxonomies][]' => $settings['slug'],
+			], admin_url( 'post-new.php' ) );
+			$add_fields_link = '<a href=' . esc_url( $link ) . '>' . __( 'Add custom fields to this taxonomy', 'mb-custom-post-type' ) . ' &rarr;</a>';
+		}
+
+		$messages['mb-taxonomy'] = [
 			0  => '', // Unused. Messages start at index 1.
-			1  => __( 'Taxonomy updated.', 'mb-custom-taxonomy' ),
-			2  => __( 'Custom field updated.', 'mb-custom-taxonomy' ),
-			3  => __( 'Custom field deleted.', 'mb-custom-taxonomy' ),
-			4  => __( 'Taxonomy updated.', 'mb-custom-taxonomy' ),
-			// translators: %s: Date and time of the revision.
-			5  => $revision ? sprintf( __( 'Taxonomy restored to revision from %s.', 'mb-custom-taxonomy' ), wp_post_revision_title( $revision, false ) ) : false,
-			6  => __( 'Taxonomy published.', 'mb-custom-taxonomy' ),
-			7  => __( 'Taxonomy saved.', 'mb-custom-taxonomy' ),
-			8  => __( 'Taxonomy submitted.', 'mb-custom-taxonomy' ),
-			// translators: %s: Date and time of the revision.
-			9  => sprintf( __( 'Taxonomy scheduled for: <strong>%s</strong>.', 'mb-custom-taxonomy' ), date_i18n( __( 'M j, Y @ G:i', 'mb-custom-taxonomy' ), strtotime( $post->post_date ) ) ),
-			10 => __( 'Taxonomy draft updated.', 'mb-custom-taxonomy' ),
-		);
+			1  => __( 'Taxonomy updated.', 'mb-custom-post-type' ),
+			2  => __( 'Custom field updated.', 'mb-custom-post-type' ),
+			3  => __( 'Custom field deleted.', 'mb-custom-post-type' ),
+			4  => __( 'Taxonomy updated.', 'mb-custom-post-type' ),
+			// Translators: %s - date and time of the revision.
+			5  => $revision ? sprintf( __( 'Taxonomy restored to revision from %s.', 'mb-custom-post-type' ), wp_post_revision_title( $revision, false ) ) : false,
+			// Translators: %s - add fields link.
+			6  => sprintf( __( 'Taxonomy published. %s', 'mb-custom-post-type' ), $add_fields_link ),
+			7  => __( 'Taxonomy saved.', 'mb-custom-post-type' ),
+			8  => __( 'Taxonomy submitted.', 'mb-custom-post-type' ),
+			// Translators: %s - date and time of the revision.
+			9  => sprintf( __( 'Taxonomy scheduled for: <strong>%s</strong>.', 'mb-custom-post-type' ), date_i18n( __( 'M j, Y @ G:i', 'mb-custom-post-type' ), strtotime( $post->post_date ) ) ),
+			10 => __( 'Taxonomy draft updated.', 'mb-custom-post-type' ),
+		];
 
 		return $messages;
 	}
 
 	public function bulk_updated_messages( $bulk_messages, $bulk_counts ) {
-		$bulk_messages['mb-taxonomy'] = array(
-			// translators: %s: Name of the taxonomy in singular and plural form.
-			'updated'   => sprintf( _n( '%s taxonomy updated.', '%s taxonomies updated.', $bulk_counts['updated'], 'mb-custom-taxonomy' ), $bulk_counts['updated'] ),
-			// translators: %s: Name of the taxonomy in singular and plural form.
-			'locked'    => sprintf( _n( '%s taxonomy not updated, somebody is editing.', '%s taxonomies not updated, somebody is editing.', $bulk_counts['locked'], 'mb-custom-taxonomy' ), $bulk_counts['locked'] ),
-			// translators: %s: Name of the taxonomy in singular and plural form.
-			'deleted'   => sprintf( _n( '%s taxonomy permanently deleted.', '%s taxonomies permanently deleted.', $bulk_counts['deleted'], 'mb-custom-taxonomy' ), $bulk_counts['deleted'] ),
-			// translators: %s: Name of the taxonomy in singular and plural form.
-			'trashed'   => sprintf( _n( '%s taxonomy moved to the Trash.', '%s taxonomies moved to the Trash.', $bulk_counts['trashed'], 'mb-custom-taxonomy' ), $bulk_counts['trashed'] ),
-			// translators: %s: Name of the taxonomy in singular and plural form.
-			'untrashed' => sprintf( _n( '%s taxonomy restored from the Trash.', '%s taxonomies restored from the Trash.', $bulk_counts['untrashed'], 'mb-custom-taxonomy' ), $bulk_counts['untrashed'] ),
-		);
+		$bulk_messages['mb-taxonomy'] = [
+			// Translators: %s - taxonomy label in singular and plural forms.
+			'updated'   => sprintf( _n( '%s taxonomy updated.', '%s taxonomies updated.', $bulk_counts['updated'], 'mb-custom-post-type' ), $bulk_counts['updated'] ),
+			// Translators: %s - taxonomy label in singular and plural forms.
+			'locked'    => sprintf( _n( '%s taxonomy not updated, somebody is editing.', '%s taxonomies not updated, somebody is editing.', $bulk_counts['locked'], 'mb-custom-post-type' ), $bulk_counts['locked'] ),
+			// Translators: %s - taxonomy label in singular and plural forms.
+			'deleted'   => sprintf( _n( '%s taxonomy permanently deleted.', '%s taxonomies permanently deleted.', $bulk_counts['deleted'], 'mb-custom-post-type' ), $bulk_counts['deleted'] ),
+			// Translators: %s - taxonomy label in singular and plural forms.
+			'trashed'   => sprintf( _n( '%s taxonomy moved to the Trash.', '%s taxonomies moved to the Trash.', $bulk_counts['trashed'], 'mb-custom-post-type' ), $bulk_counts['trashed'] ),
+			// Translators: %s - taxonomy label in singular and plural forms.
+			'untrashed' => sprintf( _n( '%s taxonomy restored from the Trash.', '%s taxonomies restored from the Trash.', $bulk_counts['untrashed'], 'mb-custom-post-type' ), $bulk_counts['untrashed'] ),
+		];
 
 		return $bulk_messages;
+	}
+
+	/**
+	 * Get post by slug.
+	 *
+	 * @param string $slug Post slug.
+	 * @param string $post_type Post type.
+	 * @return WP_Post|null
+	 */
+	private function get_post_by_slug( $slug, $post_type ) {
+		$posts = get_posts( [
+			'name'        => $slug,
+			'post_type'   => $post_type,
+			'post_status' => 'publish',
+			'numberposts' => 1,
+		] );
+
+		return ! empty( $posts[0] ) ? $posts[0] : null;
 	}
 }

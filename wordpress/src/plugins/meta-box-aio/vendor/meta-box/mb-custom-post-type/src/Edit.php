@@ -8,37 +8,7 @@ class Edit {
 
 	public function __construct( $post_type ) {
 		$this->post_type = $post_type;
-
-		add_action( 'edit_form_after_title', [ $this, 'output_root' ] );
-		add_action( 'add_meta_boxes', [ $this, 'register_upgrade_meta_box' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-	}
-
-	public function output_root() {
-		if ( $this->is_screen() ) {
-			echo '<div id="root" class="mb-cpt"></div>';
-		}
-	}
-
-	public function register_upgrade_meta_box( $meta_boxes ) {
-		if ( $this->is_screen() && ! $this->is_premium_user() ) {
-			add_meta_box( 'mb-cpt-upgrade', __( 'Upgrade', 'mb-custom-post-type' ), [ $this, 'upgrade_message' ], null, 'side', 'low' );
-		}
-	}
-
-	public function upgrade_message() {
-		?>
-		<p><?php esc_html_e( 'Upgrade now to have more features & speedy technical support:', 'mb-custom-post-type' ) ?></p>
-		<ul>
-			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'Create custom fields with UI', 'mb-custom-post-type' ) ?></li>
-			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'Add custom fields to terms and users', 'mb-custom-post-type' ) ?></li>
-			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'Create custom settings pages', 'mb-custom-post-type' ) ?></li>
-			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'Create frontend submission forms', 'mb-custom-post-type' ) ?></li>
-			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'Create frontend templates', 'mb-custom-post-type' ) ?></li>
-			<li><span class="dashicons dashicons-yes"></span><?php esc_html_e( 'And much more!', 'mb-custom-post-type' ) ?></li>
-		</ul>
-		<a href="https://metabox.io/pricing/?utm_source=plugin_cpt&utm_medium=btn_upgrade&utm_campaign=cpt_upgrade" class="button" target="_blank" rel="noopenner noreferer"><?php esc_html_e( 'Upgrade now', 'mb-custom-post-type' ) ?></a>
-		<?php
 	}
 
 	public function enqueue_scripts() {
@@ -46,20 +16,47 @@ class Edit {
 			return;
 		}
 
-		wp_enqueue_style( $this->post_type, MB_CPT_URL . 'assets/style.css', ['wp-components'], MB_CPT_VER );
+		wp_enqueue_style( $this->post_type, MB_CPT_URL . 'assets/style.css', [ 'wp-components' ], MB_CPT_VER );
+		wp_enqueue_style( 'font-awesome', MB_CPT_URL . 'assets/fontawesome/css/all.min.css', [], '6.6.0' );
+		wp_enqueue_style( 'wp-edit-post' );
+
+		wp_enqueue_script( 'mbcpt-edit', MB_CPT_URL . 'assets/edit.js', [], filemtime( MB_CPT_DIR . '/assets/edit.js' ), true );
 
 		$object = str_replace( 'mb-', '', $this->post_type );
-		wp_enqueue_code_editor( ['type' => 'application/x-httpd-php'] );
-		wp_enqueue_script( $this->post_type, MB_CPT_URL . "assets/$object.js", ['wp-element', 'wp-components', 'wp-i18n', 'clipboard'], MB_CPT_VER, true );
+		wp_enqueue_code_editor( [ 'type' => 'application/x-httpd-php' ] );
+
+		$asset = require MB_CPT_DIR . "/assets/build/$object.asset.php";
+		wp_enqueue_script( $this->post_type, MB_CPT_URL . "assets/build/$object.js", $asset['dependencies'], $asset['version'], true );
 		wp_localize_script( $this->post_type, 'MBCPT', $this->js_vars() );
-		wp_set_script_translations( $this->post_type, 'mb-custom-post-type' );
+
+		$path = '';
+		if ( defined( 'META_BOX_LITE_DIR' ) ) {
+			$path = META_BOX_LITE_DIR . '/languages/mb-custom-post-type';
+		}
+		if ( defined( 'META_BOX_AIO_DIR' ) ) {
+			$path = META_BOX_AIO_DIR . '/languages/mb-custom-post-type';
+		}
+		wp_set_script_translations( $this->post_type, 'mb-custom-post-type', $path );
 	}
 
-	private function js_vars() {
+	private function js_vars(): array {
+		$post = get_post();
+
 		$vars = [
-			'icons'         => Data::get_dashicons(),
-			'settings'      => json_decode( get_post()->post_content, ARRAY_A ),
-			'reservedTerms' => $this->get_reserved_terms(),
+			'icons'           => Data::get_dashicons(),
+			'settings'        => json_decode( $post->post_content, true ),
+			'reservedTerms'   => $this->get_reserved_terms(),
+			'action'          => get_current_screen()->action,
+			'url'             => admin_url( 'edit.php?post_type=' . get_current_screen()->id ),
+			'add'             => admin_url( 'post-new.php?post_type=' . get_current_screen()->id ),
+			'status'          => $post->post_status,
+			'author'          => get_the_author_meta( 'display_name', (int) $post->post_author ),
+			'trash'           => get_delete_post_link(),
+			'published'       => get_the_date( 'F d, Y' ) . ' ' . get_the_time( 'g:i a' ),
+			'modifiedtime'    => get_post_modified_time( 'F d, Y g:i a', true, null, true ),
+			'saving'          => __( 'Saving...', 'mb-custom-post-type' ),
+			'upgrade'         => ! $this->is_premium_user(),
+			'allCapabilities' => $this->get_all_capabilities(),
 		];
 
 		if ( 'mb-post-type' === get_current_screen()->id ) {
@@ -68,8 +65,8 @@ class Edit {
 			foreach ( $taxonomies as $slug => $taxonomy ) {
 				$options[ $slug ] = sprintf( '%s (%s)', $taxonomy->labels->singular_name, $slug );
 			}
-			$vars['taxonomies'] = $options;
-			$vars['icon_type'] = [
+			$vars['taxonomies']            = $options;
+			$vars['icon_type']             = [
 				[
 					'value' => 'dashicons',
 					'label' => esc_html__( 'Dashicons', 'mb-custom-post-type' ),
@@ -82,9 +79,13 @@ class Edit {
 					'value' => 'custom',
 					'label' => esc_html__( 'Custom URL', 'mb-custom-post-type' ),
 				],
+				[
+					'value' => 'font_awesome',
+					'label' => esc_html__( 'Font Awesome', 'mb-custom-post-type' ),
+				],
 			];
 			$vars['menu_position_options'] = $this->get_menu_position_options();
-			$vars['show_in_menu_options'] = $this->get_show_in_menu_options();
+			$vars['show_in_menu_options']  = $this->get_show_in_menu_options();
 		}
 
 		if ( 'mb-taxonomy' === get_current_screen()->id ) {
@@ -104,17 +105,18 @@ class Edit {
 		return 'post' === $screen->base && $this->post_type === $screen->post_type;
 	}
 
-	private function is_premium_user() {
-		if ( ! defined( 'RWMB_VER' ) ) {
+	private function is_premium_user(): bool {
+		if ( ! class_exists( 'MetaBox\Updater\Option' ) || ! class_exists( 'MetaBox\Updater\Checker' ) ) {
 			return false;
 		}
-		$update_option = new \RWMB_Update_Option();
-		$update_checker = new \RWMB_Update_Checker( $update_option );
+		$update_option  = new \MetaBox\Updater\Option();
+		$update_checker = new \MetaBox\Updater\Checker( $update_option );
 		return $update_checker->has_extensions();
 	}
 
-	private function get_show_in_menu_options() {
+	private function get_show_in_menu_options(): array {
 		global $menu;
+
 		$options = [
 			[
 				'value' => 'true',
@@ -137,13 +139,14 @@ class Edit {
 		return $options;
 	}
 
-	private function get_menu_position_options() {
+	private function get_menu_position_options(): array {
 		global $menu;
+
 		$positions = [
 			[
 				'value' => '',
 				'label' => __( 'Default', 'mb-custom-post-type' ),
-			]
+			],
 		];
 		foreach ( $menu as $position => $params ) {
 			if ( ! empty( $params[0] ) ) {
@@ -153,14 +156,27 @@ class Edit {
 				];
 			}
 		}
+
 		return $positions;
 	}
 
-	private function strip_span( $html ) {
+	/**
+	 * Strip span tag from HTML.
+	 *
+	 * @param string $html HTML content.
+	 *
+	 * @return string
+	 */
+	private function strip_span( $html ): string {
 		return preg_replace( '@<span .*>.*</span>@si', '', $html );
 	}
 
-	private function get_reserved_terms() {
+	/**
+	 * Get reserved terms.
+	 *
+	 * @return string[]
+	 */
+	private function get_reserved_terms(): array {
 		return [
 			'action',
 			'attachment',
@@ -249,5 +265,21 @@ class Edit {
 			'withoutcomments',
 			'year',
 		];
+	}
+
+	/**
+	 * Get all capabilities.
+	 *
+	 * @return string[]
+	 */
+	private function get_all_capabilities(): array {
+		global $wp_roles;
+
+		$capabilities = [];
+		foreach ( $wp_roles->roles as $role ) {
+			$capabilities = array_merge( $capabilities, array_keys( $role['capabilities'] ) );
+		}
+
+		return array_values( array_unique( $capabilities ) );
 	}
 }

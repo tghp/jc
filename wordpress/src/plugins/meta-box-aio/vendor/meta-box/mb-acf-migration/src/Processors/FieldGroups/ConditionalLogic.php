@@ -38,12 +38,12 @@ class ConditionalLogic {
 	}
 
 	private function migrate_rules( $groups ) {
-		// 1 group.
+		$items = [];
 		if ( count( $groups ) === 1 ) {
+			// 1 group.
 			$items = reset( $groups );
-		}
-		// Many groups: take first rule from each group.
-		else {
+		} else {
+			// Many groups: take first rule from each group.
 			foreach ( $groups as $group ) {
 				$items[] = reset( $group );
 			}
@@ -61,11 +61,11 @@ class ConditionalLogic {
 			switch ( $operator ) {
 				case '!=empty':
 					$operator = '!=';
-					$value = '';
+					$value    = '';
 					break;
 				case '==empty':
 					$operator = '=';
-					$value = '';
+					$value    = '';
 					break;
 				case '==contains':
 					$operator = 'contains';
@@ -87,6 +87,6 @@ class ConditionalLogic {
 
 	private function get_name( $field ) {
 		global $wpdb;
-		return $wpdb->get_var( $wpdb->prepare( "SELECT post_excerpt FROM $wpdb->posts WHERE post_name=%s", $field ) );
+		return $wpdb->get_var( $wpdb->prepare( "SELECT post_excerpt FROM $wpdb->posts WHERE post_name=%s", $field ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Error.
 	}
 }

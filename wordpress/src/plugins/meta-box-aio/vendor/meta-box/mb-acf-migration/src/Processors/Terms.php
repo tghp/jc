@@ -16,7 +16,7 @@ class Terms extends Base {
 			'taxonomy'   => array_keys( Helper::get_taxonomies() ),
 			'hide_empty' => false,
 			'number'     => $this->threshold,
-			'offset'     => (int) $_SESSION['processed'],
+			'offset'     => isset( $_SESSION['processed'] ) ? (int) $_SESSION['processed'] : 0,
 			'fields'     => 'ids',
 		] );
 

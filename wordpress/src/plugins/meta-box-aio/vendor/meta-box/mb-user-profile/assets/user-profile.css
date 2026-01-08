@@ -33,6 +33,11 @@
 	background-color: #d1ecf1;
 }
 
+.mbup-form .rwmb-button:disabled,
+.mbup-form .rwmb-button[disabled] {
+	opacity:.5;
+	cursor:not-allowed;
+}
 .mbup-form .rwmb-button.remove-clone {
 	width: 20px;
 	height: 20px;

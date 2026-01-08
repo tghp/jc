@@ -1,7 +1,7 @@
 <?php
 namespace MBViews;
 
-define( 'MBV_VER', '1.11.0' );
+define( 'MBV_VER', '1.12.2' );
 define( 'MBV_DIR', __DIR__ );
 list( , $url ) = \RWMB_Loader::get_path( __DIR__ );
 define( 'MBV_URL', $url );
@@ -15,17 +15,20 @@ new PostType;
 
 new Data;
 new Location\Data;
+
+$meta_box_renderer = new Renderer\MetaBox;
+$renderer = new Renderer( $meta_box_renderer );
+new Shortcode( $renderer );
+
 if ( is_admin() ) {
 	$location = new Location\Settings;
 	new Editor( $location );
 	new ConditionalLogic;
 	new AdminColumns;
 	new Category;
+	new Import;
+	new Export;
 } else {
-	$meta_box_renderer = new Renderer\MetaBox;
-	$renderer = new Renderer( $meta_box_renderer );
-
-	new Shortcode( $renderer );
 	new ActionLoader( $renderer );
 
 	new TemplateLoader( 'singular' );
@@ -36,3 +39,5 @@ if ( is_admin() ) {
 	new ContentLoader( $renderer, 'archive' );
 	new ContentLoader( $renderer, 'code' );
 }
+
+new Block( $renderer );

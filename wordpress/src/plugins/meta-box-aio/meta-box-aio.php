@@ -3,32 +3,44 @@
  * Plugin Name: Meta Box AIO
  * Plugin URI:  https://metabox.io/pricing/
  * Description: All Meta Box extensions in one package.
- * Version:     1.15.8
+ * Version:     2.2.0
  * Author:      MetaBox.io
  * Author URI:  https://metabox.io
  * License:     GPL2+
  * Text Domain: meta-box-aio
  * Domain Path: /languages/
  *
- * @package    Meta Box
- * @subpackage Meta Box AIO
+ * Copyright (C) 2010-2025 Tran Ngoc Tuan Anh. All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined( 'ABSPATH' ) || die;
+if ( ! defined( 'ABSPATH' ) ) {
+	return;
+}
 
-define( 'MBAIO_DIR', __DIR__ );
+define( 'META_BOX_AIO_DIR', __DIR__ );
 
 require __DIR__ . '/src/Loader.php';
 require __DIR__ . '/src/Settings.php';
-require __DIR__ . '/vendor/meta-box/dependency/MetaBox.php';
 require __DIR__ . '/vendor/meta-box/dependency/Plugins.php';
 
 new MBAIO\Loader;
 new MBAIO\Settings;
 
-new MetaBox\Dependency\MetaBox( 'Meta Box AIO', [
-	// Translators: %1$s - the plugin name, %2$s - Meta Box, %3$s - action.
-	'message'  => __( '%1$s requires %2$s to function correctly. %3$s.', 'meta-box-aio' ),
-	'install'  => __( 'Install now', 'meta-box-aio' ),
-	'activate' => __( 'Activate now', 'meta-box-aio' ),
-] );
+// Load translations
+add_action( 'init', function (): void {
+	load_plugin_textdomain( 'meta-box', false, basename( __DIR__ ) . '/languages/meta-box' );
+	load_plugin_textdomain( 'mb-custom-post-type', false, basename( __DIR__ ) . '/languages/mb-custom-post-type' );
+} );

@@ -53,24 +53,26 @@ class Data {
 		return array_values( $data );
 	}
 
-	public function get_posts( WP_REST_Request $request ) {
+	public function get_posts( WP_REST_Request $request ): array {
 		$search_term       = $request->get_param( 'term' );
 		$name              = $request->get_param( 'name' );
 		list( $post_type ) = explode( ':', $name );
 
-		$field = [
-			'query_args' => [
-				's'              => $search_term,
-				'post_type'      => $post_type,
-				'post_status'    => 'any',
-				'posts_per_page' => 10,
-				'orderby'        => 'post_title',
-				'order'          => 'ASC',
-			],
-		];
-		$data  = RWMB_Post_Field::query( null, $field );
+		global $wpdb;
+		$sql   = "SELECT ID, post_title FROM $wpdb->posts WHERE post_type=%s AND post_title LIKE '%%" . esc_sql( $search_term ) . "%%' ORDER BY post_title ASC LIMIT 10";
+		$sql   = $wpdb->prepare( $sql, $post_type );
 
-		return array_values( $data );
+		$posts = $wpdb->get_results( $sql );
+
+		$options = [];
+		foreach ( $posts as $post ) {
+			$options[] = [
+				'value' => $post->ID,
+				'label' => $post->post_title,
+			];
+		}
+
+		return $options;
 	}
 
 	public function has_permission() {

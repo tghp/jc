@@ -1,12 +1,18 @@
 <?php
 /**
- * Plugin Name: MB Rank Math
+ * Plugin Name: MB Rank Math Integration
  * Plugin URI:  https://metabox.io/plugins/mb-rank-math/
  * Description: Add content of Meta Box custom fields to Rank Math content analysis.
  * Author:      MetaBox.io
- * Version:     1.0.1
+ * Version:     1.0.4
  * Author URI:  https://metabox.io
+ * License:     GPL-2
  */
+
+// Prevent loading this file directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	return;
+}
 
 if ( ! function_exists( 'mb_rank_math_load' ) ) {
 	add_action( 'admin_init', 'mb_rank_math_load' );

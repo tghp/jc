@@ -12,7 +12,7 @@ class Comments extends Base {
 
 		$comments = get_comments( [
 			'number'        => $this->threshold,
-			'offset'        => (int) $_SESSION['processed'],
+			'offset'        => isset( $_SESSION['processed'] ) ? (int) $_SESSION['processed'] : 0,
 			'no_found_rows' => true,
 			'fields'        => 'ids',
 		] );

@@ -16,23 +16,23 @@ class TwigLoader implements LoaderInterface {
 	 * @throws LoaderError When $name is not found.
 	 */
 	public function getSourceContext( string $name ): Source {
-		$view = is_numeric( $name ) ? get_post( $name ) : get_page_by_path( $name, OBJECT, 'mb-views' );
+		$post = $this->get_post( $name );
 
-		if ( empty( $view ) ) {
+		if ( empty( $post ) ) {
 			// Translators: %s - Name of the view.
 			throw new LoaderError( sprintf( __( 'View "%s" is not defined.', 'mb-views' ), $name ) );
 		}
 
-		$type       = get_post_meta( $view->ID, 'type', true );
-		$mode       = get_post_meta( $view->ID, 'mode', true );
+		$type       = get_post_meta( $post->ID, 'type', true );
+		$mode       = get_post_meta( $post->ID, 'mode', true );
 		$filter_css = in_array( $type, [ 'singular', 'archive', 'code' ], true ) && 'layout' === $mode;
-		$source     = $view->post_content;
+		$source     = $post->post_content;
 
-		if ( $view->post_excerpt && ! $filter_css ) {
-			$source .= "\n<style>\n{$view->post_excerpt}\n</style>";
+		if ( $post->post_excerpt && ! $filter_css ) {
+			$source .= '<style>' . $this->unautop( $post->post_excerpt ) . '</style>';
 		}
-		if ( $view->post_content_filtered ) {
-			$source .= "\n<script>\n{$view->post_content_filtered}\n</script>";
+		if ( $post->post_content_filtered ) {
+			$source .= '<script>' . $this->unautop( $post->post_content_filtered ) . '</script>';
 		}
 
 		return new Source( $source, $name );
@@ -66,14 +66,14 @@ class TwigLoader implements LoaderInterface {
 	 * @throws LoaderError When $name is not found.
 	 */
 	public function isFresh( string $name, int $time ): bool {
-		$view = is_numeric( $name ) ? get_post( $name ) : get_page_by_path( $name, OBJECT, 'mb-views' );
+		$post = $this->get_post( $name );
 
-		if ( empty( $view ) ) {
+		if ( empty( $post ) ) {
 			// Translators: %s - Name of the view.
 			throw new LoaderError( sprintf( __( 'View "%s" is not defined.', 'mb-views' ), $name ) );
 		}
 
-		return strtotime( $view->post_modified_date ) <= $time;
+		return strtotime( $post->post_modified_date ) <= $time;
 	}
 
 	/**
@@ -84,7 +84,23 @@ class TwigLoader implements LoaderInterface {
 	 * @return bool    If the template source code is handled by this loader or not.
 	 */
 	public function exists( string $name ) {
-		$view = is_numeric( $name ) ? get_post( $name ) : get_page_by_path( $name, OBJECT, 'mb-views' );
-		return ! empty( $view );
+		$post = $this->get_post( $name );
+		return ! empty( $post );
+	}
+
+	/**
+	 * Remove double line breaks that cause wpautop problem.
+	 *
+	 * @link https://support.metabox.io/topic/line-breaks-in-css-getting-wrapped-in-paragraphs/
+	 */
+	private function unautop( string $text ): string {
+		$text = str_replace( "\r\n", "\n", $text );
+		$text = preg_replace( '/(\n){2,}/', "\n", $text );
+
+		return $text;
+	}
+
+	private function get_post( string $name ) {
+		return is_numeric( $name ) ? get_post( $name ) : get_page_by_path( $name, OBJECT, 'mb-views' );
 	}
 }

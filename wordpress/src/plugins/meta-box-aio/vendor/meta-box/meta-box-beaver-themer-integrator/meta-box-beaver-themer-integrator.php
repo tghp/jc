@@ -1,19 +1,20 @@
 <?php
 /**
- * Plugin Name: Meta Box - Beaver Themer Integrator
- * Plugin URI:  https://metabox.io/plugins/meta-box-beaver-themer-integrator/
- * Description: Integrates Meta Box and Beaver Themer.
- * Author:      MetaBox.io
- * Author URI:  https://metabox.io
- * Text Domain: meta-box-beaver-themer-integrator
- * Domain Path: /languages
- * Version:     2.0.0
- *
- * @package    Meta Box
- * @subpackage Meta Box Beaver Themer Integrator
+ * Plugin Name:      MB Beaver Builder Integration
+ * Plugin URI:       https://metabox.io/plugins/meta-box-beaver-themer-integrator/
+ * Description:      Integrates Meta Box and Beaver Builder.
+ * Author:           MetaBox.io
+ * Author URI:       https://metabox.io
+ * Text Domain:      meta-box-beaver-themer-integrator
+ * Version:          2.1.4
+ * Requires Plugins: meta-box
+ * License:          GPL-2.0
  */
 
-defined( 'ABSPATH' ) || die;
+// Prevent loading this file directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	return;
+}
 
 if ( file_exists( __DIR__ . '/vendor' ) ) {
 	require __DIR__ . '/vendor/autoload.php';

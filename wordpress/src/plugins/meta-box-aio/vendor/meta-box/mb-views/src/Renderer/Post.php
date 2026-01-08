@@ -12,7 +12,7 @@ class Post extends Base {
 
 	protected function get_data() {
 		$this->data = Renderer::get_single_value( $this->post );
-		$this->data = array_merge( $this->data, $this->get_fields() );
+		$this->data = array_merge( $this->get_fields(), $this->data );
 	}
 
 	private function get_fields() {

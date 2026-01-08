@@ -9,7 +9,8 @@ class Admin {
 		$this->model = $model;
 
 		if ( $this->model->show_in_menu ) {
-			add_action( 'admin_menu', [ $this, 'add_menu' ] );
+			// Change priority to 11 to make sure all custom menus are generated.
+			add_action( 'admin_menu', [ $this, 'add_menu' ], 11 );
 
 			add_filter( 'set-screen-option', [ $this, 'set_screen_option' ], 10, 3 );
 		}
@@ -17,7 +18,7 @@ class Admin {
 
 	public function add_menu() {
 		$action = $this->action();
-		$title = $this->model->labels['all_items'];
+		$title  = $this->model->labels['all_items'];
 		if ( $action === 'add' ) {
 			$title = $this->model->labels['add_new_item'];
 		} elseif ( $action === 'edit' ) {
@@ -45,13 +46,33 @@ class Admin {
 			);
 		}
 
+		add_action( "load-$page", [ $this, 'add_body_class_hook' ] );
 		add_action( "load-$page", [ $this, 'load_add_edit' ] );
 		add_action( "load-$page", [ $this, 'load_list_table' ] );
 		add_action( "admin_print_styles-$page", [ $this, 'enqueue' ] );
 	}
 
+	public function add_body_class_hook() {
+		add_filter( 'admin_body_class', [ $this, 'add_body_class' ] );
+	}
+
+	public function add_body_class( $body_classes ) {
+		$action  = $this->action() ?: 'list';
+		$classes = [
+			"model-{$this->model->name}",
+			"model-$action",
+		];
+
+		// Make "add" screen has the same "edit" class.
+		if ( $action === 'add' ) {
+			$classes[] = 'model-edit';
+		}
+
+		return $body_classes . ' ' . implode( ' ', $classes );
+	}
+
 	public function load_add_edit() {
-		if ( !$this->is_screen_edit() ) {
+		if ( ! $this->is_screen_edit() ) {
 			return;
 		}
 
@@ -98,7 +119,7 @@ class Admin {
 		<div class="mbct-submit">
 			<?php do_action( 'mbct_before_submit_box', $this->model ); ?>
 			<?php if ( $this->action() === 'edit' ) : ?>
-				<a href="<?= esc_url( $delete_url ) ?>" id="mbct-delete"><?php esc_html_e( 'Delete', 'mb-custom-table' ) ?></a>
+				<a href="<?= esc_url( $delete_url ); ?>" id="mbct-delete"><?php esc_html_e( 'Delete', 'mb-custom-table' ) ?></a>
 			<?php endif ?>
 			<?php submit_button( __( 'Save', 'mb-custom-table' ), 'primary', 'submit', false ); ?>
 			<?php do_action( 'mbct_after_submit_box', $this->model ); ?>
@@ -113,15 +134,18 @@ class Admin {
 	}
 
 	public function load_list_table() {
-		if ( !$this->is_screen_list() ) {
+		if ( ! $this->is_screen_list() ) {
 			return;
 		}
 
 		$this->handle_delete();
 
-		$this->list_table = new ListTable( [
+		$args             = [
 			'model' => $this->model,
-		] );
+		];
+		$list_table       = new ListTable( $args );
+		$this->list_table = apply_filters( 'mbct_list_table_object', $list_table, $args );
+
 		$args = [
 			'label'   => __( 'Number of lines per page', 'mb-custom-table' ),
 			'default' => 20,
@@ -147,12 +171,12 @@ class Admin {
 		do_action( 'mbct_before_delete', $id, $this->model->table );
 		$wpdb->delete(
 			$this->model->table,
-			['ID' => $id],
-			['%d']
+			[ 'ID' => $id ],
+			[ '%d' ]
 		);
 		do_action( 'mbct_after_delete', $id, $this->model->table );
 
-		$url = remove_query_arg( ['model-action', 'model-id', '_wpnonce'] );
+		$url = remove_query_arg( [ 'model-action', 'model-id', '_wpnonce' ] );
 		$url = add_query_arg( [
 			'model-message' => 'deleted',
 		], $url );
@@ -175,21 +199,21 @@ class Admin {
 		}
 
 		wp_enqueue_style( 'mbct-list-table', MBCT_URL . 'assets/list-table.css', [], filemtime( MBCT_DIR . '/assets/list-table.css' ) );
-		wp_enqueue_script( 'mbct-list-table', MBCT_URL . 'assets/list-table.js', ['jquery'], filemtime( MBCT_DIR . '/assets/list-table.js' ), true );
+		wp_enqueue_script( 'mbct-list-table', MBCT_URL . 'assets/list-table.js', [ 'jquery' ], filemtime( MBCT_DIR . '/assets/list-table.js' ), true );
 		wp_localize_script( 'mbct-list-table', 'MbctListTable', [
-			'nonceDelete' => wp_create_nonce( 'delete-items' ),
-			'confirm'     => __( 'Are you sure you want to delete? This action cannot be undone.', 'mb-custom-table' ),
+			'nonceBulkActions' => wp_create_nonce( 'bulk-actions' ),
+			'confirm'          => __( 'Are you sure you want to delete? This action cannot be undone.', 'mb-custom-table' ),
 		] );
 	}
 
 	public function render() {
 		$action = $this->action();
-		$view = in_array( $action, ['add', 'edit'] ) ? $action : 'list-table';
+		$view   = in_array( $action, [ 'add', 'edit' ] ) ? $action : 'list-table';
 		include MBCT_DIR . "/views/$view.php";
 	}
 
 	private function is_screen_edit() {
-		return in_array( $this->action(), ['add', 'edit'] );
+		return in_array( $this->action(), [ 'add', 'edit' ], true );
 	}
 
 	private function is_screen_list() {

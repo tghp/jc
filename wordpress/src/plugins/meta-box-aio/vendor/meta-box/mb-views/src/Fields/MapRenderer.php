@@ -15,16 +15,23 @@ class MapRenderer extends BaseRenderer {
 			$value                               = compact( 'latitude', 'longitude', 'zoom' );
 		}
 
-		$field = array_merge( self::$field, [
-			'api_key' => '',
-		] );
+		$field = self::$field['type'] === 'osm' ? array_merge( self::$field, [ 'api_key' => '' ] ) : self::$field;
 
-		return array_merge( $value, [
+		$render_map = array_merge( $value, [
 			'rendered' => RWMB_Field::call( $field, 'render_map', implode( ',', $value ), [
 				'language' => $field['language'],
 				'region'   => $field['region'],
 				'api_key'  => $field['api_key'],
 			] ),
 		] );
+
+		if ( $field['type'] === 'map' && wp_script_is( 'rwmb-map-frontend-mbview' ) ) {
+			wp_dequeue_script( 'rwmb-map-frontend' );
+		} elseif ( $field['type'] === 'osm' && wp_script_is( 'rwmb-osm-frontend-mbview' ) ) {
+			wp_dequeue_script( 'leaflet' );
+			wp_dequeue_script( 'rwmb-osm-frontend' );
+		}
+
+		return $render_map;
 	}
 }

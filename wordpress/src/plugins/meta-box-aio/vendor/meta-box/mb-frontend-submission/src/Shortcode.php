@@ -27,7 +27,10 @@ class Shortcode {
 			return '';
 		}
 
-		$form = FormFactory::make( $atts );
+		$form = FormFactory::make( $atts, 'mb_frontend_form' );
+		if ( empty( $form ) || ( empty( $form->config['id'] ) && empty( $form->config['post_fields'] ) && $form->config['only_delete'] === 'false' ) ) {
+			return '';
+		}
 		ob_start();
 		$form->render();
 
@@ -37,7 +40,7 @@ class Shortcode {
 	public function handle_request() {
 		$action = (string) rwmb_request()->post( 'action' );
 		$action = str_replace( 'mbfs_', '', $action );
-		if ( $action && in_array( $action, ['submit', 'delete'], true ) ) {
+		if ( $action && in_array( $action, [ 'submit', 'delete' ], true ) ) {
 			$this->{$action}();
 		}
 	}
@@ -52,7 +55,7 @@ class Shortcode {
 			require_once ABSPATH . 'wp-admin/includes/media.php';
 		}
 
-		$this->config['post_id'] = $this->form->process();
+		$this->config['object_id'] = $this->form->process();
 
 		// Don't redirect if errors to get the same form object in handle_request() and render().
 		if ( $this->form->error->has_errors() ) {
@@ -62,21 +65,24 @@ class Shortcode {
 			return;
 		}
 
-		$this->cleanup_request();
-
 		// For ajax only.
-		$this->send_success_message( $this->config['confirmation'] );
+		if ( $this->is_ajax() ) {
+			ob_start();
+			$this->form->show_confirmation( 'submit' );
+			$confirmation = ob_get_clean();
+			$this->send_success_message( $confirmation );
+		}
 
 		$redirect = empty( $this->config['redirect'] ) ? add_query_arg( 'rwmb-form-submitted', $this->key ) : $this->config['redirect'];
 
 		// Allow to re-edit the submitted post.
 		if ( 'true' === $this->config['edit'] ) {
-			$redirect = add_query_arg( 'rwmb_frontend_field_post_id', $this->config['post_id'], $redirect );
+			$redirect = add_query_arg( 'rwmb_frontend_field_object_id', $this->config['object_id'], $redirect );
 		}
 
 		$redirect = apply_filters( 'rwmb_frontend_redirect', $redirect, $this->config );
 
-		wp_safe_redirect( $redirect );
+		wp_redirect( $redirect );
 		die;
 	}
 
@@ -85,14 +91,12 @@ class Shortcode {
 
 		$this->form->delete();
 
-		$this->cleanup_request();
-
 		$this->send_success_message( $this->config['delete_confirmation'] );
 
 		$redirect = empty( $this->config['redirect'] ) ? add_query_arg( 'rwmb-form-deleted', $this->key ) : $this->config['redirect'];
 		$redirect = apply_filters( 'rwmb_frontend_redirect', $redirect, $this->config );
 
-		wp_safe_redirect( $redirect );
+		wp_redirect( $redirect );
 		die;
 	}
 
@@ -108,10 +112,6 @@ class Shortcode {
 		$this->check_recaptcha( $this->config );
 
 		$this->form = FormFactory::make( $this->config );
-	}
-
-	private function cleanup_request() {
-		ConfigStorage::delete( $this->key );
 	}
 
 	private function check_ajax() {
@@ -139,14 +139,14 @@ class Shortcode {
 		$response = wp_remote_retrieve_body( wp_remote_get( $url ) );
 		$response = json_decode( $response, true );
 
-		if ( empty( $response['action'] ) || 'mbfs' !== $response[ 'action' ] ) {
+		if ( empty( $response['action'] ) || 'mbfs' !== $response['action'] ) {
 			$this->send_error_message( __( 'Invalid captcha token.', 'mb-frontend-submission' ) );
 		}
 	}
 
 	private function send_error_message( $message ) {
 		if ( $this->is_ajax() ) {
-			wp_send_json_error( ['message' => $message] );
+			wp_send_json_error( [ 'message' => $message ] );
 		}
 		wp_die( $message );
 	}
@@ -156,8 +156,9 @@ class Shortcode {
 			return;
 		}
 		wp_send_json_success( [
-			'message'  => $message,
-			'redirect' => $this->form->config['redirect'],
+			'message'     => $message,
+			'redirect'    => $this->form->config['redirect'],
+			'allowScroll' => $this->config['allow_scroll'],
 		] );
 	}
 

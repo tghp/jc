@@ -1,6 +1,8 @@
 <?php
 namespace MBViews;
 
+use MetaBox\Updater\Option;
+
 class Editor {
 	private $location;
 
@@ -22,10 +24,27 @@ class Editor {
 
 		add_filter( 'admin_body_class', [ $this, 'add_body_class' ] );
 
-		add_action( 'add_meta_boxes_mb-views', [ $this, 'remove_slug_meta_box' ] );
+		add_action( 'add_meta_boxes_mb-views', [ $this, 'remove_meta_boxes' ] );
 	}
 
 	public function register_meta_boxes( $meta_boxes ) {
+		if ( ! $this->is_license_active() ) {
+			$meta_boxes[] = [
+				'title'      => '<span class="dashicons dashicons-warning"></span>' . __( 'License Warning', 'meta-box-builder' ),
+				'id'         => 'mbv-license-warning',
+				'post_types' => [ 'mb-views' ],
+				'context'    => 'side',
+				'priority'   => 'high',
+				'style'      => 'seamless',
+				'fields'     => [
+					[
+						'type'     => 'custom_html',
+						'callback' => [ $this, 'output_license_warning' ],
+					],
+				],
+			];
+		}
+
 		$meta_boxes[] = [
 			'title'      => __( 'Template Editor', 'mb-views' ),
 			'id'         => 'mbv-template-editor',
@@ -71,6 +90,23 @@ class Editor {
 		];
 
 		return $meta_boxes;
+	}
+	public function output_license_warning() {
+		$settings_page = $this->get_updater()->is_network_activated() ? network_admin_url( 'settings.php?page=meta-box-updater' ) : admin_url( 'admin.php?page=meta-box-updater' );
+
+		$status   = $this->get_updater()->get_license_status();
+		$messages = [
+			// Translators: %1$s - URL to the settings page, %2$s - URL to the pricing page.
+			'no_key'  => __( 'You have not set your Meta Box license key yet. Please <a href="%1$s">enter your license key</a> to continue.', 'mb-views' ),
+			// Translators: %1$s - URL to the settings page, %2$s - URL to the pricing page.
+			'invalid' => __( 'Your license key for Meta Box is <b>invalid</b>. Please <a href="%1$s">update your license key</a> to continue.', 'mb-views' ),
+			// Translators: %1$s - URL to the settings page, %2$s - URL to the pricing page.
+			'error'   => __( 'Your license key for Meta Box is <b>invalid</b>. Please <a href="%1$s">update your license key</a> to continue.', 'mb-views' ),
+			// Translators: %3$s - URL to the My Account page.
+			'expired' => __( 'Your license key for Meta Box is <b>expired</b>. Please <a href="%3$s" target="_blank">renew your license</a> to continue.', 'mb-views' ),
+		];
+
+		return '<h2><span class="dashicons dashicons-warning"></span>' . __( 'License Warning', 'meta-box-builder' ) . '</h2>' . wp_kses_post( sprintf( $messages[ $status ], $settings_page, 'https://metabox.io/pricing/', 'https://metabox.io/my-account/' ) );
 	}
 
 	public function enqueue() {
@@ -126,7 +162,11 @@ class Editor {
 		return $class;
 	}
 
-	public function remove_slug_meta_box() {
+	public function remove_meta_boxes() {
+		if ( ! $this->is_license_active() ) {
+			remove_meta_box( 'submitdiv', null, 'side' );
+		}
+
 		remove_meta_box( 'slugdiv', null, 'normal' );
 	}
 
@@ -160,5 +200,19 @@ class Editor {
 
 	private function is_screen() {
 		return 'mb-views' === get_current_screen()->id;
+	}
+
+	protected function is_license_active(): bool {
+		return $this->get_updater()->get_license_status() === 'active';
+	}
+
+	private function get_updater(): Option {
+		static $updater;
+
+		if ( ! $updater ) {
+			$updater = new Option();
+		}
+
+		return $updater;
 	}
 }

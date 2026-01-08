@@ -6,42 +6,46 @@ use RWMB_Helpers_Array as Arr;
 class Register extends Base {
 	protected $type = 'register';
 
-	public static function normalize( $config ) {
+	public static function normalize( array $config ) : array {
 		$config = shortcode_atts( [
 			// Meta Box ID.
-			'id'                => '',
+			'id'                 => '',
 
-			'redirect'          => '',
-			'form_id'           => 'register-form',
+			'redirect'           => '',
+			'form_id'            => 'register-form',
 
 			// Google reCaptcha v3
-			'recaptcha_key'       => '',
-			'recaptcha_secret'    => '',
+			'recaptcha_key'      => '',
+			'recaptcha_secret'   => '',
 
 			// Appearance options.
-			'label_username'    => __( 'Username', 'mb-user-profile' ),
-			'label_email'       => __( 'Email', 'mb-user-profile' ),
-			'label_password'    => __( 'Password', 'mb-user-profile' ),
-			'label_password2'   => __( 'Confirm Password', 'mb-user-profile' ),
-			'label_submit'      => __( 'Register', 'mb-user-profile' ),
+			'label_title'        => '',
+			'label_username'     => __( 'Username', 'mb-user-profile' ),
+			'label_email'        => __( 'Email', 'mb-user-profile' ),
+			'label_password'     => __( 'Password', 'mb-user-profile' ),
+			'label_password2'    => __( 'Confirm Password', 'mb-user-profile' ),
+			'label_submit'       => __( 'Register', 'mb-user-profile' ),
 
-			'id_username'       => 'user_login',
-			'id_email'          => 'user_email',
-			'id_password'       => 'user_pass',
-			'id_password2'      => 'user_pass2',
-			'id_submit'         => 'submit',
+			'id_username'        => 'user_login',
+			'id_email'           => 'user_email',
+			'id_password'        => 'user_pass',
+			'id_password2'       => 'user_pass2',
+			'id_submit'          => 'submit',
 
-			'confirmation'		 => __( 'Your account has been created successfully.', 'mb-user-profile' ),
-			'email_confirmation' => false,
+			'confirmation'       => __( 'Your account has been created successfully.', 'mb-user-profile' ),
+			'email_confirmation' => 'false',
 
-			'password_strength' => 'strong',
+			'password_strength'  => 'strong',
 
-			'email_as_username' => false,
-			'show_if_user_can'  => '',
-			'role'              => 'subscriber',
+			'email_as_username'  => 'false',
+			'show_if_user_can'   => '',
+
+			'role'               => '',
+			'append_role'        => 'false',
 		], $config );
-		if ( isset( $config[ 'email_confirmation' ] ) && 'true' === $config[ 'email_confirmation' ] ) {
-			$config[ 'confirmation' ] = __( 'Your account has been created and is pending. Please check your email to activate your account.', 'mb-user-profile' );
+
+		if ( 'true' === $config['email_confirmation'] ) {
+			$config['confirmation'] = __( 'Your account has been created and is pending. Please check your email to activate your account.', 'mb-user-profile' );
 		}
 
 		// Compatible with old shortcode attributes.
@@ -50,7 +54,7 @@ class Register extends Base {
 		return $config;
 	}
 
-	protected function has_privilege() {
+	protected function has_privilege() : bool {
 		// Always show the form for non-logged in users.
 		if ( ! is_user_logged_in() ) {
 			return true;
@@ -69,7 +73,11 @@ class Register extends Base {
 		?>
 		<div class="rwmb-field rwmb-button-wrapper rwmb-form-submit">
 			<div class="rwmb-input">
-				<button class="rwmb-button" id="<?= esc_attr( $this->config['id_submit'] ) ?>" name="rwmb_profile_submit_register" value="1"><?= esc_html( $this->config['label_submit'] ) ?></button>
+				<?php
+				$submit_button = '<button type="submit" class="rwmb-button" id="' . esc_attr( $this->config['id_submit'] ) . '" name="rwmb_profile_submit_register" value="1">' . esc_html( $this->config['label_submit'] ) . '</button>';
+				$submit_button = apply_filters( 'rwmb_profile_register_submit_button', $submit_button, $this->config );
+				echo $submit_button;
+				?>
 			</div>
 		</div>
 		<?php

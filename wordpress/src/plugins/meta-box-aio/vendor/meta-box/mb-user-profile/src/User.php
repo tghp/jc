@@ -1,6 +1,5 @@
 <?php
 namespace MetaBox\UserProfile;
-use MetaBox\UserProfile\Email;
 
 class User {
 	public $user_id;
@@ -35,7 +34,7 @@ class User {
 				$this->error->add( 'invalid-id', __( 'Invalid user ID.', 'mb-user-profile' ) );
 				return;
 			}
-			do_action( 'profile_update', $this->user_id, $old_user_data );
+			do_action( 'profile_update', $this->user_id, $old_user_data, array_merge( $data, [ 'ID' => $this->user_id ] ) );
 			return;
 		}
 
@@ -69,10 +68,6 @@ class User {
 			$data['user_login'] = $data['user_email'];
 		}
 
-		$role = $this->config['role'];
-		if ( ! empty( $role ) && $GLOBALS['wp_roles']->is_role( $role ) ) {
-			$data['role'] = $role;
-		}
 		if ( isset( $data['user_login'] ) && username_exists( $data['user_login'] ) ) {
 			$this->error->add( 'username-exists', __( 'Your username already exists.', 'mb-user-profile' ) );
 			return;
@@ -86,14 +81,29 @@ class User {
 		$result = wp_insert_user( $data );
 		if ( is_wp_error( $result ) ) {
 			$this->error = $result;
-		} else {
-			$this->user_id = $result;
+			return;
+		}
 
-			// Check if sent email confirmation
-			if ( isset( $this->config['email_confirmation'] ) && 'true' === $this->config['email_confirmation'] ) {
-				$email = new Email();
-				$email->send_confirmation_email( $result, $data['user_email'], $data['user_login'] );
+		$this->user_id = $result;
+
+		if ( $this->config['role'] ) {
+			$user = get_userdata( $this->user_id );
+
+			if ( $this->config['append_role'] === 'true' ) {
+				$user->add_role( $this->config['role'] );
+			} else {
+				$user->set_role( $this->config['role'] );
 			}
+		}
+
+		if ( Settings::get( 'force_password_change' ) ) {
+			add_user_meta( $this->user_id, 'mbup_force_password_change', 1 );
+		}
+
+		// Check if sent email confirmation.
+		if ( isset( $this->config['email_confirmation'] ) && 'true' === $this->config['email_confirmation'] ) {
+			$email = new EmailConfirmation;
+			$email->send_confirmation_email( $result, $data['user_email'], $data['user_login'] );
 		}
 	}
 }

@@ -30,6 +30,8 @@ class Ajax {
 	private function get_processor() {
 		$type = filter_input( INPUT_GET, 'type', FILTER_SANITIZE_STRING );
 		if ( ! in_array( $type, [
+			'post_types',
+			'taxonomies',
 			'field_groups',
 			'posts',
 			'terms',
@@ -39,8 +41,8 @@ class Ajax {
 		], true ) ) {
 			return;
 		}
-		$type = str_replace( ' ', '', ucwords( str_replace( '_', ' ', $type ) ) );
+		$type  = str_replace( ' ', '', ucwords( str_replace( '_', ' ', $type ) ) );
 		$class = "MetaBox\ACF\Processors\\$type";
-		return new $class;
+		return new $class();
 	}
 }

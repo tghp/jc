@@ -7,11 +7,6 @@ use MBB\Control;
 class RestApi extends Base {
 	public function get_settings_page_controls() {
 		$controls = [
-			Control::Input( 'option_name', [
-				'label'   => __( 'Option name', 'meta-box-builder' ),
-				'tooltip' => __( 'Option name where settings data is saved to. Takes settings page ID if missed. If you want to use theme mods, then set this to <code>theme_mods_$themeslug</code>.', 'meta-box-builder' ),
-			] ),
-
 			// Menu.
 			Control::Select( 'menu_type', [
 				'label'   => __( 'Menu type', 'meta-box-builder' ),
@@ -35,11 +30,12 @@ class RestApi extends Base {
 
 			// Icon, only if menu_type = top.
 			Control::Select( 'icon_type', [
-				'label'   => __( 'Icon type', 'meta-box-builder' ),
-				'options' => [
-					'dashicons' => __( 'Dashicons', 'meta-box-builder' ),
-					'svg'       => __( 'SVG', 'meta-box-builder' ),
-					'custom'    => __( 'Custom URL', 'meta-box-builder' ),
+				'label'      => __( 'Icon type', 'meta-box-builder' ),
+				'options'    => [
+					'dashicons'    => __( 'Dashicons', 'meta-box-builder' ),
+					'font_awesome' => __( 'Font Awesome', 'meta-box-builder' ),
+					'svg'          => __( 'SVG', 'meta-box-builder' ),
+					'custom'       => __( 'Custom URL', 'meta-box-builder' ),
 				],
 				'dependency' => 'menu_type:top',
 			], 'dashicons' ),
@@ -56,6 +52,12 @@ class RestApi extends Base {
 				'label'      => __( 'Icon URL', 'meta-box-builder' ),
 				'dependency' => 'icon_type:custom',
 			] ),
+			Control::Fontawesome( 'icon_font_awesome', [
+				'label'       => __( 'Icon', 'meta-box-builder' ),
+				'tooltip'     => __( 'The icon to be used for the admin menu (FontAwesome)', 'meta-box-builder' ),
+				'description' => __( 'Enter <a target="_blank" href="https://fontawesome.com/search?o=r&m=free">FontAwesome</a> icon class here. Supports FontAwesome free version only.', 'meta-box-builder' ),
+				'dependency'  => 'icon_type:font_awesome',
+			] ),
 
 			Control::Select( 'capability', [
 				'label'   => __( 'Required capability', 'meta-box-builder' ),
@@ -68,7 +70,7 @@ class RestApi extends Base {
 			Control::Select( 'style', [
 				'label'   => __( 'Style', 'meta-box-builder' ),
 				'options' => [
-					'boxes' => __( 'Boxes', 'meta-box-builder' ),
+					'boxes'    => __( 'Boxes', 'meta-box-builder' ),
 					'no-boxes' => __( 'No boxes', 'meta-box-builder' ),
 				],
 			], 'no-boxes' ),
@@ -116,10 +118,10 @@ class RestApi extends Base {
 	}
 
 	private function get_capabilities() {
-		$caps = [];
+		$caps  = [];
 		$roles = wp_roles();
 		foreach ( $roles->roles as $role ) {
-			$caps = array_merge( $caps, array_keys( $role[ 'capabilities' ] ) );
+			$caps = array_merge( $caps, array_keys( $role['capabilities'] ) );
 		}
 
 		$caps = array_unique( $caps );

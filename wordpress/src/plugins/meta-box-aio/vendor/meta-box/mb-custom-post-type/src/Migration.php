@@ -25,7 +25,6 @@ class Migration {
 			'start'               => __( 'Start...', 'mb-custom-post-type' ),
 			'migratingPostTypes'  => __( 'Migrating post types...', 'mb-custom-post-type' ),
 			'migratingTaxonomies' => __( 'Migrating taxonomies...', 'mb-custom-post-type' ),
-			'deactivate'          => __( 'Deactivating plugin CPT UI...', 'mb-custom-post-type' ),
 			'done'                => __( 'Done!', 'mb-custom-post-type' ),
 		] );
 	}
@@ -44,8 +43,8 @@ class Migration {
 			</ul>
 			<div id="migrate-status"></div>
 			<div id="migrate-links" style="display: none">
-				<a href="<?= esc_url( admin_url( 'edit.php?post_type=mb-post-type' ) ) ?>"><?php esc_html_e( 'View post types', 'mb-custom-post-type' ) ?> &rarr;</a> |
-				<a href="<?= esc_url( admin_url( 'edit.php?post_type=mb-taxonomy' ) ) ?>"><?php esc_html_e( 'View taxonomies', 'mb-custom-post-type' ) ?> &rarr;</a>
+				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=mb-post-type' ) ) ?>"><?php esc_html_e( 'View post types', 'mb-custom-post-type' ) ?> &rarr;</a> |
+				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=mb-taxonomy' ) ) ?>"><?php esc_html_e( 'View taxonomies', 'mb-custom-post-type' ) ?> &rarr;</a>
 			</div>
 		</div>
 		<?php

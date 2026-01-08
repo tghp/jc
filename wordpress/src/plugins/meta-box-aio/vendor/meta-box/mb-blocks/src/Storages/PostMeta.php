@@ -14,12 +14,15 @@ class PostMeta {
 
 	public function __call( $method, $args ) {
 		return call_user_func_array( [ $this->storage, $method ], $args );
-    }
+	}
 
-	// Fake functions to compatible with the block PHP code.
+	/**
+	 * Fake functions to compatible with the block PHP code.
+	 */
 	public function get_data() {
 		// Return an unique ID for each save.
-		return ['id' => uniqid()];
+		return [ 'id' => uniqid() ];
 	}
+
 	public function set_data( $data ) {}
 }

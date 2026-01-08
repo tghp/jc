@@ -6,7 +6,7 @@ use MetaBox\Support\Data as DataHelper;
 class Data {
 	public static function get_post_types() {
 		$post_types = DataHelper::get_post_types();
-		$post_types = array_map( function( $post_type ) {
+		$post_types = array_map( function ( $post_type ) {
 			return [
 				'slug'         => $post_type->name,
 				'name'         => $post_type->labels->singular_name,
@@ -20,7 +20,7 @@ class Data {
 
 	public static function get_taxonomies() {
 		$taxonomies = DataHelper::get_taxonomies();
-		$taxonomies = array_map( function( $taxonomy ) {
+		$taxonomies = array_map( function ( $taxonomy ) {
 			return [
 				'slug'         => $taxonomy->name,
 				'name'         => $taxonomy->labels->singular_name,
@@ -56,6 +56,38 @@ class Data {
 		return $templates;
 	}
 
+	public static function get_views(): array {
+		$query = new \WP_Query( [
+			'post_type'              => 'mb-views',
+			'posts_per_page'         => -1,
+			'orderby'                => 'title',
+			'order'                  => 'ASC',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+			'meta_query'             => [
+				[
+					'key'   => 'type',
+					'value' => 'block',
+				],
+			],
+
+		] );
+
+		$views = [];
+
+		foreach ( $query->posts as $post ) {
+			$views[ $post->ID ] = [
+				'ID'         => $post->ID,
+				'post_title' => $post->post_title,
+				'post_name'  => $post->post_name,
+			];
+		}
+
+		return $views;
+	}
+
 	public static function get_post_formats() {
 		if ( ! current_theme_supports( 'post-formats' ) ) {
 			return [];
@@ -66,7 +98,7 @@ class Data {
 	}
 
 	public static function get_setting_pages() {
-		$pages = [];
+		$pages          = [];
 		$settings_pages = apply_filters( 'mb_settings_pages', [] );
 		foreach ( $settings_pages as $settings_page ) {
 			$title = '';
@@ -80,9 +112,9 @@ class Data {
 			if ( ! empty( $settings_page['tabs'] ) ) {
 				foreach ( $settings_page['tabs'] as $id => $tab ) {
 					if ( is_string( $tab ) ) {
-						$tab = ['label' => $tab];
+						$tab = [ 'label' => $tab ];
 					}
-					$tab = wp_parse_args( $tab, [
+					$tab         = wp_parse_args( $tab, [
 						'icon'  => '',
 						'label' => '',
 					] );
@@ -106,19 +138,23 @@ class Data {
 			'mb-comment-meta'            => 'mb_comment_meta_load',
 			'mb-custom-table'            => 'mb_custom_table_load',
 			'mb-frontend-submission'     => 'mb_frontend_submission_load',
+			'mb-rest-api'                => 'mb_rest_api_load',
 			'mb-settings-page'           => 'mb_settings_page_load',
 			'mb-term-meta'               => 'mb_term_meta_load',
 			'mb-user-meta'               => 'mb_user_meta_load',
 			'meta-box-columns'           => 'mb_columns_add_markup',
 			'meta-box-conditional-logic' => 'mb_conditional_logic_load',
+			'mb-revision'                => 'mb_revision_init',
+			'mb-views'                   => 'mb_views_load',
 		];
-		$classes = [
+		$classes   = [
 			'mb-relationships'         => 'MBR_Loader',
 			'meta-box-group'           => 'RWMB_Group',
 			'meta-box-include-exclude' => 'MB_Include_Exclude',
 			'meta-box-show-hide'       => 'MB_Show_Hide',
 			'meta-box-tabs'            => 'MB_Tabs',
 			'meta-box-tooltip'         => 'MB_Tooltip',
+			'meta-box-text-limiter'    => 'MB_Text_Limiter',
 		];
 
 		if ( isset( $functions[ $extension ] ) ) {

@@ -13,7 +13,7 @@ abstract class BaseEditPage {
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_wrapper' ] );
 		add_action( "save_post_$post_type", [ $this, 'save_wrapper' ], 10, 2 );
 
-		add_action( "add_meta_boxes_$post_type", [ $this, 'remove_slug_meta_box'] );
+		add_action( "add_meta_boxes_$post_type", [ $this, 'remove_meta_boxes' ] );
 		add_filter( 'rwmb_meta_boxes', [ $this, 'add_meta_boxes' ] );
 		add_filter( 'rwmb_post_name_field_meta', [ $this, 'get_post_name' ] );
 		add_filter( 'rwmb_post_name_value', '__return_empty_string' );
@@ -51,12 +51,12 @@ abstract class BaseEditPage {
 
 	abstract public function save( $post_id, $post );
 
-	private function is_screen() {
+	private function is_screen(): bool {
 		return $this->post_type === get_current_screen()->id;
 	}
 
-	public function remove_slug_meta_box() {
-		remove_meta_box( 'slugdiv', null, 'normal' );
+	public function remove_meta_boxes(): void {
+		remove_meta_box( 'slugdiv', '', 'normal' );
 	}
 
 	public function add_meta_boxes( $meta_boxes ) {

@@ -1,61 +1,59 @@
 <?php
 /**
- * Plugin Name: Meta Box Tooltip
+ * Plugin Name: MB Tooltip
  * Plugin URI:  https://metabox.io/plugins/meta-box-tooltip/
  * Description: Add tooltip for meta fields
- * Version:     1.1.5
+ * Version:     1.1.9
  * Author:      MetaBox.io
  * Author URI:  https://metabox.io
  * License:     GPL2+
  *
- * @package Meta Box
- * @subpackage Meta Box Tooltip
+ * Copyright (C) 2010-2025 Tran Ngoc Tuan Anh. All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 // Prevent loading this file directly.
-defined( 'ABSPATH' ) || die;
+if ( ! defined( 'ABSPATH' ) ) {
+	return;
+}
 
 if ( ! class_exists( 'MB_Tooltip' ) ) {
 
-	/**
-	 * Class MB_Tooltip
-	 */
 	class MB_Tooltip {
-
-		/**
-		 * Add hooks to meta box
-		 */
 		public function __construct() {
-			add_action( 'rwmb_enqueue_scripts', array( $this, 'enqueue' ) );
-			add_filter( 'rwmb_begin_html', array( $this, 'output' ), 10, 2 );
-			add_filter( 'rwmb_outer_html', array( $this, 'field_output' ), 10, 2 );
+			add_action( 'rwmb_enqueue_scripts', [ $this, 'enqueue' ] );
+			add_filter( 'rwmb_begin_html', [ $this, 'add_label_tooltip' ], 10, 2 );
+			add_filter( 'rwmb_outer_html', [ $this, 'add_input_tooltip' ], 10, 2 );
 		}
 
-		/**
-		 * Add scripts and style of tooltip into meta box plugin
-		 */
-		public function enqueue() {
+		public function enqueue(): void {
 			list( , $url ) = RWMB_Loader::get_path( dirname( __FILE__ ) );
-			wp_enqueue_style( 'mb-tooltip', $url . 'css/tooltip.css', '', '1.1.2' );
-			wp_enqueue_script( 'popper', $url . 'js/popper.min.js', array(), '1.15.0', true );
-			wp_enqueue_script( 'tippy', $url . 'js/tippy.min.js', array( 'popper' ), '4.3.1', true );
-			wp_enqueue_script( 'mb-tooltip', $url . 'js/tooltip.js', array( 'jquery', 'tippy' ), '1.1.2', true );
+			wp_enqueue_style( 'mb-tooltip', $url . 'css/tooltip.css', [], filemtime( __DIR__ . '/css/tooltip.css' ) );
+
+			wp_register_script( 'popper', $url . 'js/popper.js', [], '2.11.6', true );
+			wp_register_script( 'tippy', $url . 'js/tippy.js', [ 'popper' ], '6.3.7', true );
+
+			wp_enqueue_script( 'mb-tooltip', $url . 'js/tooltip.js', [ 'jquery', 'tippy' ], filemtime( __DIR__ . '/js/tooltip.js' ), true );
 		}
 
-		/**
-		 * Add tooltip to field label
-		 *
-		 * @param string $html  Output HTML.
-		 * @param array  $field Field information.
-		 *
-		 * @return string
-		 */
-		public function output( $html, $field ) {
+		public function add_label_tooltip( string $html, array $field ) : string {
 			if ( empty( $field['tooltip'] ) ) {
 				return $html;
 			}
 
-			$tooltip = $this->get_tooltip_data( $field['tooltip'] );
+			$tooltip      = $this->get_tooltip_data( $field['tooltip'] );
 			$tooltip_html = $this->get_tooltip_html( $tooltip );
 
 			$html = str_replace( '</label>', $tooltip_html . '</label>', $html );
@@ -63,23 +61,15 @@ if ( ! class_exists( 'MB_Tooltip' ) ) {
 			return $html;
 		}
 
-		/**
-		 * Add tooltip to field input
-		 *
-		 * @param string $html  Output HTML.
-		 * @param array  $field Field information.
-		 *
-		 * @return string
-		 */
-		public function field_output( $html, $field ) {
+		public function add_input_tooltip( string $html, array $field ) : string {
 			if ( empty( $field['tooltip_input'] ) ) {
 				return $html;
 			}
 
-			$tooltip = $this->get_tooltip_data( $field['tooltip_input'] );
+			$tooltip      = $this->get_tooltip_data( $field['tooltip_input'] );
 			$tooltip_html = $this->get_tooltip_html( $tooltip );
 
-			$input_fields = array(
+			$input_fields = [
 				'date',
 				'datetime',
 				'email',
@@ -88,20 +78,20 @@ if ( ! class_exists( 'MB_Tooltip' ) ) {
 				'text',
 				'time',
 				'url',
-			);
+			];
 
-			if ( in_array( $field['type'], $input_fields ) ) {
-				$find = '/<input.(.*).>/U';
+			if ( in_array( $field['type'], $input_fields, true ) ) {
+				$find    = '/<input.(.*).>/U';
 				$replace = '$0' . $tooltip_html;
-				$html = preg_replace( $find, $replace, $html );
+				$html    = preg_replace( $find, $replace, $html );
 			}
 
-			$select_fields = array( 'select', 'select_advanced' );
+			$select_fields = [ 'select', 'select_advanced' ];
 
-			if ( in_array( $field['type'], $select_fields ) ) {
-				$find = '/<select.(.*).>.(.*).<\/select>/U';
+			if ( in_array( $field['type'], $select_fields, true ) ) {
+				$find    = '/<select.(.*).>.(.*).<\/select>/U';
 				$replace = '$0' . $tooltip_html;
-				$html = preg_replace( $find, $replace, $html );
+				$html    = preg_replace( $find, $replace, $html );
 			}
 
 			return $html;
@@ -113,7 +103,7 @@ if ( ! class_exists( 'MB_Tooltip' ) ) {
 		 * @param  string|array $tooltip Field tooltip.
 		 * @return array
 		 */
-		public function get_tooltip_data( $tooltip ) {
+		private function get_tooltip_data( $tooltip ) : array {
 			// Add tooltip to field label, in one of following formats
 			// 1) 'tooltip' => 'Tooltip Content'
 			// 2) 'tooltip' => array( 'icon' => 'info', 'content' => 'Tooltip Content', 'position' => 'top' )
@@ -124,12 +114,12 @@ if ( ! class_exists( 'MB_Tooltip' ) ) {
 			// In 3rd format, icon can be URL to custom icon image
 			//
 			// 'position' is optional. Value can be 'top' (default), 'bottom', 'left', 'right'.
-			$data = array(
+			$data = [
 				'content'    => 'tooltip',
 				'icon'       => 'info',
 				'position'   => 'top',
 				'allow_html' => true,
-			);
+			];
 
 			if ( is_string( $tooltip ) ) {
 				$data['content'] = $tooltip;
@@ -143,11 +133,8 @@ if ( ! class_exists( 'MB_Tooltip' ) ) {
 
 		/**
 		 * Get tooltip html from tooltip data.
-		 *
-		 * @param  array $data Tooltip data.
-		 * @return string
 		 */
-		public function get_tooltip_html( $data ) {
+		private function get_tooltip_html( array $data ) : string {
 			// If icon is an URL to custom image.
 			if ( filter_var( $data['icon'], FILTER_VALIDATE_URL ) ) {
 				$icon_html = '<img src="' . esc_url( $data['icon'] ) . '">';
@@ -172,4 +159,4 @@ if ( ! class_exists( 'MB_Tooltip' ) ) {
 	}
 
 	new MB_Tooltip;
-} // End if().
+}

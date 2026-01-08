@@ -1,59 +1,70 @@
 <?php
-/**
- * Custom table caching before saving data
- *
- * @package    Meta Box
- * @subpackage MB Custom Table
- */
-
 namespace MetaBox\CustomTable;
 
 class Cache {
+	private static function query_get( int $object_id, string $table ): array {
+		global $wpdb;
+
+		$row = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT * FROM $table WHERE `ID` = %d",
+				$object_id
+			),
+			ARRAY_A
+		);
+
+		return is_array( $row ) ? $row : [];
+	}
+
 	/**
-	 * Get data from cache.
+	 * Get a row
 	 *
-	 * @param int    $object_id Object ID.
-	 * @param string $table     Table name.
+	 * @param int|string|null $object_id Row ID
+	 * @param string          $table Table name
+	 * @param bool            $force Force to get from DB, not from cache
 	 *
 	 * @return array
 	 */
-	public static function get( $object_id, $table ) {
+	public static function get( $object_id, string $table, bool $force = false ): array {
 		global $wpdb;
 
-		$row = wp_cache_get( $object_id, self::get_cache_group( $table ) );
-		if ( false === $row ) {
-			$row = $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT * FROM $table WHERE `ID` = %d",
-					$object_id
-				),
-				ARRAY_A
-			);
-			$row = is_array( $row ) ? $row : array();
-			self::set( $object_id, $table, $row );
+		if ( ! $object_id ) {
+			return [];
 		}
-		return is_array( $row ) ? $row : array();
+
+		if ( $force ) {
+			return self::query_get( $object_id, $table );
+		}
+
+		$row = wp_cache_get( $object_id, self::get_cache_group( $table ) );
+
+		if ( false !== $row ) {
+			return is_array( $row ) ? $row : [];
+		}
+
+		$row = self::query_get( $object_id, $table );
+
+		self::set( $object_id, $table, $row );
+
+		return $row;
 	}
 
 	/**
 	 * Set a row to cache.
-	 *
-	 * @param int    $object_id Object ID.
-	 * @param string $table     Table name.
-	 * @param array  $row       Row data.
 	 */
-	public static function set( $object_id, $table, $row ) {
+	public static function set( int $object_id, string $table, array $row ) {
 		wp_cache_set( $object_id, $row, self::get_cache_group( $table ) );
 	}
 
-	/**
-	 * Get cache group name from table name.
-	 *
-	 * @param string $table Table name.
-	 *
-	 * @return string
-	 */
-	protected static function get_cache_group( $table ) {
+	public static function delete( ?int $object_id, string $table ) {
+		if ( ! $object_id ) {
+			return;
+		}
+
+		wp_cache_delete( $object_id, self::get_cache_group( $table ) );
+	}
+
+	private static function get_cache_group( string $table ): string {
 		return "rwmb_{$table}_table_data";
 	}
 }

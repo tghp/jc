@@ -1,6 +1,5 @@
 wp/*
 wp-content/*
-vendor/
 src/themes/**/dist/**/*
 !.gitkeep
 .env

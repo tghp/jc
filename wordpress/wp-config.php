@@ -94,7 +94,11 @@ $table_prefix = 'wp_';
  *
  * @link https://codex.wordpress.org/Debugging_in_WordPress
  */
-define('WP_DEBUG', false);
+if (isset($_ENV['WP_DEBUG'])) {
+    define('WP_DEBUG', intval($_ENV['WP_DEBUG']) === 1 || $_ENV['WP_DEBUG'] === 'true');
+} else {
+    define('WP_DEBUG', false);
+}
 
 /**
  * Security etc

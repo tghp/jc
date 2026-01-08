@@ -26,8 +26,7 @@ class ListTable extends \WP_List_Table {
 		$page     = $this->get_pagenum();
 
 		$where = apply_filters( "mbct_{$this->model->name}_query_where", '' );
-		$order = apply_filters( "mbct_{$this->model->name}_query_order", '' );
-
+		$order = apply_filters( "mbct_{$this->model->name}_query_order", 'ORDER BY ID DESC' );
 		$this->set_pagination_args( [
 			'total_items' => $this->get_total_items( $where ),
 			'per_page'    => $per_page,
@@ -37,12 +36,17 @@ class ListTable extends \WP_List_Table {
 		$offset = ' OFFSET ' . ( $page - 1 ) * $per_page;
 		$sql    = "SELECT * FROM $this->table $where $order $limit $offset";
 
+		$sql = apply_filters( "mbct_{$this->model->name}_prepare_items", $sql );
+
 		$this->items = $wpdb->get_results( $sql, 'ARRAY_A' );
 	}
 
-	private function get_total_items( $where ) {
+	private function get_total_items( string $where ): int {
 		global $wpdb;
-		return $wpdb->get_var( "SELECT COUNT(*) FROM $this->table $where" );
+		$sql = "SELECT COUNT(*) FROM $this->table $where";
+		$sql = apply_filters( "mbct_{$this->model->name}_total_items", $sql, $where );
+
+		return (int) $wpdb->get_var( $sql );
 	}
 
 	protected function extra_tablenav( $which ) {
@@ -57,6 +61,10 @@ class ListTable extends \WP_List_Table {
 				if ( ! empty( $output ) ) {
 					echo $output;
 					submit_button( __( 'Filter', 'mb-custom-table' ), '', 'filter_action', false, [ 'id' => 'post-query-submit' ] );
+				}
+
+				if ( isset( $_GET['post_type'] ) && $_GET['post_type'] ) {
+					echo '<input type="hidden" name="post_type" value="' . esc_attr( $_GET['post_type'] ) . '">';
 				}
 			}
 			?>
@@ -108,7 +116,7 @@ class ListTable extends \WP_List_Table {
 		}
 
 		$actions = [
-			'edit' => sprintf(
+			'edit'   => sprintf(
 				'<a href="%s">' . esc_html__( 'Edit', 'mb-custom-table' ) . '</a>',
 				add_query_arg( [
 					'model-action' => 'edit',
@@ -119,10 +127,10 @@ class ListTable extends \WP_List_Table {
 				'<a href="#" data-id="%d">' . esc_html__( 'Delete', 'mb-custom-table' ) . '</a>',
 				$item['ID'],
 				$this->model->name
-			)
+			),
 		];
 
-		$actions = apply_filters( "mbct_{$this->model->name}_row_actions", $actions );
+		$actions = apply_filters( "mbct_{$this->model->name}_row_actions", $actions, $item, $column_name );
 
 		return $this->row_actions( $actions );
 	}
@@ -132,6 +140,6 @@ class ListTable extends \WP_List_Table {
 			'bulk-delete' => __( 'Delete', 'mb-custom-table' ),
 		];
 
-		return $actions;
+		return apply_filters( "mbct_{$this->model->name}_bulk_actions", $actions );
 	}
 }

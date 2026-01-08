@@ -18,9 +18,12 @@ class Appearance {
 		}
 
 		list( $field, $attribute ) = explode( '.', $field_attribute );
-		if ( ! isset( $this->meta_box->meta_box['fields'][ $field ] ) ) {
-			return;
+
+		if ( isset( $this->meta_box->meta_box['fields'][ $field ] ) ) {
+			$this->meta_box->meta_box['fields'][ $field ][ $attribute ] = $value;
 		}
-		$this->meta_box->meta_box['fields'][ $field ][ $attribute ] = $value;
+		if ( 'meta_box' === $field && isset( $this->meta_box->meta_box[ $attribute ] ) ) {
+			$this->meta_box->meta_box[ $attribute ] = $value;
+		}
 	}
 }

@@ -2,7 +2,6 @@
 /**
  * The relationship query class that alters the WordPress query to get the connected items.
  */
-
 class MBR_Query {
 	/**
 	 * The relationship query variables.
@@ -25,16 +24,15 @@ class MBR_Query {
 	 * @return mixed
 	 */
 	public function alter_clauses( &$clauses, $id_column, $pass_thru_order = false ) {
-		// Single relationship.
 		if ( empty( $this->args['relation'] ) ) {
+			// Single relationship.
 			if ( empty( $this->args['sibling'] ) ) {
 				$this->handle_single_relationship_join( $clauses, $id_column, $pass_thru_order );
 			} else {
 				$this->handle_single_relationship_sibling( $clauses, $id_column );
 			}
-		}
-		// Multiple relationships.
-		else {
+		} else {
+			// Multiple relationships.
 			$this->handle_multiple_relationships( $clauses, $id_column );
 		}
 
@@ -58,6 +56,8 @@ class MBR_Query {
 	}
 
 	private function build_single_relationship_join( $relationship, &$clauses, $id_column, $pass_thru_order ) {
+		global $wpdb;
+
 		$source = $relationship['direction'];
 		$target = 'from' === $source ? 'to' : 'from';
 		$items  = implode( ',', array_map( 'absint', $relationship['items'] ) );
@@ -67,12 +67,10 @@ class MBR_Query {
 			$clauses['fields'] .= empty( $clauses['fields'] ) ? $fields : " , $fields";
 
 			if ( ! $pass_thru_order ) {
-
-				if ( 't.term_id' === $id_column ) {
+				$clauses['orderby'] = '`mbr_order` ASC, mbr_id DESC';
+				if ( in_array( $id_column, [ 't.term_id', "{$wpdb->prefix}users.ID" ], true ) ) {
 					$clauses['orderby'] = 'ORDER BY `mbr_order` ASC, mbr_id';
 					$clauses['order']   = 'DESC';
-				} else {
-					$clauses['orderby'] = '`mbr_order` ASC, mbr_id DESC';
 				}
 			}
 
@@ -90,14 +88,16 @@ class MBR_Query {
 
 		if ( ! $pass_thru_order ) {
 			$orderby            = "mbr.order_$source";
-			$clauses['orderby'] = 't.term_id' === $id_column ? "ORDER BY $orderby" : $orderby;
+			$clauses['orderby'] = $orderby;
+			if ( in_array( $id_column, [ 't.term_id', "{$wpdb->prefix}users.ID" ], true ) ) {
+				$clauses['orderby'] = "ORDER BY $orderby";
+			}
 		}
 
-		$alias              = "mbr_{$relationship['id']}_{$source}";
-		$fields             = "mbr.$source AS `$alias`";
+		$fields             = "mbr.$source";
 		$clauses['fields'] .= empty( $clauses['fields'] ) ? $fields : " , $fields";
 		if ( empty( $clauses['groupby'] ) ) {
-			$clauses['groupby'] = "`$alias`";
+			$clauses['groupby'] = "mbr.$source";
 		}
 
 		return sprintf(
@@ -145,29 +145,31 @@ class MBR_Query {
 	/**
 	 * Modify query join & where statement for multi-relationship.
 	 *
-	 * @param string $clauses   Query clauses.
-	 * @param array  $args   $WP_query args object.
+	 * @param string $clauses    Query clauses.
+	 * @param string $id_column  ID column name.
 	 */
 	public function handle_multiple_relationships( &$clauses, $id_column ) {
 		global $wpdb;
 		$relation = $this->args['relation'];
 		unset( $this->args['relation'] );
 		$relationships = $this->args;
-		$objects       = array();
+		$objects       = [];
 
 		foreach ( $relationships as $relationship ) {
-			$type          = $relationship['id'];
-			$source        = $relationship['direction'];
-			$items         = implode( ',', $relationship['items'] );
-			$items         = empty( $relationship['reciprocal'] ) ? "`$source` IN ($items)" : "(`from` IN ($items) OR `to` IN ($items))";
+			$type   = $relationship['id'];
+			$source = $relationship['direction'];
+			$items  = implode( ',', $relationship['items'] );
+			$items  = empty( $relationship['reciprocal'] ) ? "`$source` IN ($items)" : "(`from` IN ($items) OR `to` IN ($items))";
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Error.
 			$query_results = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT `from`,`to` FROM $wpdb->mb_relationships
-					WHERE `type`=%s AND $items",
+					WHERE `type`=%s AND $items", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					$type
 				)
 			);
-			$object_ids    = array();
+			$object_ids    = [];
 			foreach ( $query_results as $result ) {
 				if ( empty( $relationship['reciprocal'] ) ) {
 					$object_ids[] = 'from' === $source ? $result->to : $result->from;
@@ -184,7 +186,7 @@ class MBR_Query {
 		}
 		if ( empty( $objects ) ) {
 			$clauses['where'] .= ( empty( $clauses['where'] ) ? '' : ' AND' ) . " {$id_column} IN(-1)";
-			return ;
+			return;
 		}
 		$merge_object_ids = $objects[0];
 		foreach ( $objects as $object ) {
@@ -194,7 +196,7 @@ class MBR_Query {
 		}
 		if ( empty( $merge_object_ids ) ) {
 			$clauses['where'] .= ( empty( $clauses['where'] ) ? '' : ' AND' ) . " {$id_column} IN(-1)";
-			return ;
+			return;
 		}
 		$merge_object_ids = array_unique( $merge_object_ids );
 		$merge_object_ids = implode( ',', $merge_object_ids );

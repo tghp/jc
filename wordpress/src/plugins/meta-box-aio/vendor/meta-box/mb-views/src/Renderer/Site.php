@@ -27,11 +27,17 @@ class Site extends Base {
 		$this->data = array_merge( $this->data, $options );
 	}
 
-	private function get_option_names() {
+	private function get_option_names(): array {
 		$settings_pages = apply_filters( 'mb_settings_pages', [] );
-		$settings_pages = array_filter( $settings_pages, function( $settings_page ) {
+		$settings_pages = array_filter( $settings_pages, function ( $settings_page ) {
 			return empty( $settings_page['network'] );
 		} );
+		array_walk( $settings_pages, function ( &$settings_page ) {
+			if ( empty( $settings_page['option_name'] ) ) {
+				$settings_page['option_name'] = $settings_page['id'];
+			}
+		} );
+
 		return wp_list_pluck( $settings_pages, 'option_name', 'id' );
 	}
 }

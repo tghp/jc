@@ -22,7 +22,7 @@ class Post {
 		$this->post_id         = (int) $post_id;
 		$this->post_type       = $post_id ? get_post_type( $post_id ) : $post_type;
 		$this->config          = $config;
-		$this->fields          = ['post_title', 'post_content', 'post_excerpt', 'post_date'];
+		$this->fields          = [ 'post_title', 'post_content', 'post_excerpt', 'post_date' ];
 		$this->template_loader = $template_loader;
 	}
 
@@ -30,15 +30,15 @@ class Post {
 	 * Render post fields in the frontend.
 	 */
 	public function render() {
-		$data = array(
+		$data = [
 			'post_id'   => $this->post_id,
 			'post_type' => $this->post_type,
 			'config'    => $this->config,
-		);
+		];
 
 		// Set value to metabox fields by post fields.
 		foreach ( $this->fields as $field ) {
-			add_filter( "rwmb_{$field}_field_meta", function() use ( $field ) {
+			add_filter( "rwmb_{$field}_field_meta", function () use ( $field ) {
 				return $this->post_id ? get_post_field( $field, $this->post_id ) : '';
 			} );
 		}
@@ -54,7 +54,7 @@ class Post {
 	public function save() {
 		do_action( 'rwmb_frontend_before_save_post', $this );
 
-		foreach( $this->fields as $field ) {
+		foreach ( $this->fields as $field ) {
 			add_filter( "rwmb_{$field}_value", '__return_empty_string' );
 		}
 
@@ -65,7 +65,9 @@ class Post {
 		}
 
 		$this->save_thumbnail();
+
 		do_action( 'rwmb_frontend_after_save_post', $this );
+
 		return $this->post_id;
 	}
 
@@ -73,12 +75,12 @@ class Post {
 		$data       = $this->get_data();
 		$data['ID'] = $this->post_id;
 		$data       = apply_filters( 'rwmb_frontend_update_post_data', $data, $this->config );
-		$data 		= array_filter( $data );
+		$data       = array_filter( $data );
 		wp_update_post( $data );
 	}
 
 	private function create() {
-		$data                = $this->get_data();
+		$data = $this->get_data();
 		if ( empty( $data['post_title'] ) ) {
 			$data['post_title'] = __( '(No title)', 'mb-frontend-submission' );
 		}
@@ -120,7 +122,7 @@ class Post {
 		$field = RWMB_Field::call( 'normalize', $field );
 
 		$old = RWMB_Field::call( $field, 'raw_meta', $this->post_id );
-		$new = isset( $_POST[ $field['id'] ] ) ? $_POST[ $field['id'] ] : array();
+		$new = isset( $_POST[ $field['id'] ] ) ? $_POST[ $field['id'] ] : [];
 
 		$new = RWMB_Field::process_value( $new, $this->post_id, $field );
 

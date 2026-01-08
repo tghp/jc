@@ -3,16 +3,33 @@
  * Plugin Name: MB Views
  * Plugin URI:  https://metabox.io/plugins/mb-views/
  * Description: Create views for Meta Box fields and content.
- * Version:     1.11.0
+ * Version:     1.13.3
  * Author:      MetaBox.io
  * Author URI:  https://metabox.io
  * License:     GPL2+
  * Text Domain: mb-views
  * Domain Path: /languages/
+ *
+ * Copyright (C) 2010-2025 Tran Ngoc Tuan Anh. All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 // Prevent loading this file directly.
-defined( 'ABSPATH' ) || die;
+if ( ! defined( 'ABSPATH' ) ) {
+	return;
+}
 
 if ( ! function_exists( 'mb_views_load' ) ) {
 	if ( file_exists( __DIR__ . '/vendor' ) ) {
@@ -25,7 +42,7 @@ if ( ! function_exists( 'mb_views_load' ) ) {
 
 	function mb_views_load() {
 		if ( version_compare( phpversion(), '7.2.5', '<' ) ) {
-			add_action( 'admin_notices', function() {
+			add_action( 'admin_notices', function () {
 				echo '<div class="notice notice-error is-dismissible"><p>', esc_html__( 'MB Views requires PHP version 7.2.5+. Please contact your host and ask them to upgrade.', 'mb-views' ), '</p></div>';
 			} );
 			return;
@@ -38,20 +55,24 @@ if ( ! function_exists( 'mb_views_load' ) ) {
 
 		// Require conditional logic and tooltip in AIO.
 		if ( class_exists( 'MetaBox\Dependency\Plugins' ) ) {
-			new MetaBox\Dependency\Plugins( 'MB Views', [
+			new MetaBox\Dependency\Plugins(
+				'MB Views',
 				[
-					'name'  => 'Meta Box Conditional Logic',
-					'class' => 'MB_Conditional_Logic',
+					[
+						'name'  => 'Meta Box Conditional Logic',
+						'class' => 'MB_Conditional_Logic',
+					],
+					[
+						'name'  => 'Meta Box Tooltip',
+						'class' => 'MB_Tooltip',
+					],
 				],
 				[
-					'name'  => 'Meta Box Tooltip',
-					'class' => 'MB_Tooltip',
-				],
-			], [
-				// Translators: %1$s - the plugin name, %2$s - extensions, %3$s - action.
-				'message'  => __( '%1$s requires %2$s to function correctly. %3$s.', 'mb-views' ),
-				'activate' => __( 'Activate now', 'mb-views' ),
-			] );
+					// Translators: %1$s - the plugin name, %2$s - extensions, %3$s - action.
+					'message'  => __( '%1$s requires %2$s to function correctly. %3$s.', 'mb-views' ),
+					'activate' => __( 'Activate now', 'mb-views' ),
+				]
+			);
 		}
 	}
 }

@@ -12,7 +12,7 @@ class Users extends Base {
 
 		$users = get_users( [
 			'number'      => $this->threshold,
-			'offset'      => (int) $_SESSION['processed'],
+			'offset'      => isset( $_SESSION['processed'] ) ? (int) $_SESSION['processed'] : 0,
 			'count_total' => false,
 			'fields'      => 'ID',
 		] );

@@ -32,7 +32,7 @@ class MetaBox {
 		$install_url  = wp_nonce_url( admin_url( "update.php?action=install-plugin&plugin=$slug" ), "install-plugin_$slug" );
 		$activate_url = wp_nonce_url( admin_url( "plugins.php?action=activate&amp;plugin=$file" ), "activate-plugin_$file" );
 		$action_url   = $is_installed ? $activate_url : $install_url;
-		$action       = $is_installed ? $this->strings['activate'] : $this->strings['activate'];
+		$action       = $is_installed ? $this->strings['activate'] : $this->strings['install'];
 
 		printf(
 			'<div class="notice notice-error"><p>' . esc_html( $this->strings['message'] ) . '</p></div>',

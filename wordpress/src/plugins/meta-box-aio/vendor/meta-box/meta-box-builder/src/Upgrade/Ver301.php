@@ -33,7 +33,7 @@ class Ver301 {
 			$content['context'] = $new_context[ $content['context'] ];
 		}
 
-		$post->post_excerpt = json_encode( $excerpt );
+		$post->post_excerpt = wp_json_encode( $excerpt );
 		$post->post_content = serialize( $content );
 	}
 
@@ -52,17 +52,17 @@ class Ver301 {
 
 		// Make sure post_types is an array of slug. Copied from Ver300.
 		if ( ! empty( $excerpt['post_types'] ) && is_array( $excerpt['post_types'] ) ) {
-			$excerpt['post_types'] = array_map( function( $post_type ) {
+			$excerpt['post_types'] = array_map( function ( $post_type ) {
 				return isset( $post_type['slug'] ) ? $post_type['slug'] : $post_type;
 			}, $excerpt['post_types'] );
 		}
 		if ( ! empty( $content['post_types'] ) && is_array( $content['post_types'] ) ) {
-			$content['post_types'] = array_map( function( $post_type ) {
+			$content['post_types'] = array_map( function ( $post_type ) {
 				return isset( $post_type['slug'] ) ? $post_type['slug'] : $post_type;
 			}, $content['post_types'] );
 		}
 
-		$post->post_excerpt = json_encode( $excerpt );
+		$post->post_excerpt = wp_json_encode( $excerpt );
 		$post->post_content = serialize( $content );
 	}
 

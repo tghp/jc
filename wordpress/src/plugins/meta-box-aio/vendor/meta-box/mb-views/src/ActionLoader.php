@@ -5,6 +5,7 @@ use WP_Query;
 
 class ActionLoader {
 	private $renderer;
+	private $query_args;
 
 	public function __construct( $renderer ) {
 		$this->renderer = $renderer;
@@ -22,8 +23,8 @@ class ActionLoader {
 
 			'meta_query'             => [ // @codingStandardsIgnoreLine.
 				[
-					'key'      => 'type',
-					'valuecom' => 'action',
+					'key'   => 'type',
+					'value' => 'action',
 				],
 				[
 					'key'     => 'mbv_action',
@@ -35,7 +36,7 @@ class ActionLoader {
 		$query = new WP_Query( $this->query_args );
 
 		if ( ! $query->have_posts() ) {
-			return false;
+			return;
 		}
 		foreach ( $query->posts as $view ) {
 			$action   = get_post_meta( $view->ID, 'mbv_action', true );

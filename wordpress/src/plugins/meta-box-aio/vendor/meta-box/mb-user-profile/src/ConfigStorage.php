@@ -8,13 +8,19 @@ namespace MetaBox\UserProfile;
 class ConfigStorage {
 	const OPTION_NAME = 'mbup_keys';
 
-	public static function get( $key ) {
+	public static function get( string $key ) : array {
 		$option = get_option( self::OPTION_NAME );
-		return isset( $option[ $key ] ) ? $option[ $key ] : null;
+		if ( ! is_array( $option ) ) {
+			$option = [];
+		}
+		return $option[ $key ] ?? [];
 	}
 
-	public static function store( $config ) {
-		$option         = get_option( self::OPTION_NAME );
+	public static function store( array $config ) : string {
+		$option = get_option( self::OPTION_NAME );
+		if ( ! is_array( $option ) ) {
+			$option = [];
+		}
 		$key            = self::get_key( $config );
 		$option[ $key ] = $config;
 		update_option( self::OPTION_NAME, $option );
@@ -22,7 +28,7 @@ class ConfigStorage {
 		return $key;
 	}
 
-	public static function get_key( $config ) {
+	public static function get_key( array $config ) : string {
 		return md5( serialize( $config ) );
 	}
 }

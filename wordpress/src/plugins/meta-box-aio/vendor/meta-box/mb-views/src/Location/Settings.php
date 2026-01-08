@@ -32,13 +32,14 @@ class Settings {
 					'id'      => 'type',
 					'tooltip' => __( 'How to render the view', 'mb-views' ),
 					'type'    => 'select',
-					'std'     => 'singular',
+					'std'     => 'custom',
 					'options' => [
 						'singular' => __( 'Singular', 'mb-views' ),
 						'archive'  => __( 'Archive', 'mb-views' ),
 						'action'   => __( 'Action', 'mb-views' ),
 						'code'     => __( 'Code', 'mb-views' ),
 						'custom'   => __( 'Shortcode', 'mb-views' ),
+						'block'    => __( 'Block', 'mb-views' ),
 					],
 				],
 				[
@@ -145,7 +146,7 @@ class Settings {
 					'tooltip' => __( 'Defines the render order of the view', 'mb-views' ),
 					'type'    => 'number',
 					'desc'    => __( 'Views with a lower order will render first', 'mb-views' ),
-					'visible' => [ 'type', '!=', 'custom' ],
+					'visible' => [ 'type', 'not in', ['custom', 'block'] ],
 				],
 				[
 					'name'    => __( 'Name', 'mb-views' ),

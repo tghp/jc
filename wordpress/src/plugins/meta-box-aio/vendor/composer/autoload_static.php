@@ -4,12 +4,13 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit4c4c1e383108d0c55aae2c9108bf70e6
+class ComposerStaticInit452423b7f2228a7be32ff39815c42094
 {
     public static $files = array (
         '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
         'f1d056c50ac6d45dc7ebebcf304ff403' => __DIR__ . '/..' . '/meta-box/mb-blocks/src/functions.php',
         '00681e9a7f49b18907eac01682c72b95' => __DIR__ . '/..' . '/meta-box/mb-custom-table/functions.php',
+        '50e7b3f86bffe096b1d2c3244a6855fd' => __DIR__ . '/..' . '/meta-box/meta-box/meta-box.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -24,10 +25,13 @@ class ComposerStaticInit4c4c1e383108d0c55aae2c9108bf70e6
         'M' => 
         array (
             'MetaBox\\UserProfile\\' => 20,
+            'MetaBox\\TS\\' => 11,
             'MetaBox\\Support\\' => 16,
+            'MetaBox\\RestApi\\' => 16,
             'MetaBox\\CustomTable\\' => 20,
             'MetaBox\\Columns\\' => 16,
             'MetaBox\\ACF\\' => 12,
+            'MetaBox\\' => 8,
             'MBViews\\' => 8,
             'MBUM\\' => 5,
             'MBTemplate\\' => 11,
@@ -35,6 +39,7 @@ class ComposerStaticInit4c4c1e383108d0c55aae2c9108bf70e6
             'MBSP\\' => 5,
             'MBFS\\' => 5,
             'MBEI\\' => 5,
+            'MBDI\\' => 5,
             'MBCPT\\' => 6,
             'MBBlocks\\' => 9,
             'MBB\\SettingsPage\\' => 17,
@@ -64,9 +69,17 @@ class ComposerStaticInit4c4c1e383108d0c55aae2c9108bf70e6
         array (
             0 => __DIR__ . '/..' . '/meta-box/mb-user-profile/src',
         ),
+        'MetaBox\\TS\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/meta-box/mb-toolset-migration/src',
+        ),
         'MetaBox\\Support\\' => 
         array (
-            0 => __DIR__ . '/..' . '/meta-box/support',
+            0 => __DIR__ . '/..' . '/wpmetabox/support',
+        ),
+        'MetaBox\\RestApi\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/meta-box/mb-rest-api/src',
         ),
         'MetaBox\\CustomTable\\' => 
         array (
@@ -79,6 +92,10 @@ class ComposerStaticInit4c4c1e383108d0c55aae2c9108bf70e6
         'MetaBox\\ACF\\' => 
         array (
             0 => __DIR__ . '/..' . '/meta-box/mb-acf-migration/src',
+        ),
+        'MetaBox\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/meta-box/meta-box/src',
         ),
         'MBViews\\' => 
         array (
@@ -108,6 +125,10 @@ class ComposerStaticInit4c4c1e383108d0c55aae2c9108bf70e6
         array (
             0 => __DIR__ . '/..' . '/meta-box/mb-elementor-integrator/src',
         ),
+        'MBDI\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/meta-box/mb-divi-integrator/src',
+        ),
         'MBCPT\\' => 
         array (
             0 => __DIR__ . '/..' . '/meta-box/mb-custom-post-type/src',
@@ -134,7 +155,7 @@ class ComposerStaticInit4c4c1e383108d0c55aae2c9108bf70e6
         ),
         'MBBParser\\' => 
         array (
-            0 => __DIR__ . '/..' . '/meta-box/mbb-parser/src',
+            0 => __DIR__ . '/..' . '/wpmetabox/mbb-parser/src',
         ),
         'MBAIO\\' => 
         array (
@@ -164,6 +185,8 @@ class ComposerStaticInit4c4c1e383108d0c55aae2c9108bf70e6
         'MetaBox\\CustomTable\\Model\\MetaBox' => __DIR__ . '/..' . '/meta-box/mb-custom-table/src/Model/MetaBox.php',
         'MetaBox\\CustomTable\\Model\\Model' => __DIR__ . '/..' . '/meta-box/mb-custom-table/src/Model/Model.php',
         'MetaBox\\CustomTable\\Storage' => __DIR__ . '/..' . '/meta-box/mb-custom-table/src/Storage.php',
+        'MetaBox\\CustomTable\\Utils\\Helpers' => __DIR__ . '/..' . '/meta-box/mb-custom-table/src/Utils/Helpers.php',
+        'MetaBox\\CustomTable\\Utils\\Resolver' => __DIR__ . '/..' . '/meta-box/mb-custom-table/src/Utils/Resolver.php',
         'RWMB_Backup_Field' => __DIR__ . '/..' . '/meta-box/mb-settings-page/src/BackupField.php',
         'RWMB_Term_Storage' => __DIR__ . '/..' . '/meta-box/mb-term-meta/src/Storage.php',
         'RWMB_User_Storage' => __DIR__ . '/..' . '/meta-box/mb-user-meta/src/Storage.php',
@@ -172,9 +195,9 @@ class ComposerStaticInit4c4c1e383108d0c55aae2c9108bf70e6
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit4c4c1e383108d0c55aae2c9108bf70e6::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit4c4c1e383108d0c55aae2c9108bf70e6::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit4c4c1e383108d0c55aae2c9108bf70e6::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit452423b7f2228a7be32ff39815c42094::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit452423b7f2228a7be32ff39815c42094::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit452423b7f2228a7be32ff39815c42094::$classMap;
 
         }, null, ClassLoader::class);
     }

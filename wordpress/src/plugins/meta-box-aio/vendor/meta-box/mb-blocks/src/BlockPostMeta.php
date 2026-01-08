@@ -4,7 +4,7 @@ namespace MBBlocks;
 class BlockPostMeta extends Block {
 	public function get_storage() {
 		if ( null === $this->storage ) {
-			$storage = rwmb_get_storage( $this->object_type, $this );
+			$storage       = rwmb_get_storage( $this->object_type, $this );
 			$this->storage = new Storages\PostMeta( $storage );
 		}
 		return $this->storage;
@@ -25,9 +25,9 @@ class BlockPostMeta extends Block {
 	/**
 	 * Filter meta type to make helper functions work.
 	 */
-	protected function render_block( $attributes = [], $is_preview = false, $post_id = null ) {
+	public function render_block( $attributes = [], $content = null, $block = null, $is_preview = false, $post_id = null ) {
 		add_filter( 'rwmb_meta_type', [ $this, 'filter_meta_type' ] );
-		parent::render_block( $attributes, $is_preview, $post_id );
+		parent::render_block(  $attributes, $content, $block, $is_preview, $post_id );
 		remove_filter( 'rwmb_meta_type', [ $this, 'filter_meta_type' ] );
 	}
 

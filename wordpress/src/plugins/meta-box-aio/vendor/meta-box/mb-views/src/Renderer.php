@@ -15,7 +15,7 @@ class Renderer {
 	/**
 	 * Render a view.
 	 *
-	 * @param WP_Post|int|string $view Post object, view ID or view name (slug).
+	 * @param \WP_Post|int|string $view Post object, view ID or view name (slug).
 	 */
 	public function render( $view, $data = [] ) {
 		// Allow developers to bypass the default renderer and use an alternative method like Timber.
@@ -37,6 +37,11 @@ class Renderer {
 		$render = '';
 		if ( ! empty( $view_post ) ) {
 			$render = $view_post->post_name;
+
+			// Do not render unpublished views.
+			if ( $view_post->post_status !== 'publish' ) {
+				return '';
+			}
 		} elseif ( count( $paths ) ) { // Render view with Filesytem loader.
 			$render = $view;
 		}
@@ -47,7 +52,7 @@ class Renderer {
 		}
 
 		// Plugin custom loader.
-		$mb_loader = new TwigLoader;
+		$mb_loader = new TwigLoader();
 
 		// Filesystem Loader.
 		$fs_loader = new FilesystemLoader( $paths );
@@ -70,7 +75,31 @@ class Renderer {
 		$output = do_shortcode( $output );
 		$output = do_blocks( $output );
 
+		$this->add_script_map( $output );
+
 		return $output;
+	}
+
+	private function add_script_map( $html ) {
+		global $wp_scripts;
+
+		if ( false !== strpos( $html, 'rwmb-map-canvas' ) ) {
+			if ( isset( $wp_scripts->registered['rwmb-map-frontend'] ) ) {
+				if ( ! isset( $wp_scripts->registered['rwmb-map-frontend-mbview'] ) ) {
+					wp_enqueue_script( 'rwmb-map-frontend-mbview', $wp_scripts->registered['rwmb-map-frontend']->src, $wp_scripts->registered['rwmb-map-frontend']->deps, $wp_scripts->registered['rwmb-map-frontend']->ver, true );
+				}
+				wp_dequeue_script( 'rwmb-map-frontend' );
+			}
+		}
+
+		if ( false !== strpos( $html, 'rwmb-osm-canvas' ) ) {
+			if ( isset( $wp_scripts->registered['rwmb-osm-frontend'] ) ) {
+				if ( ! isset( $wp_scripts->registered['rwmb-osm-frontend-mbview'] ) ) {
+					wp_enqueue_script( 'rwmb-osm-frontend-mbview', $wp_scripts->registered['rwmb-osm-frontend']->src, $wp_scripts->registered['rwmb-osm-frontend']->deps, $wp_scripts->registered['rwmb-osm-frontend']->ver, true );
+				}
+				wp_dequeue_script( 'rwmb-osm-frontend' );
+			}
+		}
 	}
 
 	private function get_data() {
@@ -116,7 +145,7 @@ class Renderer {
 		$user_object = new Renderer\User( $this->meta_box_renderer );
 		$user_object->set_user_id( get_current_user_id() );
 
-		$post        = get_post();
+		$post = get_post();
 		// Return early if author has no post
 		if ( empty( $post ) ) {
 			return [

@@ -1,51 +1,38 @@
 <?php
 /**
- * Plugin Name: Meta Box - Elementor Integrator
+ * Plugin Name: MB Elementor Integration
  * Plugin URI:  https://metabox.io/plugins/mb-elementor-integrator/
  * Description: Integrates Meta Box and Elementor Page Builder.
- * Version:     2.0.8
+ * Version:     2.2.4
  * Author:      MetaBox.io
  * Author URI:  https://metabox.io
  * License:     GPL2+
  *
- * @package    Meta Box
- * @subpackage MB Elementor Integrator
+ * Copyright (C) 2010-2025 Tran Ngoc Tuan Anh. All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 // Prevent loading this file directly.
-defined( 'ABSPATH' ) || die;
+if ( ! defined( 'ABSPATH' ) ) {
+	return;
+}
 
-if ( ! function_exists( 'mb_elementor_integrator_register_tags' ) ) {
-	add_action( 'elementor/dynamic_tags/register_tags', 'mb_elementor_integrator_register_tags' );
+if ( file_exists( __DIR__ . '/vendor' ) ) {
+	require __DIR__ . '/vendor/autoload.php';
+}
 
-	/**
-	 * Register dynamic tags for Elementor.
-	 *
-	 * @param object $dynamic_tags Elementor dynamic tags instance.
-	 */
-	function mb_elementor_integrator_register_tags( $dynamic_tags ) {
-		if ( ! defined( 'RWMB_VER' ) ) {
-			return;
-		}
-
-		if ( file_exists( __DIR__ . '/vendor' ) ) {
-			require __DIR__ . '/vendor/autoload.php';
-		}
-
-		$dynamic_tags->register_tag( 'MBEI\Tags\Post\Text' );
-		$dynamic_tags->register_tag( 'MBEI\Tags\Post\Image' );
-		$dynamic_tags->register_tag( 'MBEI\Tags\Post\Video' );
-
-		if ( function_exists( 'mb_term_meta_load' ) ) {
-			$dynamic_tags->register_tag( 'MBEI\Tags\Archive\Text' );
-			$dynamic_tags->register_tag( 'MBEI\Tags\Archive\Image' );
-			$dynamic_tags->register_tag( 'MBEI\Tags\Archive\Video' );
-		}
-
-		if ( function_exists( 'mb_settings_page_load' ) ) {
-			$dynamic_tags->register_tag( 'MBEI\Tags\Settings\Text' );
-			$dynamic_tags->register_tag( 'MBEI\Tags\Settings\Image' );
-			$dynamic_tags->register_tag( 'MBEI\Tags\Settings\Video' );
-		}
-	}
+if ( class_exists( 'MBEI\Loader' ) ) {
+	new \MBEI\Loader();
 }

@@ -1,18 +1,32 @@
 <?php
 /**
- * Plugin Name: Meta Box Show Hide
- * Plugin URI: https://metabox.io/plugins/meta-box-show-hide/
- * Description: Easily show/hide meta boxes by various conditions using JavaScript.
- * Version: 1.3.0
- * Author: MetaBox.io
- * Author URI: https://metabox.io
- * License: GPL2+
+ * Plugin Name: MB Show Hide
+ * Plugin URI:  https://metabox.io/plugins/meta-box-show-hide/
+ * Description: Easily toggle field groups by various conditions using JavaScript.
+ * Version:     1.3.1
+ * Author:      MetaBox.io
+ * Author URI:  https://metabox.io
+ * License:     GPL2+
  *
- * @package    Meta Box
- * @subpackage Meta Box Show Hide
+ * Copyright (C) 2010-2025 Tran Ngoc Tuan Anh. All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined( 'ABSPATH' ) || exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	return;
+}
 
 if ( ! class_exists( 'MB_Show_Hide' ) ) {
 
@@ -37,9 +51,9 @@ if ( ! class_exists( 'MB_Show_Hide' ) ) {
 		 * @param RW_Meta_Box $obj The meta box object.
 		 */
 		public function js_data( RW_Meta_Box $obj ) {
-			$meta_box   = $obj->meta_box;
+			$meta_box = $obj->meta_box;
 			$conditions = array( 'show', 'hide' );
-			$data       = '';
+			$data = '';
 
 			foreach ( $conditions as $condition ) {
 				if ( empty( $meta_box[ $condition ] ) ) {

@@ -19,8 +19,8 @@ class Attributes {
 			$single = (bool) $args;
 		}
 		$default = $single ? '' : [];
-
-		return isset( $this->data[ $meta_key ] ) ? $this->data[ $meta_key ] : $default;
+		
+		return $this->data[ $meta_key ] ?? $default;
 	}
 
 	public function add( $object_id, $meta_key, $meta_value, $unique = false ) {
@@ -29,7 +29,7 @@ class Attributes {
 		}
 
 		$meta_value = wp_unslash( $meta_value );
-		$values     = isset( $this->data[ $meta_key ] ) ? $this->data[ $meta_key ] : [];
+		$values     = $this->data[ $meta_key ] ?? [];
 		$values[]   = $meta_value;
 
 		$this->data[ $meta_key ] = $values;
@@ -37,10 +37,11 @@ class Attributes {
 		return true;
 	}
 
-	public function update( $object_id, $meta_key, $meta_value, $prev_value = '' ) {
+	public function update( $object_id, $meta_key, $meta_value, $prev_value = '') {
 		if ( empty( $meta_key ) ) {
 			return false;
 		}
+
 		$meta_value = wp_unslash( $meta_value );
 		if ( '' === $meta_value || [] === $meta_value ) {
 			unset( $this->data[ $meta_key ] );

@@ -6,7 +6,7 @@ use RWMB_Helpers_Array as Arr;
 class Info extends Base {
 	protected $type = 'info';
 
-	public static function normalize( $config ) {
+	public static function normalize( array $config ) : array {
 		$config = shortcode_atts( [
 			// Meta Box ID.
 			'id'                => '',
@@ -18,10 +18,11 @@ class Info extends Base {
 			'form_id'           => 'profile-form',
 
 			// Google reCaptcha v3
-			'recaptcha_key'       => '',
-			'recaptcha_secret'    => '',
+			'recaptcha_key'     => '',
+			'recaptcha_secret'  => '',
 
 			// Appearance options.
+			'label_title'       => '',
 			'label_password'    => __( 'New Password', 'mb-user-profile' ),
 			'label_password2'   => __( 'Confirm Password', 'mb-user-profile' ),
 			'label_submit'      => __( 'Submit', 'mb-user-profile' ),
@@ -41,7 +42,7 @@ class Info extends Base {
 		return $config;
 	}
 
-	protected function has_privilege() {
+	protected function has_privilege() : bool {
 		if ( is_user_logged_in() ) {
 			return true;
 		}
@@ -60,7 +61,11 @@ class Info extends Base {
 		?>
 		<div class="rwmb-field rwmb-button-wrapper rwmb-form-submit">
 			<div class="rwmb-input">
-				<button class="rwmb-button" id="<?= esc_attr( $this->config['id_submit'] ) ?>" name="rwmb_profile_submit_info" value="1"><?= esc_html( $this->config['label_submit'] ) ?></button>
+				<?php
+				$submit_button = '<button type="submit" class="rwmb-button" id="' . esc_attr( $this->config['id_submit'] ) . '" name="rwmb_profile_submit_info" value="1">' . esc_html( $this->config['label_submit'] ) . '</button>';
+				$submit_button = apply_filters( 'rwmb_profile_info_submit_button', $submit_button, $this->config );
+				echo $submit_button;
+				?>
 			</div>
 		</div>
 		<?php

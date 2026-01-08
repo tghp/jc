@@ -33,7 +33,7 @@ class MetaBox {
 		return $data;
 	}
 
-	private function parse_group_value( $value, $field ) {
+	public function parse_group_value( $value, $field ) {
 		if ( $field['clone'] ) {
 			if ( is_array( $value ) ) {
 				foreach ( $value as $k => $clone ) {
@@ -62,7 +62,7 @@ class MetaBox {
 		return $value;
 	}
 
-	private function parse_field_value( $value, $field ) {
+	public function parse_field_value( $value, $field ) {
 		if ( in_array( $field['type'], [ 'background' ], true ) ) {
 			$value = ArrayRenderer::parse( $value, $field );
 		}
@@ -108,6 +108,10 @@ class MetaBox {
 
 		if ( in_array( $field['type'], [ 'wysiwyg' ], true ) && ! $field['raw'] ) {
 			$value = wpautop( $value );
+		}
+
+		if ( in_array( $field['type'], [ 'icon' ], true ) ) {
+			$value = BaseRenderer::parse( $value, $field );
 		}
 
 		return $value;

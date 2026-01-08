@@ -13,7 +13,7 @@ class Category {
 	}
 
 	public function register_taxonomy() {
-		$labels = array(
+		$labels = [
 			'name'                       => _x( 'Categories', 'Views Category General Name', 'mb-views' ),
 			'singular_name'              => _x( 'Category', 'Views Category Singular Name', 'mb-views' ),
 			'menu_name'                  => __( 'Category', 'mb-views' ),
@@ -34,8 +34,8 @@ class Category {
 			'no_terms'                   => __( 'No categories', 'mb-views' ),
 			'items_list'                 => __( 'Categories list', 'mb-views' ),
 			'items_list_navigation'      => __( 'Categories list navigation', 'mb-views' ),
-		);
-		$args   = array(
+		];
+		$args   = [
 			'labels'            => $labels,
 			'hierarchical'      => true,
 			'public'            => false,
@@ -45,16 +45,16 @@ class Category {
 			'show_admin_column' => true,
 			'show_tagcloud'     => false,
 			'rewrite'           => false,
-		);
+		];
 		register_taxonomy( $this->slug, $this->post_type, $args );
 	}
 
-	public function add_categories_link( $views ) {
+	public function add_categories_link( array $views ): array {
 		$views[ $this->slug ] = sprintf( '<a href="%s">%s</a>', admin_url( "edit-tags.php?taxonomy={$this->slug}&post_type={$this->post_type}" ), esc_html__( 'View Categories', 'mb-views' ) );
 		return $views;
 	}
 
-	public function output_filter( $post_type ) {
+	public function output_filter( string $post_type ) {
 		if ( $post_type !== $this->post_type ) {
 			return;
 		}
@@ -66,7 +66,7 @@ class Category {
 			'order'           => 'ASC',
 			'hide_empty'      => false,
 			'hide_if_empty'   => false,
-			'selected'        => filter_input( INPUT_GET, $taxonomy->query_var, FILTER_SANITIZE_STRING ),
+			'selected'        => filter_input( INPUT_GET, $taxonomy->query_var ),
 			'hierarchical'    => true,
 			'name'            => $taxonomy->query_var,
 			'taxonomy'        => $taxonomy->name,

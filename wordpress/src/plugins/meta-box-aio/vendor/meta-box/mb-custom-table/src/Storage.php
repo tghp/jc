@@ -52,7 +52,7 @@ class Storage {
 		$meta_value = wp_unslash( $meta_value );
 
 		$row              = Cache::get( $object_id, $this->table );
-		$values           = isset( $row[ $meta_key ] ) ? maybe_unserialize( $row[ $meta_key ] ) : array();
+		$values           = isset( $row[ $meta_key ] ) ? maybe_unserialize( $row[ $meta_key ] ) : [];
 		$values[]         = $meta_value;
 		$row[ $meta_key ] = $values;
 
@@ -77,7 +77,7 @@ class Storage {
 			return false;
 		}
 		$meta_value = wp_unslash( $meta_value );
-		if ( '' === $meta_value || array() === $meta_value ) {
+		if ( '' === $meta_value || [] === $meta_value ) {
 			$meta_value = null;
 		}
 		$row              = Cache::get( $object_id, $this->table );
@@ -105,7 +105,7 @@ class Storage {
 	 */
 	public function delete( $object_id, $meta_key = '', $meta_value = '', $delete_all = false ) {
 		if ( ! $meta_key ) {
-			Cache::set( $object_id, $this->table, null );
+			Cache::set( $object_id, $this->table, [] );
 
 			return true;
 		}
@@ -152,7 +152,8 @@ class Storage {
 			$this->delete_row( $object_id );
 			return false;
 		}
-		$where = array( 'ID' => $object_id );
+		$where = [ 'ID' => $object_id ];
+		$row   = apply_filters( 'mbct_update_data', $row, $object_id, $this->table );
 		do_action( 'mbct_before_update', $object_id, $this->table, $row );
 		$output = $wpdb->update( $this->table, (array) $row, $where );
 		do_action( 'mbct_after_update', $object_id, $this->table, $row );
@@ -161,16 +162,17 @@ class Storage {
 
 	public function insert_row( $row ) {
 		global $wpdb;
-		$id = isset( $row['ID'] ) ? $row['ID'] : null;
+		$id  = $row['ID'] ?? null;
+		$row = apply_filters( 'mbct_add_data', $row, $id, $this->table );
 		do_action( 'mbct_before_add', $id, $this->table, $row );
 		$output = $wpdb->insert( $this->table, $row );
-		do_action( 'mbct_after_add', $id, $this->table, $row );
+		do_action( 'mbct_after_add', $wpdb->insert_id, $this->table, $row );
 		return $output;
 	}
 
 	public function delete_row( $object_id ) {
 		global $wpdb;
-		$where = array( 'ID' => $object_id );
+		$where = [ 'ID' => $object_id ];
 		do_action( 'mbct_before_delete', $object_id, $this->table );
 		$output = $wpdb->delete( $this->table, $where );
 		do_action( 'mbct_after_delete', $object_id, $this->table );

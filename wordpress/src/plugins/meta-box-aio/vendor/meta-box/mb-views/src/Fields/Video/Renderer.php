@@ -9,6 +9,11 @@ class Renderer extends BaseRenderer {
 		// Groups send ID, normal fields send array of video info.
 		$value = isset( $value['ID'] ) ? $value['ID'] : $value;
 		$value = RWMB_Video_Field::file_info( $value );
+
+		if ( ! is_array( $value ) ) {
+			return;
+		}
+
 		return array_merge( $value, [
 			'rendered' => RWMB_Video_Field::format_clone_value( null, [ $value ], null, null ),
 		] );

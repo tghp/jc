@@ -6,9 +6,10 @@ use MetaBox\UserProfile\Forms\Factory;
 
 class Shortcodes {
 	public function __construct() {
-		$types = ['register', 'login', 'info'];
+		$types = [ 'register', 'login', 'info' ];
 		foreach ( $types as $type ) {
 			add_shortcode( "mb_user_profile_$type", function( $atts ) use ( $type ) {
+				$atts = $atts ?: [];
 				return $this->render_shortcode( $atts, $type );
 			} );
 		}
@@ -16,7 +17,7 @@ class Shortcodes {
 		add_action( 'template_redirect', [ $this, 'handle_submission' ] );
 	}
 
-	public function render_shortcode( $atts, $type ) {
+	public function render_shortcode( array $atts, string $type ) {
 		/*
 		 * Do not render the shortcode in the admin.
 		 * Prevent errors with enqueue assets in Gutenberg where requests are made via REST to preload the post content.
@@ -26,6 +27,8 @@ class Shortcodes {
 		}
 
 		wp_enqueue_style( 'mbup', MBUP_URL . 'assets/user-profile.css', [], MBUP_VER );
+		wp_enqueue_style( 'rwmb-password', MBUP_URL . 'assets/password.css', [], MBUP_VER );
+		wp_enqueue_script( 'rwmb-password', MBUP_URL . 'assets/password.js', [ 'jquery' ], MBUP_VER, true );
 
 		$form = Factory::make( $atts, $type );
 		ob_start();
@@ -53,7 +56,7 @@ class Shortcodes {
 			require_once ABSPATH . 'wp-admin/includes/media.php';
 		}
 
-		// Remove existings errors.
+		// Remove existing errors.
 		$codes = $form->error->get_error_codes();
 		foreach ( $codes as $code ) {
 			$form->error->remove( $code );

@@ -9,12 +9,12 @@ class SettingsPage {
 			return;
 		}
 
-		new \MBB\SettingsPage\Register;
-		new \MBB\SettingsPage\RestApi;
-		new \MBB\SettingsPage\Generator;
+		new \MBB\SettingsPage\Register();
+		new \MBB\SettingsPage\RestApi();
+		new \MBB\SettingsPage\Generator();
 
 		if ( is_admin() ) {
-			new \MBB\SettingsPage\Edit( 'mb-settings-page', __( 'Settings Page ID', 'meta-box-builder' ) );
+			new \MBB\SettingsPage\Edit( 'mb-settings-page', __( 'Settings Page', 'meta-box-builder' ) );
 		}
 	}
 }

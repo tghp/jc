@@ -26,6 +26,11 @@ class MBR_Loader {
 			return;
 		}
 
+		define( 'MBR_DIR', trailingslashit( dirname( __DIR__ ) ) );
+
+		list( , $url ) = \RWMB_Loader::get_path( MBR_DIR );
+		define( 'MBR_URL', $url );
+
 		$this->load_files();
 
 		/**
@@ -53,8 +58,12 @@ class MBR_Loader {
 		MB_Relationships_API::set_term_query( $term_query );
 		MB_Relationships_API::set_user_query( $user_query );
 
+		new MBR_Admin_Filter();
 		$shortcodes = new MBR_Shortcodes( $rel_factory, $obj_factory );
 		$shortcodes->init();
+
+		$rest_api = new MB_Relationships_REST_API();
+		$rest_api->init();
 
 		// All registration code goes here.
 		do_action( 'mb_relationships_init' );
@@ -66,7 +75,7 @@ class MBR_Loader {
 	protected function create_table() {
 		require __DIR__ . '/database/table.php';
 
-		$table = new MBR_Table();
+		$table            = new MBR_Table();
 		$is_table_created = get_option( 'mbr_table_created' );
 		if ( ! $is_table_created ) {
 			$table->create();
@@ -97,8 +106,10 @@ class MBR_Loader {
 		require __DIR__ . '/relationship/relationship.php';
 		require __DIR__ . '/relationship/admin-columns.php';
 		require __DIR__ . '/relationship/meta-boxes.php';
+		require __DIR__ . '/relationship/admin-filter.php';
 
 		require __DIR__ . '/api.php';
+		require __DIR__ . '/rest-api.php';
 		require __DIR__ . '/shortcodes.php';
 	}
 }

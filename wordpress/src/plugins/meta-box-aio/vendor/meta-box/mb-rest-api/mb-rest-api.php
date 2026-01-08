@@ -3,19 +3,18 @@
  * Plugin Name: MB Rest API
  * Plugin URI:  https://metabox.io/plugins/mb-rest-api/
  * Description: Add Meta Box custom fields to WordPress Rest API.
- * Version:     1.4.0
+ * Version:     2.0.5
  * Author:      MetaBox.io
  * Author URI:  https://metabox.io
  * License:     GPL2+
  * Text Domain: mb-rest-api
  * Domain Path: /languages/
- *
- * @package    Meta Box
- * @subpackage MB Rest API
  */
 
 // Prevent loading this file directly.
-defined( 'ABSPATH' ) || die;
+if ( ! defined( 'ABSPATH' ) ) {
+	return;
+}
 
 if ( ! function_exists( 'mb_rest_api_load' ) ) {
 	// Load necessary admin files.
@@ -23,15 +22,17 @@ if ( ! function_exists( 'mb_rest_api_load' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/post.php';
 	require_once ABSPATH . 'wp-admin/includes/comment.php';
 
+	if ( file_exists( __DIR__ . '/vendor' ) ) {
+		require __DIR__ . '/vendor/autoload.php';
+	}
+
 	add_action( 'init', 'mb_rest_api_load', 5 );
 
-	/**
-	 * Loader function for the plugin files.
-	 */
 	function mb_rest_api_load() {
-		require_once __DIR__ . '/class-mb-rest-api.php';
-
-		$mb_rest_api = new MB_Rest_API();
-		add_action( 'rest_api_init', array( $mb_rest_api, 'init' ) );
+		new MetaBox\RestApi\Post;
+		new MetaBox\RestApi\Term;
+		new MetaBox\RestApi\User;
+		new MetaBox\RestApi\Comment;
+		new MetaBox\RestApi\Setting;
 	}
 }
