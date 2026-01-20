@@ -23,7 +23,6 @@ export default function Essay({
 }) {
   const {
     title,
-    slug,
     content,
     date,
     modified,
@@ -188,7 +187,7 @@ export default function Essay({
               <div className="single-essay__sidebar-media-links">
                 {hasPdf && (
                   <a
-                    href={`./${slug}/pdf/`}
+                    href={`./pdf`}
                     target={`_blank`}
                     aria-label="Download PDF"
                   >
