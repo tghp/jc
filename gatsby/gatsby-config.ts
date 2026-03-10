@@ -67,14 +67,13 @@ module.exports = {
       },
     },
     {
-      resolve: 'gatsby-plugin-react-svg',
+      resolve: "gatsby-plugin-svgr-loader",
       options: {
         rule: {
           include: /assets/,
-        },
-      },
+        }
+      }
     },
-    'gatsby-plugin-gatsby-cloud',
     {
       resolve: 'gatsby-plugin-feed',
       options: {
