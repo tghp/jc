@@ -1,12 +1,14 @@
-exports.wrapRootElement = ({ element }) => {
-    if (typeof window !== "undefined") {
-        document.body.addEventListener('click', e => {
-            if (e.target.host && e.target.host !== window.location.host) {
-                e.preventDefault();
-                window.open(e.target.href, '_blank');
-            }
-        });
+exports.onClientEntry = () => {
+    if (typeof window === "undefined") {
+        return;
     }
 
-    return element;
+    document.body.addEventListener('click', e => {
+        const link = e.target.closest('a');
+
+        if (link && link.host && link.host !== window.location.host) {
+            e.preventDefault();
+            window.open(link.href, '_blank', 'noopener');
+        }
+    });
 }
