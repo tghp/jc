@@ -32,6 +32,7 @@ class Model {
 
 			// New.
 			'capability'    => 'edit_posts',
+			'supports'      => [], // Features: 'author', 'published_date', 'modified_date'.
 		];
 		$args = array_merge( $defaults, $args );
 
@@ -76,5 +77,9 @@ class Model {
 		$labels = array_merge( $defaults, $labels );
 
 		return $labels;
+	}
+
+	public function supports( string $feature ): bool {
+		return in_array( $feature, $this->supports, true );
 	}
 }

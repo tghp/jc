@@ -9,7 +9,7 @@ function processForm() {
 		key = 'MBUP_Data_' + $form.find( '[name^="mbup_key"]' ).val(),
 		i18n = window[ key ];
 
-	if ( typeof i18n !== 'object' || !i18n.hasOwnProperty( 'strength' ) ) {
+	if ( typeof i18n !== 'object' ) {
 		return;
 	}
 

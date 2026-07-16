@@ -1,6 +1,7 @@
 <?php
 namespace MBAIO;
 
+use RWMB_Switch_Field;
 use MetaBox\Updater\Option;
 
 class Settings {
@@ -11,6 +12,7 @@ class Settings {
 		$this->auto_activate_extensions();
 
 		add_action( 'init', [ $this, 'init' ], 0 );
+		add_action( 'wp_ajax_mbaio_toggle_extension', [ $this, 'ajax_toggle_extension' ] );
 	}
 
 	/**
@@ -18,7 +20,7 @@ class Settings {
 	 * Do not save settings in the form of 'extension' => true.
 	 * Instead save an array of active extensions.
 	 */
-	private function migrate_settings() {
+	private function migrate_settings(): void {
 		$option = get_option( $this->option_name );
 		if ( empty( $option ) || isset( $option['extensions'] ) ) {
 			return;
@@ -36,7 +38,7 @@ class Settings {
 		update_option( $this->option_name, $option );
 	}
 
-	private function auto_activate_extensions() {
+	private function auto_activate_extensions(): void {
 		$option = get_option( $this->option_name );
 		if ( isset( $option['extensions'] ) ) {
 			return;
@@ -45,7 +47,7 @@ class Settings {
 		update_option( $this->option_name, $option );
 	}
 
-	public function init() {
+	public function init(): void {
 		// Allows developers to bypass the settings page by filter.
 		if ( false === apply_filters( 'mb_aio_show_settings', true ) ) {
 			return;
@@ -65,11 +67,33 @@ class Settings {
 			'meta-box-aio',
 			[ $this, 'render' ]
 		);
-		add_action( "load-{$page_hook}", [ $this, 'save' ] );
 		add_action( "admin_print_styles-{$page_hook}", [ $this, 'enqueue' ] );
 	}
 
-	public function render() {
+	public function enqueue(): void {
+		$builder_dir = META_BOX_AIO_DIR . '/vendor/meta-box/meta-box-builder';
+		$builder_url = META_BOX_AIO_URL . 'vendor/meta-box/meta-box-builder';
+
+		wp_enqueue_style(
+			'mbb-app',
+			$builder_url . '/assets/css/style.css',
+			[],
+			filemtime( $builder_dir . '/assets/css/style.css' )
+		);
+		wp_enqueue_style( 'rwmb-switch', RWMB_CSS_URL . 'switch.css', [], RWMB_VER );
+		wp_enqueue_style( 'meta-box-dashboard', RWMB_URL . 'src/Dashboard/assets/css/dashboard.css', [], filemtime( RWMB_DIR . 'src/Dashboard/assets/css/dashboard.css' ) );
+		wp_enqueue_style( 'meta-box-aio', plugin_dir_url( __DIR__ ) . 'assets/aio.css', [], '1.23.0' );
+
+		wp_register_script( 'tippy', 'https://cdn.jsdelivr.net/combine/npm/@popperjs/core@2.11.2/dist/umd/popper.min.js,npm/tippy.js@6.3.7/dist/tippy-bundle.umd.min.js', [], '6.3.7', true );
+		wp_enqueue_script( 'meta-box-aio', plugin_dir_url( __DIR__ ) . 'assets/aio.js', [ 'tippy' ], '1.23.0', true );
+
+		wp_localize_script( 'meta-box-aio', 'mbAioEtxs', [
+			'nonce' => wp_create_nonce( 'mbaio_nonce' ),
+		] );
+	}
+
+
+	public function render(): void {
 		if ( ! $this->is_license_active() ) {
 			$this->show_license_warning();
 			return;
@@ -81,48 +105,33 @@ class Settings {
 
 		include_once ABSPATH . 'wp-admin/includes/plugin.php';
 		?>
-		<div class="wrap">
-			<header class="mbaio-header">
-				<div class="mbaio-container">
-					<a class="mbaio-title" target="_blank" href="https://elu.to/aiosm"><?php include dirname( __DIR__ ) . '/assets/meta-box.svg'; ?></a>
-					<nav>
-						<a target="_blank" href="https://elu.to/aiosd"><?php esc_html_e( 'Documentation', 'meta-box-aio' ); ?></a>
-						<a target="_blank" href="https://elu.to/aioss"><?php esc_html_e( 'Support Forum', 'meta-box-aio' ); ?></a>
-						<a target="_blank" href="https://elu.to/aiosa"><?php esc_html_e( 'My Account', 'meta-box-aio' ); ?></a>
-					</nav>
+		<div class="wrap mbaio-extensions">
+			<?php $this->get_header(); ?>
+			<div class="mb-body">
+				<div class="mbaio-ajax" style="visibility: hidden;">
+					<!-- For displaying ajax message -->
+					<div class="message"></div>
 				</div>
-			</header>
-
-			<div class="mbaio-container"><h1 class="screen-reader-text">Meta Box</h1></div><!-- For displaying admin notices -->
-
-			<form action="" method="post" class="mbaio-container">
-				<div id="poststuff">
-					<div class="mbaio-filter">
-						<h4><?php esc_html_e( 'Filter:', 'meta-box-aio' ) ?></h4>
-						<ul>
-							<li><a href="#" data-filter=""><?php esc_html_e( 'All', 'meta-box-aio' ); ?></a></li>
-							<li><a href="#" data-filter="premium"><?php esc_html_e( 'Premium', 'meta-box-aio' ); ?></a></li>
-							<li><a href="#" data-filter="free"><?php esc_html_e( 'Free', 'meta-box-aio' ); ?></a></li>
-							<li><a href="#" data-filter="popular"><?php esc_html_e( 'Popular', 'meta-box-aio' ); ?></a></li>
-							<li><a href="#" data-filter="data"><?php esc_html_e( 'Data', 'meta-box-aio' ); ?></a></li>
-							<li><a href="#" data-filter="ui"><?php esc_html_e( 'UI', 'meta-box-aio' ); ?></a></li>
-							<li><a href="#" data-filter="integration"><?php esc_html_e( 'Integration', 'meta-box-aio' ); ?></a></li>
-							<li><a href="#" data-filter="admin"><?php esc_html_e( 'Admin', 'meta-box-aio' ); ?></a></li>
-							<li><a href="#" data-filter="frontend"><?php esc_html_e( 'Frontend', 'meta-box-aio' ); ?></a></li>
-						</ul>
-					</div>
-					<div id="post-body" class="columns-2">
-						<div id="post-body-content">
-							<table class="widefat mbaio-list">
-								<thead>
-									<tr>
-										<td class="check-column"><input type="checkbox"></td>
-										<th><strong><?php esc_html_e( 'Available Extensions', 'meta-box-aio' ); ?></strong></th>
-										<th></th>
-										<th></th>
-									</tr>
-								</thead>
-								<tbody>
+				<div class="mb-body__inner">
+					<div class="mb-main">
+						<div class="mb-box">
+							<div class="mb-box__header mb-flex">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4 4 19h16L12 4zm0 3.2 5.5 10.3H12V7.2z"></path></svg>
+								<span class="mb-box__title"><?php esc_html_e( 'Filter:', 'meta-box-aio' ); ?></span>
+								<ul class="mbaio-filter">
+									<li><a href="#" data-filter=""><?php esc_html_e( 'All', 'meta-box-aio' ); ?></a></li>
+									<li><a href="#" data-filter="premium"><?php esc_html_e( 'Premium', 'meta-box-aio' ); ?></a></li>
+									<li><a href="#" data-filter="free"><?php esc_html_e( 'Free', 'meta-box-aio' ); ?></a></li>
+									<li><a href="#" data-filter="popular"><?php esc_html_e( 'Popular', 'meta-box-aio' ); ?></a></li>
+									<li><a href="#" data-filter="data"><?php esc_html_e( 'Data', 'meta-box-aio' ); ?></a></li>
+									<li><a href="#" data-filter="ui"><?php esc_html_e( 'UI', 'meta-box-aio' ); ?></a></li>
+									<li><a href="#" data-filter="integration"><?php esc_html_e( 'Integration', 'meta-box-aio' ); ?></a></li>
+									<li><a href="#" data-filter="admin"><?php esc_html_e( 'Admin', 'meta-box-aio' ); ?></a></li>
+									<li><a href="#" data-filter="frontend"><?php esc_html_e( 'Frontend', 'meta-box-aio' ); ?></a></li>
+								</ul>
+							</div>
+							<div class="mb-box__body">
+								<table class="widefat mbaio-list">
 									<?php foreach ( $extensions as $extension ) : ?>
 										<?php
 										$info  = "https://metabox.io/plugins/{$extension['slug']}/?utm_source=settings_page&utm_medium=link&utm_campaign=aio";
@@ -138,22 +147,24 @@ class Settings {
 										if ( isset( $extension['forum'] ) ) {
 											$forum = $extension['forum'];
 										}
-										$is_active = in_array( $extension['slug'], $active_extensions );
-										$class     = $is_active ? 'mbaio-active' : '';
+										$is_active = in_array( $extension['slug'], $active_extensions, true );
 
-										$require = ! isset( $extension['require'] ) || is_plugin_active( $extension['require'] );
+										// Use the switch markup and styles from Meta Box.
+										$field  = RWMB_Switch_Field::normalize( [
+											'type'       => 'switch',
+											'attributes' => [
+												'value' => esc_attr( $extension['slug'] ),
+											],
+										] );
+										$switch = RWMB_Switch_Field::html( $is_active, $field );
 										?>
-										<tr class="<?php echo esc_attr( $class ) ?>">
-											<th class="check-column">
-												<?php if ( $require ) : ?>
-													<input type="checkbox" name="meta_box_aio[extensions][]" value="<?php echo esc_attr( $extension['slug'] ) ?>" <?php checked( $is_active ) ?>>
-												<?php else : ?>
-													<input type="checkbox" disabled value="<?php echo esc_attr( $extension['slug'] ) ?>">
-												<?php endif; ?>
+										<tr>
+											<th>
+												<?php echo $switch; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 											</th>
 											<td>
 												<a target="_blank" class="mbaio-tooltip" data-tippy-content="<?php echo esc_attr( $extension['desc'] ) ?>" href="<?php echo esc_url( $info ) ?>"><?php echo esc_html( $extension['title'] ) ?></a>
-												<?php if ( ! $require ) : ?>
+												<?php if ( isset( $extension['plugin'] ) ) : ?>
 													<?php // Translators: %s - Plugin name ?>
 													<?php $this->tooltip( sprintf( __( 'This extension requires plugin %s to be installed and activated.', 'meta-box-aio' ), $extension['plugin'] ), 'warning' ) ?>
 												<?php endif; ?>
@@ -170,38 +181,17 @@ class Settings {
 											</td>
 										</tr>
 									<?php endforeach; ?>
-								</tbody>
-							</table>
-
-							<?php submit_button( __( 'Save Changes', 'meta-box-aio' ) ) ?>
-						</div>
-						<div id="postbox-container-1" class="postbox-container">
-							<div class="postbox">
-								<h2 class="hndle"><span class="dashicons dashicons-admin-links"></span> <?php esc_html_e( 'Quick Links', 'meta-box-aio' ) ?></h2>
-								<div class="inside">
-									<ul>
-										<li><a target="_blank" href="https://elu.to/aiosa"><?php esc_html_e( 'My Account', 'meta-box-aio' ) ?></a></li>
-										<li><a target="_blank" href="https://elu.to/aiosd"><?php esc_html_e( 'Documentation', 'meta-box-aio' ) ?></a></li>
-										<li><a target="_blank" href="https://elu.to/aioss"><?php esc_html_e( 'Support Forum', 'meta-box-aio' ) ?></a></li>
-									</ul>
-								</div>
-							</div>
-							<div class="postbox">
-								<h2 class="hndle"><span class="dashicons dashicons-groups"></span> <?php esc_html_e( 'Meta Box Community', 'meta-box-aio' ) ?></h2>
-								<div class="inside">
-									<p><?php esc_html_e( 'Join the community of super helpful Meta Box users. Say hello, ask questions, give feedback, help each other and get faster update information!', 'meta-box-aio' ); ?></p>
-									<p><a target="_blank" href="https://elu.to/aiosfb"><?php esc_html_e( 'Join Our Facebook Group &rarr;', 'meta-box-aio' ) ?></a></p>
-								</div>
+								</table>
 							</div>
 						</div>
 					</div>
-				</div>
-			</form>
+				</div><!-- .mb-body__inner -->
+			</div><!-- .mb-body -->
 		</div>
 		<?php
 	}
 
-	public function show_license_warning() {
+	public function show_license_warning(): void {
 		$settings_page = $this->get_updater()->is_network_activated() ? network_admin_url( 'settings.php?page=meta-box-updater' ) : admin_url( 'admin.php?page=meta-box-updater' );
 
 		$status   = $this->get_updater()->get_license_status();
@@ -217,59 +207,108 @@ class Settings {
 		];
 
 		?>
-		<div class="wrap">
-			<header class="mbaio-header">
-				<div class="mbaio-container">
-					<a class="mbaio-title" target="_blank" href="https://elu.to/aiosm"><?php include dirname( __DIR__ ) . '/assets/meta-box.svg'; ?></a>
-					<nav>
-						<a target="_blank" href="https://elu.to/aiosd"><?php esc_html_e( 'Documentation', 'meta-box-aio' ); ?></a>
-						<a target="_blank" href="https://elu.to/aioss"><?php esc_html_e( 'Support Forum', 'meta-box-aio' ); ?></a>
-						<a target="_blank" href="https://elu.to/aiosa"><?php esc_html_e( 'My Account', 'meta-box-aio' ); ?></a>
-					</nav>
-				</div>
-			</header>
-
-			<div class="mbaio-container"><h1 class="screen-reader-text">Meta Box</h1></div><!-- For displaying admin notices -->
-
-			<form action="" method="post" class="mbaio-container">
-				<div id="poststuff">
-					<div class="mbaio-license-warning">
-						<h2>
-							<span class="dashicons dashicons-warning"></span>
-							<?php esc_html_e( 'License Warning', 'meta-box-aio' ) ?>
-						</h2>
-						<?php echo wp_kses_post( sprintf( $messages[ $status ], $settings_page, 'https://elu.to/aiosa' ) ); ?>
+		<div class="wrap mbaio-extensions">
+			<?php $this->get_header(); ?>
+			<div class="mb-body">
+				<div class="mb-body__inner">
+					<div class="mb-main">
+						<div class="mb-box">
+							<div class="mbaio-license-warning">
+								<h2>
+									<span class="dashicons dashicons-warning"></span>
+									<?php esc_html_e( 'License Warning', 'meta-box-aio' ) ?>
+								</h2>
+								<?php echo wp_kses_post( sprintf( $messages[ $status ], $settings_page, 'https://elu.to/aiosa' ) ); ?>
+							</div>
+						</div>
 					</div>
 				</div>
-			</form>
+			</div>
 		</div>
 		<?php
 	}
 
+	private function get_header(): void {
+		?>
+		<header class="mb-header mb-flex mb-dashboard">
+			<div class="mb-header__left">
+				<?php include META_BOX_AIO_DIR . '/assets/logo.svg'; ?>
+				<h1><?php esc_html_e( 'Extensions', 'meta-box-aio' ); ?></h1>
+			</div>
 
-	public function save() {
-		if ( ! isset( $_POST['submit'] ) || empty( $_POST['meta_box_aio'] ) ) {
-			return;
+			<div class="mb-dashboard__header__icons">
+				<div class="mb-dashboard__header__social">
+					<a href="https://www.facebook.com/groups/metaboxusers" target="_blank">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-label="Facebook">
+							<path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"></path>
+						</svg>
+					</a>
+					<a href="https://www.youtube.com/c/MetaBoxWP" target="_blank">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-label="Youtube">
+							<path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path>
+						</svg>
+					</a>
+					<a href="https://x.com/wpmetabox" target="_blank">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-label="X">
+							<path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"></path>
+						</svg>
+					</a>
+					<a href="https://www.linkedin.com/company/meta-box/" target="_blank">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-label="LinkedIn">
+							<circle cx="4.983" cy="5.009" r="2.188"></circle>
+							<path d="M9.237 8.855v12.139h3.769v-6.003c0-1.584.298-3.118 2.262-3.118 1.937 0 1.961 1.811 1.961 3.218v5.904H21v-6.657c0-3.27-.704-5.783-4.526-5.783-1.835 0-3.065 1.007-3.568 1.96h-.051v-1.66H9.237zm-6.142 0H6.87v12.139H3.095z"></path>
+						</svg>
+					</a>
+				</div>
+				<div class="mb-dashboard__header__links">
+					<a href="https://docs.metabox.io" target="_blank" class="mb-dashboard__tooltip" data-tooltip="<?php esc_attr_e( 'Documentation', 'meta-box-aio' ); ?>">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+						</svg>
+					</a>
+					<a href="#" class="mb-dashboard__tooltip" data-tooltip="<?php esc_attr_e( 'My Account', 'meta-box-aio' ); ?>" data-position="bottom-right">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+							<circle class="cls-1" cx="12" cy="7.25" r="5.73"/><path class="cls-1" d="M1.5,23.48l.37-2.05A10.3,10.3,0,0,1,12,13h0a10.3,10.3,0,0,1,10.13,8.45l.37,2.05"/>
+						</svg>
+					</a>
+				</div>
+			</div>
+		</header>
+		<?php
+	}
+
+	public function ajax_toggle_extension(): void {
+		check_ajax_referer( 'mbaio_nonce' );
+
+		if ( empty( $_POST['slug'] ) ) {
+			wp_send_json_error( __( 'An error has occurred.', 'meta-box-aio' ) );
 		}
-		$data = $_POST['meta_box_aio'];
-		update_option( 'meta_box_aio', $data );
 
-		add_settings_error( null, 'meta-box-aio', __( 'Settings saved.', 'meta-box-aio' ), 'updated' );
-		add_action( 'admin_notices', 'settings_errors' );
+		$slug   = sanitize_text_field( wp_unslash( $_POST['slug'] ?? '' ) );
+		$active = intval( $_POST['active'] ?? 0 );
+
+		$option = get_option( $this->option_name, [] );
+		$exts   = $option['extensions'] ?? [];
+
+		if ( ! $active ) {
+			$exts = array_diff( $exts, [ $slug ] );
+		} elseif ( ! in_array( $slug, $exts, true ) ) {
+			$exts[] = $slug;
+		}
+
+		$option['extensions'] = array_values( $exts );
+		update_option( $this->option_name, $option );
+
+		wp_send_json_success( [ 'message' => __( 'Extension updated', 'meta-box-aio' ) ] );
 	}
 
-	public function enqueue() {
-		wp_enqueue_style( 'meta-box-aio', plugin_dir_url( __DIR__ ) . 'assets/aio.css', [], '1.23.0' );
-		wp_register_script( 'tippy', 'https://cdn.jsdelivr.net/combine/npm/@popperjs/core@2.11.2/dist/umd/popper.min.js,npm/tippy.js@6.3.7/dist/tippy-bundle.umd.min.js', [], '6.3.7', true );
-		wp_enqueue_script( 'meta-box-aio', plugin_dir_url( __DIR__ ) . 'assets/aio.js', [ 'tippy' ], '1.23.0', true );
-	}
-
-	private function get_extensions() {
+	private function get_extensions(): array {
 		$extensions = [
 			[
-				'slug'  => 'mb-acf-migration',
-				'title' => 'MB ACF Migration',
-				'desc'  => __( 'Migrate field groups and custom fields from Advanced Custom Fields to Meta Box', 'meta-box-aio' ),
+				'slug'   => 'mb-acf-migration',
+				'title'  => 'MB ACF Migration',
+				'desc'   => __( 'Migrate field groups and custom fields from Advanced Custom Fields to Meta Box', 'meta-box-aio' ),
+				'plugin' => 'Advanced Custom Fields',
 			],
 			[
 				'slug'  => 'mb-admin-columns',
@@ -299,10 +338,11 @@ class Settings {
 				'desc'  => __( 'Save custom fields data to custom table instead of the default meta tables. Reduce database size and increase performance.', 'meta-box-aio' ),
 			],
 			[
-				'slug'  => 'mb-divi-integrator',
-				'title' => 'MB Divi Integrator',
-				'docs'  => false,
-				'desc'  => __( 'Connect and display custom fields created by the Meta Box plugin in the Divi.', 'meta-box-aio' ),
+				'slug'   => 'mb-divi-integrator',
+				'title'  => 'MB Divi Integrator',
+				'docs'   => false,
+				'desc'   => __( 'Connect and display custom fields created by the Meta Box plugin in the Divi.', 'meta-box-aio' ),
+				'plugin' => 'Divi',
 			],
 			[
 				'slug'  => 'mb-frontend-submission',
@@ -310,9 +350,10 @@ class Settings {
 				'desc'  => __( 'Create editorial forms so users can submit blog posts on the front end.', 'meta-box-aio' ),
 			],
 			[
-				'slug'  => 'mb-rank-math',
-				'title' => 'MB Rank Math',
-				'desc'  => __( 'Add content of custom fields to Rank Math Content Analysis to have better/correct SEO score.', 'meta-box-aio' ),
+				'slug'   => 'mb-rank-math',
+				'title'  => 'MB Rank Math',
+				'desc'   => __( 'Add content of custom fields to Rank Math Content Analysis to have better/correct SEO score.', 'meta-box-aio' ),
+				'plugin' => 'Rank Math',
 			],
 			[
 				'slug'  => 'mb-relationships',
@@ -340,9 +381,10 @@ class Settings {
 				'desc'  => __( 'Easily add custom fields to categories, tags or any custom taxonomy.', 'meta-box-aio' ),
 			],
 			[
-				'slug'  => 'mb-toolset-migration',
-				'title' => 'MB Toolset Migration',
-				'desc'  => __( 'Migrate post types, field groups, custom fields and relationships from Toolset to Meta Box', 'meta-box-aio' ),
+				'slug'   => 'mb-toolset-migration',
+				'title'  => 'MB Toolset Migration',
+				'desc'   => __( 'Migrate post types, field groups, custom fields and relationships from Toolset to Meta Box', 'meta-box-aio' ),
+				'plugin' => 'Toolset',
 			],
 			[
 				'slug'  => 'mb-user-meta',
@@ -360,12 +402,11 @@ class Settings {
 				'desc'  => __( 'Build front-end templates for WordPress without touching theme files. Support Twig and all field types.', 'meta-box-aio' ),
 			],
 			[
-				'slug'    => 'meta-box-beaver-themer-integrator',
-				'title'   => 'MB Beaver Builder Integration',
-				'docs'    => false,
-				'desc'    => __( 'Select and show custom fields created by the Meta Box plugin in the Beaver Themer field connection.', 'meta-box-aio' ),
-				'require' => 'bb-theme-builder/bb-theme-builder.php',
-				'plugin'  => 'Beaver Themer',
+				'slug'   => 'meta-box-beaver-themer-integrator',
+				'title'  => 'MB Beaver Builder Integration',
+				'docs'   => false,
+				'desc'   => __( 'Select and show custom fields created by the Meta Box plugin in the Beaver Themer field connection.', 'meta-box-aio' ),
+				'plugin' => 'Beaver Themer',
 			],
 			[
 				'slug'  => 'meta-box-builder',
@@ -383,20 +424,18 @@ class Settings {
 				'desc'  => __( 'Control when and where meta boxes, fields and HTML elements appear.', 'meta-box-aio' ),
 			],
 			[
-				'slug'    => 'mb-elementor-integrator',
-				'title'   => 'MB Elementor Integration',
-				'docs'    => false,
-				'desc'    => __( 'Connect and display custom fields created by the Meta Box plugin in the Elementor\'s dynamic tags.', 'meta-box-aio' ),
-				'require' => 'elementor-pro/elementor-pro.php',
-				'plugin'  => 'Elementor Pro',
+				'slug'   => 'mb-elementor-integrator',
+				'title'  => 'MB Elementor Integration',
+				'docs'   => false,
+				'desc'   => __( 'Connect and display custom fields created by the Meta Box plugin in the Elementor\'s dynamic tags.', 'meta-box-aio' ),
+				'plugin' => 'Elementor Pro',
 			],
 			[
-				'slug'    => 'meta-box-facetwp-integrator',
-				'title'   => 'MB FacetWP Integration',
-				'docs'    => false,
-				'desc'    => __( 'Integrates Meta Box and FacetWP, makes custom fields searchable and filterable in the frontend.', 'meta-box-aio' ),
-				'require' => 'facetwp/index.php',
-				'plugin'  => 'FacetWP',
+				'slug'   => 'meta-box-facetwp-integrator',
+				'title'  => 'MB FacetWP Integration',
+				'docs'   => false,
+				'desc'   => __( 'Integrates Meta Box and FacetWP, makes custom fields searchable and filterable in the frontend.', 'meta-box-aio' ),
+				'plugin' => 'FacetWP',
 			],
 			[
 				'slug'  => 'meta-box-geolocation',
@@ -440,13 +479,12 @@ class Settings {
 				'desc'  => __( 'Display help information for fields using beautiful tooltips.', 'meta-box-aio' ),
 			],
 			[
-				'slug'    => 'meta-box-yoast-seo',
-				'title'   => 'MB Yoast SEO Integration',
-				'docs'    => false,
-				'forum'   => 'https://metabox.io/support/forum/meta-box-for-yoast-seo/',
-				'desc'    => __( 'Add content of custom fields to Yoast SEO Content Analysis to have better/correct SEO score.', 'meta-box-aio' ),
-				'require' => 'wordpress-seo/wp-seo.php',
-				'plugin'  => 'Yoast SEO',
+				'slug'   => 'meta-box-yoast-seo',
+				'title'  => 'MB Yoast SEO Integration',
+				'docs'   => false,
+				'forum'  => 'https://metabox.io/support/forum/meta-box-for-yoast-seo/',
+				'desc'   => __( 'Add content of custom fields to Yoast SEO Content Analysis to have better/correct SEO score.', 'meta-box-aio' ),
+				'plugin' => 'Yoast SEO',
 			],
 		];
 
@@ -456,14 +494,14 @@ class Settings {
 
 		$extensions = array_filter(
 			$extensions, function ( $extension ) use ( $slugs ) {
-				return in_array( $extension['slug'], $slugs );
+				return in_array( $extension['slug'], $slugs, true );
 			}
 		);
 
 		return $extensions;
 	}
 
-	private function tooltip( $content, $icon = 'info' ) {
+	private function tooltip( $content, $icon = 'info' ): void {
 		if ( 'info' === $icon ) {
 			echo '<button type="button" class="mbaio-tooltip" data-tippy-content="' . esc_attr( $content ) . '"><span class="dashicons dashicons-editor-help"></span></button>';
 			return;

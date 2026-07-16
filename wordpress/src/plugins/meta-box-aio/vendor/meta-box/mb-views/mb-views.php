@@ -1,14 +1,16 @@
 <?php
 /**
- * Plugin Name: MB Views
- * Plugin URI:  https://metabox.io/plugins/mb-views/
- * Description: Create views for Meta Box fields and content.
- * Version:     1.13.3
- * Author:      MetaBox.io
- * Author URI:  https://metabox.io
- * License:     GPL2+
- * Text Domain: mb-views
- * Domain Path: /languages/
+ * Plugin Name:       MB Views
+ * Plugin URI:        https://metabox.io/plugins/mb-views/
+ * Description:       Create views for Meta Box fields and content.
+ * Version:           1.15.1
+ * Requires at least: 6.2
+ * Requires PHP:      7.4
+ * Author:            MetaBox.io
+ * Author URI:        https://metabox.io
+ * License:           GPL2+
+ * Text Domain:       mb-views
+ * Domain Path:       /languages/
  *
  * Copyright (C) 2010-2025 Tran Ngoc Tuan Anh. All rights reserved.
  *
@@ -41,12 +43,6 @@ if ( ! function_exists( 'mb_views_load' ) ) {
 	add_action( 'init', 'mb_views_load', 5 );
 
 	function mb_views_load() {
-		if ( version_compare( phpversion(), '7.2.5', '<' ) ) {
-			add_action( 'admin_notices', function () {
-				echo '<div class="notice notice-error is-dismissible"><p>', esc_html__( 'MB Views requires PHP version 7.2.5+. Please contact your host and ask them to upgrade.', 'mb-views' ), '</p></div>';
-			} );
-			return;
-		}
 		if ( ! defined( 'RWMB_VER' ) ) {
 			return;
 		}

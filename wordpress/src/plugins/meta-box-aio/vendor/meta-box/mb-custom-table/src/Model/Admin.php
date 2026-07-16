@@ -1,6 +1,8 @@
 <?php
 namespace MetaBox\CustomTable\Model;
 
+use MetaBox\CustomTable\API;
+
 class Admin {
 	private $model;
 	public $list_table;
@@ -16,7 +18,7 @@ class Admin {
 		}
 	}
 
-	public function add_menu() {
+	public function add_menu(): void {
 		$action = $this->action();
 		$title  = $this->model->labels['all_items'];
 		if ( $action === 'add' ) {
@@ -52,11 +54,11 @@ class Admin {
 		add_action( "admin_print_styles-$page", [ $this, 'enqueue' ] );
 	}
 
-	public function add_body_class_hook() {
+	public function add_body_class_hook(): void {
 		add_filter( 'admin_body_class', [ $this, 'add_body_class' ] );
 	}
 
-	public function add_body_class( $body_classes ) {
+	public function add_body_class( string $body_classes ): string {
 		$action  = $this->action() ?: 'list';
 		$classes = [
 			"model-{$this->model->name}",
@@ -71,13 +73,13 @@ class Admin {
 		return $body_classes . ' ' . implode( ' ', $classes );
 	}
 
-	public function load_add_edit() {
+	public function load_add_edit(): void {
 		if ( ! $this->is_screen_edit() ) {
 			return;
 		}
 
 		add_meta_box(
-			'mbct-submit',
+			'submitdiv',
 			__( 'Submit', 'mb-custom-table' ),
 			[ $this, 'render_submit_box' ],
 			null, // Current page.
@@ -91,6 +93,7 @@ class Admin {
 		if ( empty( $_POST['submit'] ) ) {
 			return;
 		}
+
 		// Get the correct inserted ID when add new model.
 		$object_id = rwmb_request()->filter_get( 'model-id', FILTER_SANITIZE_NUMBER_INT );
 		$message   = 'updated';
@@ -107,21 +110,85 @@ class Admin {
 		wp_safe_redirect( $url );
 	}
 
-	public function render_submit_box() {
+	public function render_submit_box(): void {
 		$output = $this->template_submit_box();
 		echo apply_filters( 'mbct_submit_box', $output, $this->model );
 	}
 
-	public function template_submit_box() {
+	private function template_submit_box(): string {
 		$delete_url = wp_nonce_url( add_query_arg( 'model-action', 'delete' ), 'delete' );
+
+		// Get entry data for edit mode
+		$entry = [];
+		if ( $this->action() === 'edit' ) {
+			$object_id = rwmb_request()->filter_get( 'model-id', FILTER_SANITIZE_NUMBER_INT );
+			if ( $object_id ) {
+				$entry = API::get( $object_id, $this->model->table );
+			}
+		}
+
 		ob_start();
 		?>
-		<div class="mbct-submit">
+		<div id="submitpost" class="mbct-submit submitbox">
 			<?php do_action( 'mbct_before_submit_box', $this->model ); ?>
-			<?php if ( $this->action() === 'edit' ) : ?>
-				<a href="<?= esc_url( $delete_url ); ?>" id="mbct-delete"><?php esc_html_e( 'Delete', 'mb-custom-table' ) ?></a>
-			<?php endif ?>
-			<?php submit_button( __( 'Save', 'mb-custom-table' ), 'primary', 'submit', false ); ?>
+
+			<?php if ( $this->model->supports( 'author' ) ) : ?>
+				<div class="misc-pub-section mbct-author">
+					<label><?php esc_html_e( 'Author', 'mb-custom-table' ); ?></label>
+					<div class="mbct-info-value">
+						<?php
+						$current_author_id = 0;
+						if ( $entry && ! empty( $entry['author'] ) ) {
+							$current_author_id = $entry['author'];
+						} elseif ( $this->action() === 'add' ) {
+							$current_author_id = get_current_user_id();
+						}
+
+						wp_dropdown_users( [
+							'name'             => 'mbct_author',
+							'selected'         => $current_author_id,
+							'include_selected' => true,
+							'show'             => 'display_name_with_login',
+						] );
+						?>
+					</div>
+				</div>
+			<?php endif; ?>
+
+			<?php if ( $entry && $this->model->supports( 'published_date' ) && ! empty( $entry['published_date'] ) ) : ?>
+				<div class="misc-pub-section mbct-published-date">
+					<div>
+						<strong><?php esc_html_e( 'Published', 'mb-custom-table' ); ?></strong>
+						<div class="mbct-info-value">
+							<?php echo esc_html( mysql2date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $entry['published_date'] ) ); ?>
+						</div>
+					</div>
+				</div>
+			<?php endif; ?>
+
+			<?php if ( $entry && $this->model->supports( 'modified_date' ) && ! empty( $entry['modified_date'] ) ) : ?>
+				<div class="misc-pub-section mbct-modified-date">
+					<div>
+						<strong><?php esc_html_e( 'Last Modified', 'mb-custom-table' ); ?></strong>
+						<div class="mbct-info-value">
+							<?php echo esc_html( mysql2date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $entry['modified_date'] ) ); ?>
+						</div>
+					</div>
+				</div>
+			<?php endif; ?>
+
+			<div id="major-publishing-actions">
+				<?php if ( $this->action() === 'edit' ) : ?>
+					<div id="delete-action">
+						<a class="submitdelete deletion" href="<?= esc_url( $delete_url ); ?>" id="mbct-delete"><?php esc_html_e( 'Delete', 'mb-custom-table' ) ?></a>
+					</div>
+				<?php endif ?>
+				<div id="publishing-action">
+					<?php submit_button( __( 'Save', 'mb-custom-table' ), 'primary', 'submit', false ); ?>
+				</div>
+				<div class="clear"></div>
+			</div>
+
 			<?php do_action( 'mbct_after_submit_box', $this->model ); ?>
 		</div>
 		<?php

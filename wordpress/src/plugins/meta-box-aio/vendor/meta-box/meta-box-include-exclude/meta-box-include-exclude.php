@@ -3,10 +3,12 @@
  * Plugin Name: MB Include Exclude
  * Plugin URI:  https://metabox.io/plugins/meta-box-include-exclude/
  * Description: Advanced location rules for field groups.
- * Version:     1.1.1
+ * Version:     1.1.2
  * Author:      MetaBox.io
  * Author URI:  https://metabox.io
  * License:     GPL2+
+ * Text Domain: meta-box-include-exclude
+ * Domain Path: /languages/
  *
  * Copyright (C) 2010-2025 Tran Ngoc Tuan Anh. All rights reserved.
  *
@@ -27,4 +29,5 @@
 if ( defined( 'ABSPATH' ) && ! class_exists( 'MB_Include_Exclude' ) ) {
 	require __DIR__ . '/class-mb-include-exclude.php';
 	add_filter( 'rwmb_show', [ 'MB_Include_Exclude', 'check' ], 10, 2 );
+	load_plugin_textdomain( 'meta-box-include-exclude', false, plugin_basename( __DIR__ ) . '/languages/' );
 }

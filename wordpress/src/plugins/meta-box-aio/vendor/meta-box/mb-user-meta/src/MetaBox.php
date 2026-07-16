@@ -8,14 +8,14 @@ class MetaBox extends \RW_Meta_Box {
 
 	protected function object_hooks() {
 		// Add meta fields to edit user page.
-		add_action( 'show_user_profile', array( $this, 'show' ) );
-		add_action( 'edit_user_profile', array( $this, 'show' ) );
+		add_action( 'show_user_profile', [ $this, 'show' ] );
+		add_action( 'edit_user_profile', [ $this, 'show' ] );
 
 		// Save user meta.
-		add_action( 'profile_update', array( $this, 'save_post' ) );
-		add_action( 'user_register', array( $this, 'save_post' ) );
+		add_action( 'profile_update', [ $this, 'save_post' ] );
+		add_action( 'user_register', [ $this, 'save_post' ] );
 
-		add_action( "rwmb_before_{$this->meta_box['id']}", array( $this, 'show_heading' ) );
+		add_action( "rwmb_before_{$this->meta_box['id']}", [ $this, 'show_heading' ] );
 	}
 
 	public function show_heading() {
@@ -36,7 +36,7 @@ class MetaBox extends \RW_Meta_Box {
 			return false;
 		}
 		$screen = get_current_screen();
-		return in_array( $screen->id, ['profile', 'user-edit', 'profile-network', 'user-edit-network'], true );
+		return in_array( $screen->id, [ 'profile', 'user-edit', 'profile-network', 'user-edit-network' ], true );
 	}
 
 	public function get_current_object_id() {
@@ -44,10 +44,10 @@ class MetaBox extends \RW_Meta_Box {
 			return false;
 		}
 		$screen = get_current_screen();
-		if ( in_array( $screen->id, ['profile', 'profile-network'], true ) ) {
+		if ( in_array( $screen->id, [ 'profile', 'profile-network' ], true ) ) {
 			return get_current_user_id();
 		}
-		if ( in_array( $screen->id, ['user-edit', 'user-edit-network'], true ) ) {
+		if ( in_array( $screen->id, [ 'user-edit', 'user-edit-network' ], true ) ) {
 			return isset( $_REQUEST['user_id'] ) ? absint( $_REQUEST['user_id'] ) : false;  // phpcs:ignore WordPress.Security.NonceVerification
 		}
 		return false;

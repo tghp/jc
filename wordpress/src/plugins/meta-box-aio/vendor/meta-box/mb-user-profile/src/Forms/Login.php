@@ -28,12 +28,14 @@ class Login extends Base {
 			'label_title'         => '',
 			'label_username'      => __( 'Username or Email Address', 'mb-user-profile' ),
 			'label_password'      => __( 'Password', 'mb-user-profile' ),
+			'label_password2'     => __( 'Confirm Password', 'mb-user-profile' ),
 			'label_remember'      => __( 'Remember Me', 'mb-user-profile' ),
 			'label_lost_password' => __( 'Lost Password?', 'mb-user-profile' ),
 			'label_submit'        => __( 'Log In', 'mb-user-profile' ),
 
 			'id_username'         => 'user_login',
 			'id_password'         => 'user_pass',
+			'id_password2'        => 'user_pass2',
 			'id_remember'         => 'remember',
 			'id_submit'           => 'submit',
 
@@ -49,6 +51,12 @@ class Login extends Base {
 	}
 
 	protected function has_privilege() : bool {
+		// Always render the form to preview in the editor.
+		$is_preview = defined( 'REST_REQUEST' ) && REST_REQUEST;
+		if ( $is_preview ) {
+			return true;
+		}
+
 		if ( is_user_logged_in() && ! $this->is_processed() ) {
 			esc_html_e( 'You are already logged in.', 'mb-user-profile' );
 			return false;
@@ -57,6 +65,9 @@ class Login extends Base {
 	}
 
 	public function process() {
+		// Check reCAPTCHA verification first
+		$this->check_recaptcha();
+		
 		if ( isset( $_GET['rwmb-lost-password'] ) ) {
 			return $this->retrieve_password();
 		}

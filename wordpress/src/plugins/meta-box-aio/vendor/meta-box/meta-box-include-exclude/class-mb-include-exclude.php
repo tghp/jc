@@ -175,8 +175,8 @@ class MB_Include_Exclude {
 	 */
 	protected static function check_post_terms( $taxonomy, $terms ) {
 		$terms = RWMB_Helpers_Array::from_csv( $terms );
-
 		$post_terms = wp_get_post_terms( self::$post_id, $taxonomy );
+
 		if ( is_wp_error( $post_terms ) || ! is_array( $post_terms ) || empty( $post_terms ) ) {
 			return false;
 		}
@@ -236,11 +236,11 @@ class MB_Include_Exclude {
 	}
 
 	/**
-	* Check if current user has one of specified capabilities.
-	*
-	* @param array|string $capabilities List of user capabilities. Array or CSV.
-	* @return bool
-	*/
+	 * Check if current user has one of specified capabilities.
+	 *
+	 * @param array|string $capabilities List of user capabilities. Array or CSV.
+	 * @return bool
+	 */
 	protected static function check_capability( $capabilities ) {
 		$user = wp_get_current_user();
 		$capabilities = array_map( 'strtolower', RWMB_Helpers_Array::from_csv( $capabilities ) );
@@ -382,12 +382,13 @@ class MB_Include_Exclude {
 	/**
 	 * Get current term ID.
 	 */
-	protected static function get_current_term_id() : int {
+	protected static function get_current_term_id(): int {
 		if ( ! is_admin() ) {
 			return 0;
 		}
-		if ( isset( $GLOBALS['pagenow'] ) && 'term.php' === $GLOBALS['pagenow'] && isset( $_GET['tag_ID'] ) ) {
-			return absint( $_GET['tag_ID'] );
+
+		if ( isset( $GLOBALS['pagenow'] ) && in_array( $GLOBALS['pagenow'], [ 'term.php', 'edit-tags.php', true ] ) ) {
+			return absint( $_GET['tag_ID'] ?? $_POST['tag_ID'] ?? 0 );
 		}
 
 		return 0;

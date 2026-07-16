@@ -131,7 +131,7 @@ class FieldGroup {
 			);
 		}
 
-		if ( 'group' === $field['type'] ) {
+		if ( ! empty( $field['fields'] ) && is_array( $field['fields'] ) ) {
 			$this->register_fields_strings( $field['fields'], $package, $id );
 		}
 	}
@@ -200,7 +200,7 @@ class FieldGroup {
 			}
 		}
 
-		if ( 'group' === $field['type'] ) {
+		if ( ! empty( $field['fields'] ) && is_array( $field['fields'] ) ) {
 			$this->use_fields_translations( $field['fields'], $package, $id );
 		}
 	}
@@ -215,7 +215,7 @@ class FieldGroup {
 	private function get_package( object $post ): array {
 		return [
 			'kind'  => 'Meta Box: Field Group',
-			'name'  => $post->post_name,
+			'name'  => urldecode( $post->post_name ),
 			'title' => $post->post_title,
 		];
 	}

@@ -2,7 +2,6 @@
 namespace MBBlocks;
 
 use MBBlocks\Utils\Resolver;
-use RWMB_Field;
 
 class Block extends \RW_Meta_Box {
 	public $storage;
@@ -45,9 +44,23 @@ class Block extends \RW_Meta_Box {
 		$this->register_block_type();
 
 		add_action( 'wp_ajax_mb_blocks_save', [ $this, 'save_block' ] );
+		add_action( 'enqueue_block_assets', [ $this, 'enqueue_block_assets' ] );
+
+		// Enqueue Font Awesome for admin pages
+		add_action( 'rwmb_enqueue_scripts', [ $this, 'enqueue_fontawesome' ] );
+
+		/**
+		 * For `block_editor` field, which can be used anywhere and not in iframed content
+		 * - Run enqueue_assets callback to make sure block assets are available in WordPress admin
+		 * - Enqueue FontAwesome for block icons
+		 *
+		 * @see meta-box/inc/fields/block-editor.php file for the hook
+		 */
+		add_action( 'rwmb_enqueue_block_editor_assets', [ $this, 'enqueue_block_assets' ] );
+		add_action( 'rwmb_enqueue_block_editor_assets', [ $this, 'enqueue_fontawesome' ] );
 	}
 
-	public function save_block() {
+	public function save_block(): void {
 		$request = rwmb_request();
 
 		if ( "meta-box/$this->id" !== $request->post( 'block' ) ) {
@@ -78,7 +91,7 @@ class Block extends \RW_Meta_Box {
 		wp_send_json_success( $data );
 	}
 
-	private function register_block_type() {
+	private function register_block_type(): void {
 		// If the block is already registered, don't register it again.
 		// Blocks register via block.json file are already registered.
 		if ( mb_is_block_exists( "meta-box/{$this->id}" ) ) {
@@ -95,46 +108,54 @@ class Block extends \RW_Meta_Box {
 			'context',
 			'attributes',
 			'description',
+			'example',
 		];
 
 		$metadata = array_intersect_key( $this->meta_box, array_flip( $block_keys ) );
 
 		$default_attributes = [
-			'id'   => [
+			'id'     => [
 				'type'    => 'string',
 				'default' => $this->id,
 			],
-			'name' => [
+			'name'   => [
 				'type'    => 'string',
 				'default' => $this->id,
 			],
-			'data' => [
+			'data'   => [
 				'type'    => 'object',
 				'default' => $this->example['attributes']['data'] ?? [],
+			],
+			'anchor' => [
+				'type'    => 'string',
+				'default' => '',
 			],
 		];
 
 		$metadata = array_merge( $metadata, [
-			// Don't use version 3 because it makes the editor content in iframe
-			// which is impossible to enqueue Meta Box and fields' assets and add proper hooks (like footer templates image_advanced)
-			'api_version'           => 2,
-			'editor_script_handles' => ['mb-blocks'],
-			'editor_style_handles'  => ['mb-blocks'],
+			'api_version'           => 3,
+			'editor_script_handles' => [ 'mb-blocks' ],
+			'editor_style_handles'  => [ 'mb-blocks' ],
 			'render_callback'       => [ $this, 'render' ],
 			'attributes'            => ! empty( $this->attributes ) ? $this->attributes : $default_attributes,
 		] );
 
+		$this->register_block_assets( $metadata );
+
 		register_block_type( "meta-box/{$this->id}", $metadata );
 	}
 
-	public function enqueue() {
-		parent::enqueue();
+	private function register_block_assets( array &$metadata ): void {
+		$handle = "meta-box/{$this->id}";
 
-		if ( is_admin() && ! $this->is_edit_screen() ) {
-			return;
+		if ( $this->enqueue_style ) {
+			wp_register_style( $handle, $this->enqueue_style, [], $this->version );
+			$metadata['style_handles'] = [ $handle ];
 		}
-
-		$this->enqueue_block_assets();
+		if ( $this->enqueue_script ) {
+			wp_register_script( $handle, $this->enqueue_script, [ 'jquery' ], $this->version, true );
+			$metadata['script_handles'] = [ $handle ];
+		}
 	}
 
 	public function render( $attributes = [], $content = '', $block = null ) {
@@ -160,8 +181,6 @@ class Block extends \RW_Meta_Box {
 	}
 
 	public function render_block( $attributes = [], $content = null, $block = null, $is_preview = false, $post_id = null ) {
-		$this->enqueue_block_assets();
-
 		if ( is_string( $this->render_callback ) && str_starts_with( $this->render_callback, 'view:' ) ) {
 			$renderer  = apply_filters( 'mbb_block_renderer', null );
 			$view_name = str_replace( 'view:', '', $this->render_callback );
@@ -196,24 +215,13 @@ class Block extends \RW_Meta_Box {
 		}
 	}
 
-	private function enqueue_block_assets(): void {
-		$handle = "meta-box/$this->id";
-
-		if ( $this->enqueue_style ) {
-			wp_enqueue_style( $handle, $this->enqueue_style, [], $this->version );
-		}
-
-		if ( $this->enqueue_script ) {
-			wp_enqueue_script( $handle, $this->enqueue_script, [ 'jquery' ], $this->version, true );
-		}
-
+	public function enqueue_block_assets(): void {
 		if ( $this->enqueue_assets && is_callable( $this->enqueue_assets ) ) {
 			call_user_func( $this->enqueue_assets );
 		}
+	}
 
-		if ( ! is_admin() ) {
-			return;
-		}
+	public function enqueue_fontawesome(): void {
 		$use_fontawesome = false;
 		if ( is_string( $this->icon ) && str_contains( $this->icon, 'fa-' ) ) {
 			$use_fontawesome = true;

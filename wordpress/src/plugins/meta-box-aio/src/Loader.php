@@ -9,9 +9,6 @@ class Loader {
 	}
 
 	public function load_extensions( $extensions = [] ): void {
-		// Only load autoloader for plugins here.
-		require META_BOX_AIO_DIR . '/vendor/autoload.php';
-
 		$extensions = empty( $extensions ) ? $this->get_enabled_extensions() : $extensions;
 		$files      = array_map( [ $this, 'get_extension_file' ], $extensions );
 		$files      = array_filter( $files );

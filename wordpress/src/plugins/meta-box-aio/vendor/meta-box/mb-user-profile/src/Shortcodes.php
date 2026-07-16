@@ -27,8 +27,6 @@ class Shortcodes {
 		}
 
 		wp_enqueue_style( 'mbup', MBUP_URL . 'assets/user-profile.css', [], MBUP_VER );
-		wp_enqueue_style( 'rwmb-password', MBUP_URL . 'assets/password.css', [], MBUP_VER );
-		wp_enqueue_script( 'rwmb-password', MBUP_URL . 'assets/password.js', [ 'jquery' ], MBUP_VER, true );
 
 		$form = Factory::make( $atts, $type );
 		ob_start();

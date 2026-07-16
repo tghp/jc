@@ -26,11 +26,9 @@ class Data {
 		register_rest_route( 'mbv', 'views', array_merge( $params, [
 			'callback' => [ $this, 'get_views' ],
 		] ) );
-		if ( class_exists( 'MB_Relationships_API' ) ) {
-			register_rest_route( 'mbv', 'relationships', array_merge( $params, [
-				'callback' => [ $this, 'get_relationships' ],
-			] ) );
-		}
+		register_rest_route( 'mbv', 'relationships', array_merge( $params, [
+			'callback' => [ $this, 'get_relationships' ],
+		] ) );
 	}
 
 	public function get_meta_boxes( WP_REST_Request $request ) {
@@ -56,11 +54,11 @@ class Data {
 		return $query->posts;
 	}
 
-	public function get_relationships() {
-		return \MB_Relationships_API::get_all_relationships_settings();
+	public function get_relationships(): array {
+		return class_exists( 'MB_Relationships_API' ) ? \MB_Relationships_API::get_all_relationships_settings() : [];
 	}
 
-	public function has_permission() {
+	public function has_permission(): bool {
 		return current_user_can( 'manage_options' );
 	}
 }

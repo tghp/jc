@@ -26,8 +26,6 @@ return array(
     'MBDI\\' => array($vendorDir . '/meta-box/mb-divi-integrator/src'),
     'MBCPT\\' => array($vendorDir . '/meta-box/mb-custom-post-type/src'),
     'MBBlocks\\' => array($vendorDir . '/meta-box/mb-blocks/src'),
-    'MBB\\SettingsPage\\' => array($vendorDir . '/meta-box/meta-box-builder/modules/settings-page/src'),
-    'MBB\\Relationships\\' => array($vendorDir . '/meta-box/meta-box-builder/modules/relationships/src'),
     'MBB\\' => array($vendorDir . '/meta-box/meta-box-builder/src'),
     'MBBTI\\' => array($vendorDir . '/meta-box/meta-box-beaver-themer-integrator/src'),
     'MBBParser\\' => array($vendorDir . '/wpmetabox/mbb-parser/src'),

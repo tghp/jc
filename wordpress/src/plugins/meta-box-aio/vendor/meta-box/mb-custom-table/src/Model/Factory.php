@@ -8,7 +8,9 @@ class Factory {
 		$model = new Model( $name, $args );
 		self::add( $name, $model );
 
-		$admin = new Admin( $model );
+		new Admin( $model );
+		new SupportData( $model );
+		new TableSchema( $model );
 
 		return $model;
 	}

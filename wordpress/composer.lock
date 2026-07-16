@@ -2537,12 +2537,12 @@
             }
         },
         {
-            "name": "tghp/metabox-aio",
-            "version": "2.2.0",
+            "name": "tghp/meta-box-aio",
+            "version": "3.7.0",
             "dist": {
                 "type": "path",
                 "url": "./src/plugins/meta-box-aio",
-                "reference": "414cd49c8d4a6da91d11fc385f852b2591e46a36"
+                "reference": "43e7bde7ff2249648d486cec81e4e2dd01ebe335"
             },
             "type": "wordpress-plugin",
             "transport-options": {
@@ -2919,5 +2919,5 @@
     "prefer-lowest": false,
     "platform": {},
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }

@@ -38,5 +38,7 @@ if ( ! function_exists( 'mb_term_meta_load' ) ) {
 		}
 
 		new MBTM\Loader;
+
+		load_plugin_textdomain( 'mb-term-meta', false, plugin_basename( __DIR__ ) . '/languages/' );
 	}
 }

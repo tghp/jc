@@ -3,7 +3,7 @@
  * Plugin Name: Meta Box AIO
  * Plugin URI:  https://metabox.io/pricing/
  * Description: All Meta Box extensions in one package.
- * Version:     2.2.0
+ * Version:     3.7.0
  * Author:      MetaBox.io
  * Author URI:  https://metabox.io
  * License:     GPL2+
@@ -30,7 +30,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	return;
 }
 
+// Use 'plugins_loaded' hook to make sure it runs "after" individual extensions are loaded.
+// So individual extensions can take a higher priority.
+add_action( 'plugins_loaded', function (): void {
+	require __DIR__ . '/vendor/autoload.php';
+} );
+
 define( 'META_BOX_AIO_DIR', __DIR__ );
+define( 'META_BOX_AIO_URL', plugin_dir_url( __FILE__ ) );
 
 require __DIR__ . '/src/Loader.php';
 require __DIR__ . '/src/Settings.php';
@@ -39,8 +46,14 @@ require __DIR__ . '/vendor/meta-box/dependency/Plugins.php';
 new MBAIO\Loader;
 new MBAIO\Settings;
 
+if ( is_admin() ) {
+	require __DIR__ . '/src/Tools.php';
+	new MBAIO\Tools;
+}
+
 // Load translations
 add_action( 'init', function (): void {
+	load_plugin_textdomain( 'meta-box-aio', false, basename( __DIR__ ) . '/languages/meta-box-aio' );
 	load_plugin_textdomain( 'meta-box', false, basename( __DIR__ ) . '/languages/meta-box' );
 	load_plugin_textdomain( 'mb-custom-post-type', false, basename( __DIR__ ) . '/languages/mb-custom-post-type' );
 } );

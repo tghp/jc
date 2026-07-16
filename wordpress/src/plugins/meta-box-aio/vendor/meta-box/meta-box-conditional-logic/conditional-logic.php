@@ -1,6 +1,6 @@
 <?php
 class MB_Conditional_Logic {
-	private $has_conditions = false;
+	private $has_conditions     = false;
 	private $outside_conditions = null;
 
 	public function setup(): void {
@@ -74,7 +74,7 @@ class MB_Conditional_Logic {
 
 	public function enqueue() {
 		list( , $url ) = RWMB_Loader::get_path( __DIR__ );
-		wp_enqueue_script( 'mb-conditional-logic', $url . 'conditional-logic.js', ['underscore', 'rwmb'], filemtime( __DIR__ . '/conditional-logic.js' ), true );
+		wp_enqueue_script( 'mb-conditional-logic', $url . 'conditional-logic.js', [ 'underscore', 'rwmb' ], filemtime( __DIR__ . '/conditional-logic.js' ), true );
 		\RWMB_Helpers_Field::localize_script_once( 'mb-conditional-logic', 'conditions', $this->get_outside_conditions() );
 	}
 
@@ -102,7 +102,7 @@ class MB_Conditional_Logic {
 	}
 
 	private function parse_condition( array $condition ): array {
-		$relation = isset( $condition['relation'] ) && in_array( $condition['relation'], ['and', 'or'] ) ? $condition['relation'] : 'and';
+		$relation = isset( $condition['relation'] ) && in_array( $condition['relation'], [ 'and', 'or' ] ) ? $condition['relation'] : 'and';
 
 		$condition_to_normalize = $condition;
 		if ( isset( $condition['when'] ) && is_array( $condition['when'] ) ) {

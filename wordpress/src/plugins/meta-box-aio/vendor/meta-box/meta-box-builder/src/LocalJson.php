@@ -1,6 +1,8 @@
 <?php
 namespace MBB;
 
+use MBB\RestApi\Save;
+
 class LocalJson {
 	public function __construct() {
 		add_action( 'mbb_after_save', [ $this, 'generate_local_json' ], 10, 3 );
@@ -20,23 +22,17 @@ class LocalJson {
 	}
 
 	/**
-	 * Get data from a .json file
-	 *
-	 * @param string $file_path
-	 * @return array[ $data, $error ]
+	 * Get decoded JSON as an associative array from a .json file
 	 */
 	public static function read_file( string $file_path ): array {
-		if ( ! file_exists( $file_path ) ) {
-			return [ null, new \WP_Error( 'file_not_found', __( 'File not found!', 'meta-box-builder' ) ) ];
+		if ( ! file_exists( $file_path ) || ! is_readable( $file_path ) ) {
+			return [];
 		}
 
-		if ( ! is_readable( $file_path ) ) {
-			return [ null, new \WP_Error( 'file_not_readable', __( 'File not readable!', 'meta-box-builder' ) ) ];
-		}
+		$content = file_get_contents( $file_path );
+		$json    = json_decode( $content, true );
 
-		$data = file_get_contents( $file_path );
-
-		return [ $data, null ];
+		return is_array( $json ) ? $json : [];
 	}
 
 	public static function write_file( string $file_path, array $data ) {
@@ -136,6 +132,7 @@ class LocalJson {
 			'post_status'  => $data['post_status'],
 			'post_content' => $data['post_content'],
 		] );
+		$post_array = Save::fix_post_date( $post_array );
 
 		$post_id = wp_insert_post( $post_array );
 
@@ -164,19 +161,14 @@ class LocalJson {
 			return false;
 		}
 
+		$post = null;
 		if ( isset( $args['post_id'] ) ) {
 			$post = get_post( $args['post_id'] );
 		} elseif ( isset( $args['post_name'] ) ) {
 			$post = get_page_by_path( $args['post_name'], OBJECT, 'meta-box' );
-		} else {
-			return false;
 		}
 
-		if ( ! $post ) {
-			return false;
-		}
-
-		if ( $post->post_type !== 'meta-box' || $post->post_status !== 'publish' ) {
+		if ( empty( $post ) || $post->post_type !== 'meta-box' || $post->post_status !== 'publish' ) {
 			return false;
 		}
 
@@ -197,15 +189,8 @@ class LocalJson {
 		$files     = JsonService::get_files();
 		$file_path = JsonService::get_paths()[0] . '/' . $post->post_name . '.json';
 		foreach ( $files as $file ) {
-			[ $data, $error ] = self::read_file( $file );
-
-			if ( $data === null || $error !== null ) {
-				continue;
-			}
-
-			$raw_json = json_decode( $data, true );
-
-			if ( json_last_error() !== JSON_ERROR_NONE || ! is_array( $raw_json ) ) {
+			$raw_json = self::read_file( $file );
+			if ( empty( $raw_json ) ) {
 				continue;
 			}
 
@@ -221,28 +206,6 @@ class LocalJson {
 			break;
 		}
 
-		$success = self::write_file( $file_path, $post_data );
-
-		if ( ! $success ) {
-			/**
-			 * Meta key 'data' is used to store temporary error messages.
-			 * It's used for both local JSON and blocks JSON. See src/Extensions/Blocks.php
-			 * Return an error message.
-			 * @var mixed
-			 */
-			$data = get_post_meta( $post->ID, 'data', true );
-
-			if ( ! is_array( $data ) ) {
-				$data = [];
-			}
-
-			$data['json_path_error'] = __( 'Error during saving json file. Please check the folder permission and save again.', 'meta-box-builder' );
-
-			update_post_meta( $post->ID, 'data', $data );
-
-			return false;
-		}
-
-		return true;
+		return (bool) self::write_file( $file_path, $post_data );
 	}
 }

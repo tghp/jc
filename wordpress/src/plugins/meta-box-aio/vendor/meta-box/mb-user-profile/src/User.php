@@ -101,9 +101,24 @@ class User {
 		}
 
 		// Check if sent email confirmation.
-		if ( isset( $this->config['email_confirmation'] ) && 'true' === $this->config['email_confirmation'] ) {
+		$email_confirmation = isset( $this->config['email_confirmation'] ) && 'true' === $this->config['email_confirmation'];
+		if ( $email_confirmation ) {
 			$email = new EmailConfirmation;
 			$email->send_confirmation_email( $result, $data['user_email'], $data['user_login'] );
 		}
+
+		$auto_login_enabled = isset( $this->config['auto_login'] ) && 'true' === $this->config['auto_login'];
+		if ( $auto_login_enabled && ! $email_confirmation ) {
+			// Set the current user and auth cookie.
+			wp_set_current_user( $this->user_id );
+			wp_set_auth_cookie( $this->user_id );
+
+			// Trigger wp_login action.
+			$user = get_user_by( 'id', $this->user_id );
+			if ( $user ) {
+				do_action( 'wp_login', $user->user_login, $user );
+			}
+		}
+
 	}
 }

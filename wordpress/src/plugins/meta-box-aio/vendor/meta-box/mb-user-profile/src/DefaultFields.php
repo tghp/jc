@@ -4,17 +4,30 @@ namespace MetaBox\UserProfile;
 class DefaultFields {
 	public function __construct() {
 		add_filter( 'rwmb_meta_boxes', [ $this, 'register_fields' ] );
+
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		// Do not show default forms & fields in the admin.
+		$ids = [
+			'rwmb-user-register',
+			'rwmb-user-login',
+			'rwmb-user-lost-password',
+			'rwmb-user-reset-password',
+			'rwmb-user-info',
+		];
+		foreach ( $ids as $id ) {
+			add_filter( "rwmb_show_{$id}", '__return_false' );
+		}
 	}
 
 	public function register_fields( array $meta_boxes ): array {
-
-		if ( ! is_admin() ) {
-			$meta_boxes[] = $this->get_register_fields();
-			$meta_boxes[] = $this->get_login_fields();
-			$meta_boxes[] = $this->get_lost_password_fields();
-			$meta_boxes[] = $this->get_reset_password_fields();
-			$meta_boxes[] = $this->get_info_fields();
-		}
+		$meta_boxes[] = $this->get_register_fields();
+		$meta_boxes[] = $this->get_login_fields();
+		$meta_boxes[] = $this->get_lost_password_fields();
+		$meta_boxes[] = $this->get_reset_password_fields();
+		$meta_boxes[] = $this->get_info_fields();
 
 		return $meta_boxes;
 	}
@@ -43,14 +56,12 @@ class DefaultFields {
 					'type'     => 'password',
 					'required' => true,
 					'desc'     => '<span id="password-strength" class="rwmb-password-strength"></span>',
-					'append'   => '<i class="password-icon show-icon"></i>',
 				],
 				'password2' => [
 					'name'     => __( 'Confirm Password', 'mb-user-profile' ),
 					'id'       => 'user_pass2',
 					'type'     => 'password',
 					'required' => true,
-					'append'   => '<i class="password-icon show-icon"></i>',
 				],
 			] ),
 		];
@@ -72,7 +83,6 @@ class DefaultFields {
 					'name'     => __( 'Password', 'mb-user-profile' ),
 					'id'       => 'user_pass',
 					'type'     => 'password',
-					'append'   => '<i class="password-icon show-icon"></i>',
 					'required' => true,
 				],
 				'remember'      => [
@@ -185,14 +195,12 @@ class DefaultFields {
 					'type'     => 'password',
 					'required' => true,
 					'desc'     => '<span id="password-strength" class="rwmb-password-strength"></span>',
-					'append'   => '<i class="password-icon show-icon"></i>',
 				],
 				'password2' => [
 					'name'     => __( 'Confirm Password', 'mb-user-profile' ),
 					'id'       => 'user_pass2',
 					'type'     => 'password',
 					'required' => true,
-					'append'   => '<i class="password-icon show-icon"></i>',
 				],
 			] ),
 		];

@@ -8,11 +8,17 @@ class Site extends Base {
 			'description' => get_bloginfo( 'description' ),
 		];
 
+		$this->data = array_merge( $this->data, $this->get_settings_pages() );
+	}
+
+	public function get_settings_pages(): array {
 		// Group field values by settings page ID.
 		$options      = [];
 		$option_names = $this->get_option_names();
 		foreach ( $option_names as $settings_page => $option_name ) {
-			$options[ $settings_page ] = [];
+			$options[ $settings_page ] = [
+				'_option_name' => $option_name, // Internal variable to use in TwigProxy.
+			];
 		}
 		$meta_boxes = rwmb_get_registry( 'meta_box' )->get_by( [ 'object_type' => 'setting' ] );
 		foreach ( $meta_boxes as $meta_box ) {
@@ -24,7 +30,7 @@ class Site extends Base {
 			}
 		}
 
-		$this->data = array_merge( $this->data, $options );
+		return $options;
 	}
 
 	private function get_option_names(): array {

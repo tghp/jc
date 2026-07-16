@@ -1,7 +1,7 @@
 <?php
 namespace MBViews;
 
-define( 'MBV_VER', '1.12.2' );
+define( 'MBV_VER', '1.13.4' );
 define( 'MBV_DIR', __DIR__ );
 list( , $url ) = \RWMB_Loader::get_path( __DIR__ );
 define( 'MBV_URL', $url );
@@ -41,3 +41,4 @@ if ( is_admin() ) {
 }
 
 new Block( $renderer );
+new Blocks\View( $renderer );

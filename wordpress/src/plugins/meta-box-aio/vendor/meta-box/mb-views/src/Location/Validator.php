@@ -92,7 +92,9 @@ class Validator {
 		}
 
 		return ( is_tax( $subtype ) && 'all' === $rule['value'] )
+			|| ( 'category' === $subtype && 'all' === $rule['value'] )
 			|| ( 'category' === $subtype && is_category( $rule['value'] ) )
+			|| ( 'post_tag' === $subtype && 'all' === $rule['value'] )
 			|| ( 'post_tag' === $subtype && is_tag( $rule['value'] ) )
 			|| is_tax( $subtype, (int) $rule['value'] );
 	}

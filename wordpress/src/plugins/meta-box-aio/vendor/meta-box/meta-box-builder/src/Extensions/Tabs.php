@@ -7,46 +7,51 @@ use MBB\Helpers\Data;
 
 class Tabs {
 	public function __construct() {
+		add_filter( 'mbb_field_types', [ $this, 'add_field_type' ] );
 		if ( ! Data::is_extension_active( 'meta-box-tabs' ) ) {
 			return;
 		}
-		add_action( 'mbb_field_types', [ $this, 'add_field_type' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_font_awesome' ] );
 		add_filter( 'mbb_meta_box_settings', [ $this, 'parse_meta_box_settings' ] );
-
-		add_filter( 'mbb_settings_controls', [ $this, 'add_settings_controls' ] );
 	}
 
 	public function add_field_type( $field_types ) {
 		$field_types['tab'] = [
 			'title'    => __( 'Tab', 'meta-box-builder' ),
 			'category' => 'layout',
+			'disabled' => ! Data::is_extension_active( 'meta-box-tabs' ),
 			'controls' => [
-				'name',
-				'id',
 				'type',
-				Control::Select( 'icon_type', [
+				Control::Name( 'name', [
+					'required' => true,
+					'label'    => __( 'Label', 'meta-box-builder' ),
+				] ),
+				Control::Id( 'id', [
+					'label'       => __( 'ID', 'meta-box-builder' ),
+					'required'    => true,
+					'description' => __( 'Use only lowercase letters, numbers, underscores (and be careful dashes).', 'meta-box-builder' ),
+				] ),
+				Control::Radio( 'icon_type', [
 					'label'   => __( 'Icon type', 'meta-box-builder' ),
 					'options' => [
 						'dashicons'   => __( 'Dashicons', 'meta-box-builder' ),
 						'fontawesome' => __( 'Font Awesome', 'meta-box-builder' ),
-						'url'         => __( 'Custom URL', 'meta-box-builder' ),
+						'url'         => __( 'Custom', 'meta-box-builder' ),
 					],
 				], 'dashicons' ),
-				Control::Icon( 'icon', [
+				Control::DashiconPicker( 'icon', [
 					'label'      => __( 'Icon', 'meta-box-builder' ),
 					'dependency' => 'icon_type:dashicons',
-				] ),
+				], '' ),
 				Control::Fontawesome( 'icon_fa', [
 					'label'       => __( 'Icon', 'meta-box-builder' ),
-					'tooltip'     => __( 'The icon to be used for the admin menu (FontAwesome)', 'meta-box-builder' ),
-					'description' => __( 'Enter <a target="_blank" href="https://fontawesome.com/search?o=r&m=free">FontAwesome</a> icon class here. Supports FontAwesome free version only.', 'meta-box-builder' ),
+					'description' => __( 'Enter <a target="_blank" href="https://fontawesome.com/search?o=r&m=free">Font Awesome</a> icon class here. Supports the free version only.', 'meta-box-builder' ),
 					'dependency'  => 'icon_type:fontawesome',
-				] ),
+				], '' ),
 				Control::Input( 'icon_url', [
 					'label'      => __( 'Icon URL', 'meta-box-builder' ),
 					'dependency' => 'icon_type:url',
-				] ),
+				], '' ),
 			],
 		];
 
@@ -55,18 +60,58 @@ class Tabs {
 
 	public function enqueue_font_awesome(): void {
 		if ( get_current_screen()->id === 'meta-box' ) {
-			wp_enqueue_style( 'font-awesome', MBB_URL . 'assets/fontawesome/css/all.min.css', [], '6.6.0' );
+			wp_enqueue_style( 'font-awesome', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css', [], ' 6.7.2' );
 		}
 	}
 
-	public function parse_meta_box_settings( $settings ) {
+	public function parse_meta_box_settings( array $settings ): array {
+		if ( empty( $settings['fields'] ) || ! is_array( $settings['fields'] ) ) {
+			unset(
+				$settings['tabs'],
+				$settings['tab_style'],
+				$settings['tab_default_active'],
+				$settings['tab_remember']
+			);
+			return $settings;
+		}
+
+		$first_field_type = Arr::get( $settings, 'fields.0.type' );
+
+		// First field must be a tab!
+		if ( 'tab' !== $first_field_type ) {
+			$this->remove_tabs( $settings );
+			return $settings;
+		}
+
 		$this->parse_tabs( $settings );
-		$this->set_fields_tab( $settings['fields'] );
+		$this->set_fields_tab( $settings );
 		return $settings;
 	}
 
-	private function parse_tabs( &$settings ) {
+	private function remove_tabs( array &$settings ): void {
+		unset(
+			$settings['tabs'],
+			$settings['tab_style'],
+			$settings['tab_default_active'],
+			$settings['tab_remember']
+		);
+
+		// Remove 'tab' property from all fields.
+		foreach ( $settings['fields'] as &$field ) {
+			unset( $field['tab'] );
+		}
+
+		// Remove all fields with type = 'tab'.
+		$settings['fields'] = array_filter( $settings['fields'], function ( $field ) {
+			return 'tab' !== Arr::get( $field, 'type' );
+		} );
+		$settings['fields'] = array_values( $settings['fields'] );
+	}
+
+	private function parse_tabs( &$settings ): void {
 		$tabs = [];
+
+		$prefix = $settings['prefix'] ?? '';
 
 		$fields = $settings['fields'];
 		foreach ( $fields as $field ) {
@@ -87,37 +132,35 @@ class Tabs {
 				$icon = "dashicons-$icon";
 			}
 
-			$tabs[ $field['id'] ] = compact( 'label', 'icon' );
+			// Remove field ID prefix for tabs.
+			$field['id'] = $this->get_field_id_without_prefix( $field['id'], $prefix );
+
+			if ( ! $icon ) {
+				$tabs[ $field['id'] ] = $label;
+			} else {
+				$tabs[ $field['id'] ] = compact( 'label', 'icon' );
+			}
 		}
+
+		$settings['tabs'] = $tabs;
 
 		if ( 'default' === Arr::get( $settings, 'tab_style' ) ) {
 			unset( $settings['tab_style'] );
 		}
 
-		if ( empty( $tabs ) ) {
-			unset( $settings['tab_style'] );
-			unset( $settings['tab_default_active'] );
-		} else {
-			$settings['tabs'] = $tabs;
-
-			// Move 'fields' to bottom.
-			unset( $settings['fields'] );
-			$settings['fields'] = $fields;
-		}
+		// Move 'fields' to bottom.
+		unset( $settings['fields'] );
+		$settings['fields'] = $fields;
 	}
 
-	private function set_fields_tab( &$fields ) {
-		if ( empty( $fields ) ) {
-			return;
-		}
-		if ( 'tab' !== Arr::get( $fields[0], 'type' ) ) {
-			return;
-		}
+	private function set_fields_tab( array &$settings ): void {
+		$prefix = $settings['prefix'] ?? '';
+		$fields = &$settings['fields'];
 
 		$previous_tab = null;
 		foreach ( $fields as $k => &$field ) {
 			if ( 'tab' === $field['type'] ) {
-				$previous_tab = $field['id'];
+				$previous_tab = $this->get_field_id_without_prefix( $field['id'], $prefix );
 				unset( $fields[ $k ] );
 			} else {
 				$field['tab'] = $previous_tab;
@@ -125,18 +168,10 @@ class Tabs {
 		}
 	}
 
-	public function add_settings_controls( $controls ) {
-		$controls['14.1'] = Control::Select( 'tab_style', [
-			'label'   => __( 'Tab style', 'meta-box-builder' ),
-			'tooltip' => __( 'Change how look and feel of tabs in Meta Box Tabs', 'meta-box-builder' ),
-			'options' => [
-				'default' => __( 'Default', 'meta-box-builder' ),
-				'box'     => __( 'Box', 'meta-box-builder' ),
-				'left'    => __( 'Left', 'meta-box-builder' ),
-			],
-		] );
-		$controls['14.2'] = Control::Input( 'tab_default_active', __( 'Default active tab ID', 'meta-box-builder' ) );
-
-		return $controls;
+	private function get_field_id_without_prefix( string $field_id, string $prefix ): string {
+		if ( $prefix && str_starts_with( $field_id, $prefix ) ) {
+			return substr( $field_id, strlen( $prefix ) );
+		}
+		return $field_id;
 	}
 }

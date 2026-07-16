@@ -127,11 +127,16 @@ class Factory {
 		$base_meta_box = rwmb_get_registry( 'meta_box' )->get( 'rwmb-user-info' );
 		$appearance    = new Appearance( $base_meta_box );
 
+		$appearance->set( 'meta_box.title', $config['label_title'] );
+
 		$appearance->set( 'password.name', $config['label_password'] );
 		$appearance->set( 'password.id', $config['id_password'] );
 
 		$appearance->set( 'password2.name', $config['label_password2'] );
 		$appearance->set( 'password2.id', $config['id_password2'] );
+
+		$appearance->set( 'submit.std', $config['label_submit'] );
+		$appearance->set( 'submit.id', $config['id_submit'] );
 
 		$meta_box_ids = Arr::from_csv( $config['id'] );
 

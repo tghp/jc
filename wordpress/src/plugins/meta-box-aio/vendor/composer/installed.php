@@ -3,17 +3,17 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'd7450a666b9319e3a752138576d9757d740d3bcd',
+        'reference' => 'a7ea2abfa17add1e20d3053c84e0e07d0c27ff9b',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'dev' => true,
+        'dev' => false,
     ),
     'versions' => array(
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'd7450a666b9319e3a752138576d9757d740d3bcd',
+            'reference' => 'a7ea2abfa17add1e20d3053c84e0e07d0c27ff9b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -62,7 +62,7 @@
         'meta-box/mb-admin-columns' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '2a61b082d34eb872f49773192660dd8217f72ca6',
+            'reference' => 'bff2677b477aff070bb36a73f9763ed3221685f1',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/mb-admin-columns',
             'aliases' => array(
@@ -73,7 +73,7 @@
         'meta-box/mb-blocks' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '9293c5c6dfa9c4c4b3c4c7e3a1ff0208fd351967',
+            'reference' => 'ecbb08bb46e5610a03a41ad1cc74d46a2ec8438b',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/mb-blocks',
             'aliases' => array(
@@ -84,7 +84,7 @@
         'meta-box/mb-custom-table' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '9a9db918a2d097be183f29cd58970d1e591bad51',
+            'reference' => 'ce6f927fcb9607fc1d20c4f5f1837a8253b940f2',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/mb-custom-table',
             'aliases' => array(
@@ -95,7 +95,7 @@
         'meta-box/mb-frontend-submission' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'ab4d9a60e49954c66547032da20d57ca5af002ea',
+            'reference' => 'cb39bd2dca0118fd94ad28369ade0ff5d790b44d',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/mb-frontend-submission',
             'aliases' => array(
@@ -106,7 +106,7 @@
         'meta-box/mb-revision' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'c69a553fc1d56f01bf81d2255c0b98f4f4a8c2d2',
+            'reference' => '0ad9378b09c004090dd3c1e2880b28f7784c2f11',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/mb-revision',
             'aliases' => array(
@@ -117,7 +117,7 @@
         'meta-box/mb-settings-page' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '3e1d543568c2bebf427277096f289cdfecaf9a2e',
+            'reference' => '2baf9f08759c743a6661fb5223ef2a320f2401f0',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/mb-settings-page',
             'aliases' => array(
@@ -128,7 +128,7 @@
         'meta-box/mb-term-meta' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '65269db62a15cea237bac96c62253ca7139d1583',
+            'reference' => '303982f074b0459b8c650bb2ab07a4df5a3b5f7a',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/mb-term-meta',
             'aliases' => array(
@@ -139,7 +139,7 @@
         'meta-box/mb-user-meta' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '82c41f97b1c4976a70d87a05236983e02f72d3cb',
+            'reference' => 'ec7825447fb85231177d022ae45331c0b43cd7c1',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/mb-user-meta',
             'aliases' => array(
@@ -150,7 +150,7 @@
         'meta-box/mb-user-profile' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'cb9c4571a9e9502e2555f4affa02d241a2555a8c',
+            'reference' => '67924eb1f7a61f4e9c6baf877310d4ca35b0124e',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/mb-user-profile',
             'aliases' => array(
@@ -161,7 +161,7 @@
         'meta-box/mb-views' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'a208f6376bfa3880501293da5c445e57b40b498d',
+            'reference' => '59f4a1ed3f375f650546696a294db4e979e4f2f0',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/mb-views',
             'aliases' => array(
@@ -183,7 +183,7 @@
         'meta-box/meta-box-conditional-logic' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '9098393b25fb9830759f413f2290e3ddf8299b09',
+            'reference' => 'c010996617e205a84d5dd3e21d9b115b1fd16793',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/meta-box-conditional-logic',
             'aliases' => array(
@@ -194,7 +194,7 @@
         'meta-box/meta-box-geolocation' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '8cf19b342a5060cd235fbd95bd4144f65237a538',
+            'reference' => '02122b656dbd6c14f148b3b29ba9a0d8b7bd3101',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/meta-box-geolocation',
             'aliases' => array(
@@ -205,7 +205,7 @@
         'meta-box/meta-box-group' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'e1944cee2d510a6a957888faa48ba0d40a608bd0',
+            'reference' => 'efade09ca70528749b5daae0416ce33b8457f08c',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/meta-box-group',
             'aliases' => array(
@@ -216,7 +216,7 @@
         'meta-box/meta-box-include-exclude' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '79e795c1d84b6249c24ab5a6b6b562b76c486a05',
+            'reference' => '8e60602212aa7f442f72864a8a5e9ae2b71cf084',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/meta-box-include-exclude',
             'aliases' => array(
@@ -238,7 +238,7 @@
         'meta-box/meta-box-tabs' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'f480b39488503f24daf945efac3dbd8198bc6ed8',
+            'reference' => '5f3843ea2cde1b7a2572ac2e1ddb769c83ead111',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/meta-box-tabs',
             'aliases' => array(
@@ -249,7 +249,7 @@
         'meta-box/meta-box-template' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '8c8bb8ed376af8e6b1b8585851c2c45953a4ea59',
+            'reference' => '7b5d152e02f8287744f811bfd6787e31d9c672fe',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/meta-box-template',
             'aliases' => array(
@@ -301,7 +301,7 @@
         'wpmetabox/mb-acf-migration' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'ebc1c5729f19fea689859eafcb03b0c86613317f',
+            'reference' => 'de81f2424e3c274f2efca4944afcdc88c6bb4a06',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/mb-acf-migration',
             'aliases' => array(
@@ -323,7 +323,7 @@
         'wpmetabox/mb-custom-post-type' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'd5d6e042cac3030dea44aebe0b7294f4812f5b0b',
+            'reference' => 'f71bc114166880ba0521b69a70d2a33948a7833c',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/mb-custom-post-type',
             'aliases' => array(
@@ -334,7 +334,7 @@
         'wpmetabox/mb-divi-integrator' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '0ad11f3b3c6684d68bd34ad57686c5e5b2ff521f',
+            'reference' => '812643ed67f06981ef28c5ed169bb2288b92e6d4',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/mb-divi-integrator',
             'aliases' => array(
@@ -367,7 +367,7 @@
         'wpmetabox/mb-relationships' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '2ead0499d2566bc0f5f035986c8db58ac854a971',
+            'reference' => 'd43b148ba98ff8e90cc698a499483777ccd9f606',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/mb-relationships',
             'aliases' => array(
@@ -378,7 +378,7 @@
         'wpmetabox/mb-rest-api' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '9d52dc5070dad5bb258b3cce92d2b6ce4bdac9b5',
+            'reference' => '0fd0efb5eb49147f247bd729d76c795ea8764471',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/mb-rest-api',
             'aliases' => array(
@@ -389,7 +389,7 @@
         'wpmetabox/mb-toolset-migration' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '77cbcbd61165b7e1b5bdb98ae50c9bc94fd4be23',
+            'reference' => '6c5785ac833389887eb5571c7719e5189ec069fb',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/mb-toolset-migration',
             'aliases' => array(
@@ -411,29 +411,28 @@
         'wpmetabox/mbb-parser' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'a0955241ccca5558c9c49f79ab3bc98fc05ade92',
+            'reference' => '642171b1c08eb4892d85e1418d1191fd26c15e14',
             'type' => 'library',
             'install_path' => __DIR__ . '/../wpmetabox/mbb-parser',
             'aliases' => array(
-                0 => '9999999-dev',
+                0 => '2',
+                1 => '9999999-dev',
             ),
             'dev_requirement' => false,
         ),
         'wpmetabox/meta-box' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
-            'reference' => '9cf65b4dbcda8bc3c6a06f96e591bd01dfdfe60c',
+            'pretty_version' => '5.12.0',
+            'version' => '5.12.0.0',
+            'reference' => 'ab68b5ee5949640b37608d1056845d79bf029d2f',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/meta-box',
-            'aliases' => array(
-                0 => '9999999-dev',
-            ),
+            'aliases' => array(),
             'dev_requirement' => false,
         ),
         'wpmetabox/meta-box-beaver-themer-integrator' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'bc0b8a2f9e683451d4f015c77dab971b68cbd483',
+            'reference' => 'b06fd1bf79d0987ab5375b4da7c3991bd3d328e6',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/meta-box-beaver-themer-integrator',
             'aliases' => array(
@@ -442,20 +441,18 @@
             'dev_requirement' => false,
         ),
         'wpmetabox/meta-box-builder' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
-            'reference' => '783bbe630d45f3fdbdfafa606e2300f18ed66f6c',
+            'pretty_version' => '5.3.0',
+            'version' => '5.3.0.0',
+            'reference' => '51f8b5d5dffa036a7f0996dfb1a79b9161bc90f7',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/meta-box-builder',
-            'aliases' => array(
-                0 => '9999999-dev',
-            ),
+            'aliases' => array(),
             'dev_requirement' => false,
         ),
         'wpmetabox/meta-box-facetwp-integrator' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '6956bb962d73570d394ebc28c68d20a76c405aa4',
+            'reference' => 'd4ef18e5e8c508fe75617f8a0b64c6779137b565',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/meta-box-facetwp-integrator',
             'aliases' => array(
@@ -466,18 +463,19 @@
         'wpmetabox/support' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '874318ec497ce7fb918eb0629dec825210155d97',
+            'reference' => '6c392347cdb77ed133b8a4227b5ee20db89a5717',
             'type' => 'library',
             'install_path' => __DIR__ . '/../wpmetabox/support',
             'aliases' => array(
-                0 => '9999999-dev',
+                0 => '1',
+                1 => '9999999-dev',
             ),
             'dev_requirement' => false,
         ),
         'wpmetabox/text-limiter' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'f6ab317dbca65007a38281475823509dd8b2de88',
+            'reference' => '83ed8ae612170819f8d7f262913eeacd4f27c96c',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../meta-box/text-limiter',
             'aliases' => array(

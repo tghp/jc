@@ -4,6 +4,7 @@ namespace MBViews;
 use eLightUp\Twig\Environment;
 use eLightUp\Twig\Loader\FilesystemLoader;
 use eLightUp\Twig\Loader\ChainLoader;
+use WP_Post;
 
 class Renderer {
 	private $meta_box_renderer;
@@ -115,21 +116,32 @@ class Renderer {
 		return $data;
 	}
 
-	private function get_post_data() {
+	private function get_post_data(): array {
 		$posts = $GLOBALS['wp_query']->posts;
 		if ( empty( $posts ) || ! is_array( $posts ) ) {
 			$posts = [];
 		}
-		$posts = array_map( function( $post ) {
-			$post_object = new Renderer\Post( $this->meta_box_renderer );
-			$post_object->set_post( $post );
-			return $post_object;
-		}, $posts );
+		$posts = array_map( [ $this, 'create_post_object' ], $posts );
 
-		return [
+		$data = [
 			'query' => [ 'posts' => $posts ],
 			'post'  => empty( $posts ) ? null : reset( $posts ),
 		];
+
+		// Set the global $post to the current post context to ensure {{ post }} always point to
+		// the current post in the loop, which is useful for custom query loops like the Query Loop block.
+		$post = get_post();
+		if ( $post instanceof WP_Post ) {
+			$data['post'] = $this->create_post_object( $post );
+		}
+
+		return $data;
+	}
+
+	private function create_post_object( WP_Post $post ): Renderer\Post {
+		$post_object = new Renderer\Post( $this->meta_box_renderer );
+		$post_object->set_post( $post );
+		return $post_object;
 	}
 
 	private function get_term_data() {

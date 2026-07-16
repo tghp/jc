@@ -1,3 +1,287 @@
+### 3.7.0 - 2026-04-22
+
+- New field type `link` that allows you to add a link with native WordPress experience (similar to ACF)
+- Auto add child blocks for allowed blocks for the `block_editor` field
+- Add allowed blocks callback that must return a list of blocks for the `block_editor` field
+- Improve the UX of allowed block lists for the `block_editor` field
+- Add missing `class`, `before`, `after` controls for the `custom_html` field
+- Add time format support for the `datetime` field
+- Remove all tabs settings when there are no fields
+- Update the React app to React 18
+- Fix detecting title and name changes
+- Fix missing `sprintf` import for date time field preview
+- Fix custom settings not available in the builder after import
+
+### 3.6.1 - 2026-03-30
+
+- Fix not loading block assets in iframed content and for `block_editor` field
+- Fix conditional logic not working for blocks with `normal` context
+- Fix file permission
+
+### 3.6.0 - 2026-03-26
+
+**Highlight:**
+
+Blocks created with Meta Box now use block API version 3 and are compatible with WordPress iframed content. If you set the `'context' => 'normal'` for blocks, clicking the edit icon will open the edit form in a modal. In the builder, you'll see an option for'Where to display the edit form?' setting for blocks.
+
+For more information, please see [the blog post](https://metabox.io/aio-3-6/)
+
+**Other improvements:**
+
+- Add keyboard shortcut `Ctrl+S` (or `Cmd+S` on Mac) to quick save when editting field groups, settings pages, relationships, post types, taxonomies and views.
+- Block editor field: allow users to create/edit/select allowed block lists in the builder.
+- Block editor field: add `toolbar_position` option for where to display editing toolbar for blocks, which accepts value `top` (default) or `contextual`.
+- Cache and debounce block preview rendering to improve performance
+
+**Fixes:**
+- Fix `select2` not working in multiple block instances
+- Fix validation error persisting after removing duplicate blocks
+- Fix saving an empty paragraph in the block editor field
+- Fix extra empty clone saved when calling `set_post_data()` during validation
+- Fix not showing tab icons after importing field groups
+- Fix removed tabs but code generation still has code for tabs
+- Fix geolocation not working with conditional logic
+
+### 3.5.1 - 2026-03-09
+
+**Improvements for the block editor field:**
+
+- Add breadcrumbs
+- Fix compatibility with Block Visibility plugin
+- Fix not loading 3rd-party blocks
+- Improve the CSS
+
+**Other changes:**
+
+- Fix save time format for the datetime field
+- Fix icon field dropdown broken display when SVG contains double quotes
+- Fix path traversal in `ajax_delete_file` for security
+- Fix timestamp should not be set for the time picker field
+- Add missing comma after capabilities in taxonomy PHP code output
+- Fix warning when slug of custom post type/taxonomy is too long
+- Fix updating WooCommerce products via REST API
+- Fix undefined `post_fields` in Bricks
+- Update `pt_BR` translations
+
+### 3.5.0 - 2026-02-03
+
+**Improvements for the block editor field:**
+
+- Add block inspector sidebar
+- Add structure panel to show the list view of blocks
+- Add fullscreen mode
+- Add `height` settings (default is `300px`) and allow resizing the editor
+
+**Fixes for the block editor field:**
+
+- Fix cannot upload images for the image block
+- Fix blank site editor when using the block editor field
+- Fix custom rich text formats not working
+- Fix conflicts with `image_advanced` and `file_advanced` fields
+
+**Other changes:**
+
+- Implement AJAX-based saving for views to improve user experience and eliminate page refreshes.
+- Fix REST API error when the Relationships extension is inactive.
+- Fix an issue where `{{ post.* }}` variables failed to display data from the current post inside the Query Loop block.
+- Fix cannot create new terms with required date/time fields
+
+### 3.4.0 - 2026-01-15
+
+**Highlights:**
+
+Add new field type: `block_editor`. See more details on our [blog post](https://metabox.io/block-editor-field-type/) and [documentation](https://docs.metabox.io/fields/block-editor/).
+
+**Other changes:**
+
+- Rearrange settings for custom post type/taxonomy for a better UX
+- Fix fatal error on custom post type/taxonomy list screens
+- Fix cannot publish a field group if its status is future
+- Clarify table name restriction
+- Update built-in user profile blocks to use API version 3
+
+### 3.3.5 - 2025-12-04
+
+- Fix text limiter not working if a field has prepend value
+- Fix `sprintf` not imported, causing "Something is wrong" error
+
+### 3.3.4 - 2025-11-24
+
+- Fix the `use` statement with non-compound name has no effect
+
+### 3.3.3 - 2025-11-24
+
+- Add filters for reordering post types and taxonomies, allowing built-in or other post types/taxonomies can be reordered. See [docs for usage](https://docs.metabox.io/reorder-posts-terms/).
+- Change icon for required/cloneable badge to avoid UX confusion
+- Change tooltip for field label to top to always show the ID
+- Hide date's `save_format` & `timestamp` settings when in a group to avoid confustion as they're not effective when inside groups
+- Fix cannot add rules for Advanced location rules
+- Fix cursor jumping when editing tooltip content
+- Fix typing issue with Vietnamese in the field label in the field settings panel
+- Fix incorrect location when importing field groups for settings pages
+- Fix parsing JSON notation
+- Fix deprecation message for `datetime` field
+- Fix cannot toggle integration extensions on the Extensions page.
+
+## 3.3.2 - 2025-11-14
+
+- Update pt_BR translation
+- Fix required text field preventing saving
+- Fix no selected settings page causes the field group editor error
+
+## 3.3.1 - 2025-11-07
+
+- Add prefix to field IDs when checking for duplication
+- Add notice for relationship's field settings to let users know they are applied to the field on the other side of the relationship
+- Show field group settings when the location is set for a settings page
+- Make option to default hide a meta box works for settings pages
+- Fix return type `static` not supported in PHP < 8.0
+- WPML integration: fix error when filtering value for helper functions when no fields are found.
+
+## 3.3.0 - 2025-11-05
+
+**Highlights:**
+
+- Allow models to add more features: `author`, `published_date`, `modified_date` via the `supports` parameter. [Learn more about it](https://docs.metabox.io/extensions/mb-custom-table/#usage). This version also simplifies the API for creating custom tables for models. You don't need to pass the last parameter for auto increament anymore. The plugin will auto handle that for you. This makes the code to create custom tables consistent for both normal posts/terms/users and models.
+- Add width settings for admin columns, which allows you to define custom width for a column. You can set the width in the builder, or set via parameter `width`, like: `'width' => '10%'`.
+- Add a new block for adding a view in the block editor
+- Add auto login for register form. To enable it, set `'auto_login'="true"` to the register shortcode.
+- Add toggle status column settings for quickly toggle Published/Draft status for custom post types.
+
+**Other changes:**
+
+- Fix bug with `meta_box_sanitize_cb` when importing custom post types from ACF
+- WPML integration: filter helper functions to get the translated IDs for `post` field
+- Fix cloning `post` field not clearing the value
+- Remove IDs for custom HTML, divider, heading fields in the structure panel, and for custom HTML field in the preview area
+- Fix parsing prefix for tabs
+- Fix required URL & email fields preventing saving
+- Fix cannot save field group again if saving it without title and ID
+- Local JSON: fix custom table name not containing prefix
+- Do not show default user forms & fields in the admin
+
+## 3.2.0 - 2025-10-07
+
+**Highlights:**
+
+Add new feature for taxonomies: allow to reorder terms.
+
+**Other changes:**
+
+- Add pagination for user frontend dashboard
+- Support `hide_from_front` option in user profile forms
+- Improve compatibility with object cache
+- Add missing reCAPTCHA verification in login form
+- Add confirm password to validate password in reset password form
+- Let users know when deleting a field, its data remains in the DB
+- Revamp the API to register a new field type. Please follow [the docs](https://docs.metabox.io/creating-new-field-types/) for details.
+- Add an option to disable dragging the pin on the map/osm fields
+- Fix parsing/unparsing tabs for settings pages
+- Fix empty block render code after reloading the editing page
+- Fix cannot edit a field on Safari
+- Set default menu position for settings page after all menus
+- Fix menu icon (dashicons) not working for settings pages
+- Remove "text_domain" from generated labels for post types
+- Fix encoded unicode characters when importing post types
+- Fix Admin Columns Pro integration not working when Meta Box free is deactivated
+
+## 3.1.1 - 2025-09-17
+
+Fix named parameter not supported in PHP < 8
+
+## 3.1.0 - 2025-09-16
+
+**Highlights:**
+
+This version introduces 4 tools to cleanup and maintain your database by removing or changing custom fields and custom post types in the database.
+
+Learn more about those tools in [our blog post](https://metabox.io/tools/).
+
+Other changes:
+
+- Ask before leaving without saving changes
+- Add an icon to the field label to show if field has `save_value` settings is off
+- Use icon for required & cloneable settings for better accessibility
+- Add disabled, readonly attributes to date, time fields
+- Open field settings panel when add a new field
+- Improve behavior when deleting a field by auto seting the next or previous field active
+- Allow to change type for custom HTML, divider, heading, hidden fields
+- Fix error switching field type to group and tab
+- Fix compatible with Gutenberg plugin
+- Fix parsing std value for radio when it's 0
+- Fix tabs not working with blocks.
+- Remove notice for feedback for the new UI
+- Don't show upgrade panels for AIO users
+
+## 3.0.1 - 2025-08-21
+
+- Allow to change field type
+- Allow click to edit tab label
+- Always show sub-fields for cloneable group with "Start with no inputs" enabled
+- Set active field to new added field
+- Prevent invalid characters when editing field ID
+- Fix missing field prefix when auto creating custom tables
+- Fix admin menu overlaying the app (caused by ASE)
+- Fix cursor jump for ID, FileSize & block code
+- Fix missing `object_id` when update custom models from the front end
+
+## 3.0.0 - 2025-08-18
+
+**Highlights:**
+
+This version introduces a rewritten the builder with a new UI/UX. [Learn more](https://metabox.io/mb-builder-5-0-0-official-release/) about the new UI.
+
+**Other changes:**
+
+- Fix Open Street Maps field not showing (sometimes) with conditional logic
+- Fix inserting custom map style for settings pages
+- Fix hook `mbct_after_delete` is not firing for bulk delete action
+- Update block controls for frontend submission & user profile's blocks
+
+## 2.3.1 - 2025-07-18
+
+- Fix error when defining block supports for anchor
+- Fix compatibility of the conditional logic with the site editor (full-site editing)
+
+## 2.3.0 - 2025-07-15
+
+**Highlights:**
+
+Rewrite the re-order feature, making works with hierarchical post types. Now you can drag and drop posts to re-order them and even setup parent/child relationships. To re-order posts, now you need to click the "Re-order" link in the header of the screen (near All | Published filters).
+
+**Other changes:**
+
+- Update config storage to reduce size of keys in the DB for frontend submission and user profile modules
+- Improve performance for conditional logic in the block editor
+- Fix validation for blocks
+- Addmin filter for relationships: allow to remove selected choice
+- Fix not respecting std value in child field when it is set to 0, false, ''
+- Fix term meta not saving when using advanced location rules
+- Add revision support for views
+- Add German translations
+
+## 2.2.3 - 2025-06-23
+
+- Fix issue translating empty groups with WPML/Polylang
+- Add German translation
+
+## 2.2.2 - 2025-06-11
+
+- Add `mbct_{$action}_bulk_action` action for handling bulk actions for custom models
+- Fix error for translating relationship texts
+- Add German translations for some extensions
+
+## 2.2.1 - 2025-05-21
+
+- Fix datetime field returns null
+- Fix single image field not working with Polylang Pro
+- Fix `fields_translations` settings still available and grows rapidly event when Polylang is not active
+- Fix reveal password not working
+- Fix WPML integration with some languages
+- Fix error when adding additional CSS class to the Profile block
+- Fix reCaptcha not working for user profile forms when password strength is disabled
+
+
 ## 2.2.0 - 2025-05-08
 
 Highlights:

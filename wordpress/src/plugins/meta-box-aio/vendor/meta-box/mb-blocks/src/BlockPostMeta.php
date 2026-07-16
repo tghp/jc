@@ -27,7 +27,7 @@ class BlockPostMeta extends Block {
 	 */
 	public function render_block( $attributes = [], $content = null, $block = null, $is_preview = false, $post_id = null ) {
 		add_filter( 'rwmb_meta_type', [ $this, 'filter_meta_type' ] );
-		parent::render_block(  $attributes, $content, $block, $is_preview, $post_id );
+		parent::render_block( $attributes, $content, $block, $is_preview, $post_id );
 		remove_filter( 'rwmb_meta_type', [ $this, 'filter_meta_type' ] );
 	}
 

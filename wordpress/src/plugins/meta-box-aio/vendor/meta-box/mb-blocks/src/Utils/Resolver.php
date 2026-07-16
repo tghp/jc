@@ -37,13 +37,13 @@ class Resolver {
 	 * @return mixed
 	 */
 	public function resolve( $closure ) {
-		$reflection = ( is_array( $closure ) ) ? 
-			new \ReflectionMethod( $closure[0], $closure[1] ) : 
+		$reflection = ( is_array( $closure ) ) ?
+			new \ReflectionMethod( $closure[0], $closure[1] ) :
 			new \ReflectionFunction( $closure );
 
 		$arguments = $reflection->getParameters();
 
-		$arguments = array_map( function ($argument) {
+		$arguments = array_map( function ( $argument ) {
 			return $this->bindMaps[ $argument->name ] ?? null;
 		}, $arguments );
 

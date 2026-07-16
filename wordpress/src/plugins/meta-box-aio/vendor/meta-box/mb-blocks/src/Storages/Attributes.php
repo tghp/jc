@@ -19,7 +19,7 @@ class Attributes {
 			$single = (bool) $args;
 		}
 		$default = $single ? '' : [];
-		
+
 		return $this->data[ $meta_key ] ?? $default;
 	}
 
@@ -37,7 +37,7 @@ class Attributes {
 		return true;
 	}
 
-	public function update( $object_id, $meta_key, $meta_value, $prev_value = '') {
+	public function update( $object_id, $meta_key, $meta_value, $prev_value = '' ) {
 		if ( empty( $meta_key ) ) {
 			return false;
 		}

@@ -43,7 +43,10 @@ class Ajax {
 			return $resolver->resolve( [ $this, "{$action}_bulk_action" ] );
 		}
 
-		wp_send_json_error( 'Invalid action', 'mb-custom-table' );
+		// Or run the action.
+		do_action( "mbct_{$action}_bulk_action", $ids, $model, $request );
+
+		wp_send_json_error( __( 'Invalid action', 'mb-custom-table' ) );
 	}
 
 	public function bulk_delete_bulk_action( $ids, $model ) {
@@ -67,7 +70,7 @@ class Ajax {
 
 		// Only fire the action if rows were actually deleted
 		foreach ( $ids as $id ) {
-			do_action( 'mbct_before_delete', $id, $model->table );
+			do_action( 'mbct_after_delete', $id, $model->table );
 		}
 
 		wp_send_json_success();

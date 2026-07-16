@@ -21,7 +21,7 @@ class DuplicatedFields {
 	];
 
 	public function __construct() {
-		add_filter( 'rwmb_outer_html', [$this, 'remove_field'], 10, 2 );
+		add_filter( 'rwmb_outer_html', [ $this, 'remove_field' ], 10, 2 );
 	}
 
 	public function remove_field( $html, $field ) {
@@ -29,7 +29,7 @@ class DuplicatedFields {
 			return $html;
 		}
 		$screen = get_current_screen();
-		if ( ! is_object( $screen ) || ! in_array( $screen->id, ['profile', 'user-edit', 'profile-network', 'user-edit-network'], true ) ) {
+		if ( ! is_object( $screen ) || ! in_array( $screen->id, [ 'profile', 'user-edit', 'profile-network', 'user-edit-network' ], true ) ) {
 			return $html;
 		}
 		return in_array( $field['id'], $this->fields, true ) ? '' : $html;

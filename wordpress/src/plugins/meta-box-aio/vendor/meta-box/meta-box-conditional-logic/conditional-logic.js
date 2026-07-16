@@ -377,7 +377,11 @@
 
 		// If Gutenberg is active.
 		if ( rwmb.isGutenberg ) {
-			return $( '#editor' );
+			// For MB Blocks with `'context' => 'normal'`, forms are rendered in a portal outside #editor.
+			// Use the editor scope only if the field is actually inside it.
+			if ( $field.closest( '#editor, #site-editor' ).length ) {
+				return $( '#editor, #site-editor' );
+			}
 		}
 
 		// Global scope. Should be the closest 'form', since in the frontend, users can insert the same meta box in multiple forms.
@@ -653,11 +657,31 @@
 	// Export the runConditionalLogic to global scope to use in other scripts.
 	rwmb.runConditionalLogic = runConditionalLogic;
 
-	$( window ).on( 'load', function() {
-		init();
-	} );
+	if ( rwmb.isGutenberg ) {
+		// For Gutenberg, we need to subscribe to all changes, to detect when meta boxes are fully rendered (by JS!).
+		// So we can get watched elements (which are custom fields inside meta boxes) and run conditional logic.
+		const unsubscribe = wp.data.subscribe( () => {
+			const editPostStore = wp.data.select( 'core/edit-post' );
+			const editorStore = wp.data.select( 'core/editor' );
 
-	// Run when page finishes loading to improve performance.
-	// https://github.com/wpmetabox/meta-box/issues/1195.
-	setTimeout( init, 100 );
+			let isReady = false;
+			if ( editPostStore ) {
+				// For post editor, prefer to check if meta boxes are initialized.
+				isReady = editPostStore?.areMetaBoxesInitialized();
+			} else if ( editorStore ) {
+				// For site editor, check if editor is ready.
+				isReady = editorStore?.__unstableIsEditorReady();
+			}
+
+			if ( isReady ) {
+				setTimeout( init, 200 ); // Wait for 200ms to make sure all meta boxes are rendered.
+				unsubscribe(); // Unsubscribe from the editor changes, so it won't be called again.
+			}
+		} );
+	} else {
+		// Run when page finishes loading to improve performance.
+		// https://github.com/wpmetabox/meta-box/issues/1195.
+		$( window ).on( 'load', init );
+		setTimeout( init, 200 );
+	}
 } )( jQuery, rwmb );

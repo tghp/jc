@@ -23,7 +23,7 @@ abstract class Base {
 	 *
 	 * @var array
 	 */
-	protected $searchable_field_ids = array();
+	protected $searchable_field_ids = [];
 
 	/**
 	 * Custom table name.
@@ -61,12 +61,22 @@ abstract class Base {
 	 */
 	abstract protected function init();
 
-	/**
-	 * Enqueue admin styles.
-	 */
-	public function enqueue() {
-		list( , $url ) = RWMB_Loader::get_path( dirname( dirname( __FILE__ ) ) );
+	public function enqueue(): void {
+		list( , $url ) = RWMB_Loader::get_path( dirname( __DIR__ ) );
 		wp_enqueue_style( 'mb-admin-columns', $url . 'css/admin-columns.css' );
+
+		// Add inline styles for column widths.
+		$css = [];
+		foreach ( $this->fields as $field ) {
+			if ( is_array( $field['admin_columns'] ) && isset( $field['admin_columns']['width'] ) && intval( $field['admin_columns']['width'] ) ) {
+				$css[] = sprintf(
+					'.column-%1$s { width: %2$s }',
+					esc_html( $field['id'] ),
+					esc_attr( $field['admin_columns']['width'] )
+				);
+			}
+		}
+		wp_add_inline_style( 'mb-admin-columns', implode( "\n", $css ) );
 	}
 
 	/**
@@ -88,17 +98,17 @@ abstract class Base {
 
 			// If position is specified.
 			if ( is_string( $config ) ) {
-				$config = strtolower( $config );
+				$config                    = strtolower( $config );
 				list( $position, $target ) = array_map( 'trim', explode( ' ', $config . ' ' ) );
 				$this->add( $columns, $field['id'], $field['name'], $position, $target );
 			}
 
 			// If an array of configuration is specified.
 			if ( is_array( $config ) ) {
-				$config = wp_parse_args( $config, array(
+				$config                    = wp_parse_args( $config, [
 					'position' => '',
 					'title'    => $field['name'],
-				) );
+				] );
 				list( $position, $target ) = array_map( 'trim', explode( ' ', $config['position'] . ' ' ) );
 				$this->add( $columns, $field['id'], $config['title'], $position, $target );
 			}
@@ -142,7 +152,7 @@ abstract class Base {
 		}
 
 		// Add new column in a specific position.
-		$new = array();
+		$new = [];
 		switch ( $position ) {
 			case 'replace':
 				foreach ( $columns as $key => $value ) {
@@ -183,7 +193,7 @@ abstract class Base {
 	 * @return array|bool False if not found. Array of field parameters if found.
 	 */
 	protected function find_field( $field_id ) {
-		$fields = wp_list_filter( $this->fields, array( 'id' => $field_id ) );
+		$fields = wp_list_filter( $this->fields, [ 'id' => $field_id ] );
 
 		return empty( $fields ) ? false : reset( $fields );
 	}

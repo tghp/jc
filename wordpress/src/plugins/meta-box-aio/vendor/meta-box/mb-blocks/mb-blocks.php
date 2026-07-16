@@ -1,14 +1,15 @@
 <?php
 /**
- * Plugin Name: MB Blocks
- * Plugin URI:  https://metabox.io/plugins/mb-blocks/
- * Description: Create custom Gutenberg blocks.
- * Version:     1.7.5
- * Author:      MetaBox.io
- * Author URI:  https://metabox.io
- * License:     GPL2+
- * Text Domain: mb-blocks
- * Domain Path: /languages/
+ * Plugin Name:       MB Blocks
+ * Plugin URI:        https://metabox.io/plugins/mb-blocks/
+ * Description:       Create custom Gutenberg blocks.
+ * Version:           1.8.2
+ * Requires at least: 6.3
+ * Author:            MetaBox.io
+ * Author URI:        https://metabox.io
+ * License:           GPL2+
+ * Text Domain:       mb-blocks
+ * Domain Path:       /languages/
  *
  * Copyright (C) 2010-2025 Tran Ngoc Tuan Anh. All rights reserved.
  *
@@ -47,7 +48,7 @@ if ( ! function_exists( 'mb_blocks_load' ) ) {
 		list( , $url ) = RWMB_Loader::get_path( __DIR__ );
 		define( 'MB_BLOCKS_DIR', __DIR__ );
 		define( 'MB_BLOCKS_URL', $url );
-		define( 'MB_BLOCKS_VER', '1.7.5' );
+		define( 'MB_BLOCKS_VER', '1.8.2' );
 
 		new MBBlocks\Loader();
 		new MBBlocks\Api();

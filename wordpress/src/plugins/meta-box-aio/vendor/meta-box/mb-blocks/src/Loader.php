@@ -44,7 +44,7 @@ class Loader {
 
 			if ( $renderer ) {
 				$settings['render_callback'] = static function ( $attributes, $content, $block ) use ( $renderer, $view_name ) {
-                    $attributes = $attributes['views'] ?? $attributes;
+					$attributes = $attributes['views'] ?? $attributes;
 
 					return $renderer->render( $view_name, compact( 'attributes', 'content', 'block' ) );
 				};
@@ -96,6 +96,18 @@ class Loader {
 	}
 
 	public static function prepare_render_callback_data( $attributes, $content, $block, $settings, $meta_box ) {
+		$is_editor = defined( 'REST_REQUEST' ) && REST_REQUEST && isset( $_GET['context'] ) && $_GET['context'] === 'edit';
+
+		// Generate cache key based on block ID and attributes for non-editor requests.
+		$cache_key = null;
+		if ( ! $is_editor ) {
+			$cache_key = 'mbb_render_' . $meta_box->id . '_' . md5( wp_json_encode( $attributes['data'] ?? [] ) );
+			$cached    = wp_cache_get( $cache_key, 'mb-blocks' );
+			if ( $cached !== false ) {
+				return $cached;
+			}
+		}
+
 		// $attributes['data'] contains raw data from the block.
 		// We loop through the key and get the value from the db
 		// And set it to $attributes[$key]
@@ -119,55 +131,58 @@ class Loader {
 			$attributes[ $key ] = mb_get_block_field( $key );
 		}
 
-        // Prepare value for mb_views if it's installed
-        if ( function_exists( 'mb_views_load' ) ) {
-            $attributes['views'] = $attributes;
-            $mb_views_meta_box_renderer = new \MBViews\Renderer\MetaBox();
+		// Prepare value for mb_views if it's installed
+		if ( function_exists( 'mb_views_load' ) ) {
+			$attributes['views']        = $attributes;
+			$mb_views_meta_box_renderer = new \MBViews\Renderer\MetaBox();
 
-            foreach ( $attributes['data'] as $key => $value ) {
-                $field = array_filter( $meta_box->meta_box['fields'], function ( $field ) use ( $key ) {
-                    return $field['id'] === $key;
-                } );
+			foreach ( $attributes['data'] as $key => $value ) {
+				$field = array_filter( $meta_box->meta_box['fields'], function ( $field ) use ( $key ) {
+					return $field['id'] === $key;
+				} );
 
-                $field = reset( $field );
+				$field = reset( $field );
 
-                if (  empty( $field ) ) {
-                    continue;
-                }
+				if ( empty( $field ) ) {
+					continue;
+				}
 
-                $attributes['views'][ $key ] = ( 'group' === $field['type'] ) ?
+				$attributes['views'][ $key ] = ( 'group' === $field['type'] ) ?
 					$mb_views_meta_box_renderer->parse_group_value( $value, $field ) :
 					$mb_views_meta_box_renderer->parse_field_value( $value, $field );
-            }
-        }
+			}
+		}
 
 		// Render the block
 		$rendered = call_user_func( $settings['render_callback'], $attributes, $content, $block );
 
 		// If block is called via WP-API, thats mean we are in the editor, we need to keep <InnerBlocks /> tag.
-		if ( defined( 'REST_REQUEST' ) && REST_REQUEST && isset( $_GET['context'] ) && $_GET['context'] === 'edit' ) {
+		if ( $is_editor ) {
 			return $rendered;
 		}
 
 		preg_match( '#<InnerBlocks(.*?)\/>#s', $rendered, $matches );
 
-		if ( empty ( $matches ) ) {
+		if ( empty( $matches ) ) {
+			wp_cache_set( $cache_key, $rendered, 'mb-blocks', 300 );
 			return $rendered;
 		}
 
 		[ $inner_blocks, $attributes ] = $matches;
 
-    // If the block has class, style, or id, wrap the content with a div to match with the block editor.
+		// If the block has class, style, or id, wrap the content with a div to match with the block editor.
 		// otherwise, keep the content as is to backward compatible with the previous versions.
 		if ( ! empty( $attributes ) && (
-			 str_contains( $attributes, 'class') ||
-			 str_contains( $attributes, 'style') ||
-			 str_contains( $attributes, 'id' )
+			str_contains( $attributes, 'class' ) ||
+			str_contains( $attributes, 'style' ) ||
+			str_contains( $attributes, 'id' )
 		) ) {
 			$content = "<div $attributes>$content</div>";
 		}
 
 		$rendered = str_replace( $inner_blocks, $content, $rendered );
+
+		wp_cache_set( $cache_key, $rendered, 'mb-blocks', 300 );
 
 		return $rendered;
 	}
@@ -212,7 +227,7 @@ class Loader {
 			filemtime( MB_BLOCKS_DIR . '/assets/blocks.css' )
 		);
 
-		$asset = include MB_BLOCKS_DIR . '/assets/build/index.asset.php';
+		$asset                   = include MB_BLOCKS_DIR . '/assets/build/index.asset.php';
 		$asset['dependencies'][] = 'underscore';
 		$asset['dependencies'][] = 'jquery';
 		wp_enqueue_script(
@@ -222,7 +237,6 @@ class Loader {
 			$asset['version'],
 			true
 		);
-
 
 		// Pass all registered blocks to JavaScript.
 		$blocks = mb_get_all_blocks();

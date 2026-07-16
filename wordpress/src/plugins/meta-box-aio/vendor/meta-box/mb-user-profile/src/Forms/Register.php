@@ -42,6 +42,8 @@ class Register extends Base {
 
 			'role'               => '',
 			'append_role'        => 'false',
+
+			'auto_login'         => 'false',
 		], $config );
 
 		if ( 'true' === $config['email_confirmation'] ) {
@@ -55,6 +57,12 @@ class Register extends Base {
 	}
 
 	protected function has_privilege() : bool {
+		// Always render the form to preview in the editor.
+		$is_preview = defined( 'REST_REQUEST' ) && REST_REQUEST;
+		if ( $is_preview ) {
+			return true;
+		}
+
 		// Always show the form for non-logged in users.
 		if ( ! is_user_logged_in() ) {
 			return true;

@@ -5,7 +5,8 @@ use WP_Post;
 use MetaBox\Support\Arr;
 
 class PostTypeRegister extends Register {
-	private $menu_positions = [];
+	private $menu_positions       = [];
+	private $font_awesome_classes = [ 'fa', 'fa-classic', 'fa-sharp', 'fas', 'fa-solid', 'far', 'fa-regular', 'fab', 'fa-brands' ];
 
 	public function register() {
 		// Register main post type 'mb-post-type'.
@@ -32,8 +33,7 @@ class PostTypeRegister extends Register {
 			'supports'      => false,
 			'public'        => false,
 			'show_ui'       => true,
-			'show_in_menu'  => defined( 'RWMB_VER' ) ? 'meta-box' : null,
-			'menu_icon'     => 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB2aWV3Qm94PSIxNjQuMzI4IDE0OS40NDEgNTMuNDcgNDIuNjYiIHdpZHRoPSI1My40NyIgaGVpZ2h0PSI0Mi42NiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNIDIwNC42NjggMTc5LjM5MSBMIDIwNS40ODggMTYwLjU1MSBMIDIwNS4zMTggMTYwLjUyMSBMIDE5My44ODggMTkyLjEwMSBMIDE4OC4xNDggMTkyLjEwMSBMIDE3Ni43NzggMTYwLjY0MSBMIDE3Ni42MDggMTYwLjY2MSBMIDE3Ny40MjggMTc5LjM5MSBMIDE3Ny40MjggMTg2LjA5MSBMIDE4MS45OTggMTg2Ljk3MSBMIDE4MS45OTggMTkyLjEwMSBMIDE2NC4zMjggMTkyLjEwMSBMIDE2NC4zMjggMTg2Ljk3MSBMIDE2OC44NjggMTg2LjA5MSBMIDE2OC44NjggMTU1LjQ4MSBMIDE2NC4zMjggMTU0LjYwMSBMIDE2NC4zMjggMTQ5LjQ0MSBMIDE2OC44NjggMTQ5LjQ0MSBMIDE4MC4wMjggMTQ5LjQ0MSBMIDE5MC44OTggMTgwLjg4MSBMIDE5MS4wNzggMTgwLjg4MSBMIDIwMi4wMzggMTQ5LjQ0MSBMIDIxNy43OTggMTQ5LjQ0MSBMIDIxNy43OTggMTU0LjYwMSBMIDIxMy4yMjggMTU1LjQ4MSBMIDIxMy4yMjggMTg2LjA5MSBMIDIxNy43OTggMTg2Ljk3MSBMIDIxNy43OTggMTkyLjEwMSBMIDIwMC4xMjggMTkyLjEwMSBMIDIwMC4xMjggMTg2Ljk3MSBMIDIwNC42NjggMTg2LjA5MSBMIDIwNC42NjggMTc5LjM5MSBaIiBzdHlsZT0iZmlsbDogcmdiKDE1OCwgMTYzLCAxNjgpOyB3aGl0ZS1zcGFjZTogcHJlOyIvPgo8L3N2Zz4=',
+			'show_in_menu'  => 'meta-box',
 			'can_export'    => true,
 			'rewrite'       => false,
 			'query_var'     => false,
@@ -225,6 +225,10 @@ class PostTypeRegister extends Register {
 			$settings = $this->get_post_type_settings( $post_type );
 			$slug     = Arr::get( $settings, 'slug' );
 
+			if ( empty( $slug ) ) {
+				continue;
+			}
+
 			$messages[ $slug ] = $message;
 
 			if ( ! Arr::get( $settings, 'publicly_queryable' ) ) {
@@ -352,11 +356,17 @@ class PostTypeRegister extends Register {
 	}
 
 	public function enqueue_font_awesome(): void {
-		wp_enqueue_style( 'font-awesome', MB_CPT_URL . 'assets/fontawesome/css/all.min.css', [], '6.6.0' );
+		wp_enqueue_style( 'font-awesome', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css', [], ' 6.7.2' );
+		$selectors = [];
+		foreach ( $this->font_awesome_classes as $class ) {
+			$selectors[] = ".$class:before";
+		}
+		$selectors = implode( ', ', $selectors );
 		wp_add_inline_style(
 			'font-awesome',
-			'.fa:before, fas, .fa-solid:before, .fab:before, .fa-brand:before, .far:before, .fa-regular:before {
+			$selectors . ' {
 				font-size: 16px;
+				line-height: 20px;
 				font-family: inherit;
 				font-weight: inherit;
 			}'

@@ -9,6 +9,12 @@ class Edit {
 	public function __construct( $post_type ) {
 		$this->post_type = $post_type;
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+
+		add_action( 'add_meta_boxes', [ $this, 'remove_submitdiv_meta_box' ] );
+	}
+
+	public function remove_submitdiv_meta_box(): void {
+		remove_meta_box( 'submitdiv', $this->post_type, 'side' );
 	}
 
 	public function enqueue_scripts() {
@@ -16,8 +22,13 @@ class Edit {
 			return;
 		}
 
+		wp_enqueue_style( 'mbb-app',
+			'https://cdn.jsdelivr.net/gh/wpmetabox/meta-box-builder@5.1.0/assets/css/style.css',
+			[],
+			'5.1.0'
+		);
 		wp_enqueue_style( $this->post_type, MB_CPT_URL . 'assets/style.css', [ 'wp-components' ], MB_CPT_VER );
-		wp_enqueue_style( 'font-awesome', MB_CPT_URL . 'assets/fontawesome/css/all.min.css', [], '6.6.0' );
+		wp_enqueue_style( 'font-awesome', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css', [], ' 6.7.2' );
 		wp_enqueue_style( 'wp-edit-post' );
 
 		wp_enqueue_script( 'mbcpt-edit', MB_CPT_URL . 'assets/edit.js', [], filemtime( MB_CPT_DIR . '/assets/edit.js' ), true );
@@ -49,7 +60,7 @@ class Edit {
 			'action'          => get_current_screen()->action,
 			'url'             => admin_url( 'edit.php?post_type=' . get_current_screen()->id ),
 			'add'             => admin_url( 'post-new.php?post_type=' . get_current_screen()->id ),
-			'status'          => $post->post_status,
+			'status'          => $post->post_status === 'auto-draft' ? 'publish' : $post->post_status,
 			'author'          => get_the_author_meta( 'display_name', (int) $post->post_author ),
 			'trash'           => get_delete_post_link(),
 			'published'       => get_the_date( 'F d, Y' ) . ' ' . get_the_time( 'g:i a' ),
@@ -57,6 +68,7 @@ class Edit {
 			'saving'          => __( 'Saving...', 'mb-custom-post-type' ),
 			'upgrade'         => ! $this->is_premium_user(),
 			'allCapabilities' => $this->get_all_capabilities(),
+			'mbb'             => defined( 'MBB_VER' ) ? true : false,
 		];
 
 		if ( 'mb-post-type' === get_current_screen()->id ) {
@@ -145,7 +157,7 @@ class Edit {
 		$positions = [
 			[
 				'value' => '',
-				'label' => __( 'Default', 'mb-custom-post-type' ),
+				'label' => __( 'Let WordPress decide automatically', 'mb-custom-post-type' ),
 			],
 		];
 		foreach ( $menu as $position => $params ) {

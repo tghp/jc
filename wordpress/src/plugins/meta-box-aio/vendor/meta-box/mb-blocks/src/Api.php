@@ -11,9 +11,9 @@ class Api {
 		// Register POST /mb-blocks/v1/block/:id/get_form endpoint
 		// This endpoint is used to fill the meta box with block data and return the HTML
 		// back to the client.
-		register_rest_route( 'mb-blocks/v1', '/block/(?P<id>.+)/get_form', [ 
-			'methods' => \WP_REST_Server::EDITABLE,
-			'callback' => [ $this, 'get_form' ],
+		register_rest_route( 'mb-blocks/v1', '/block/(?P<id>.+)/get_form', [
+			'methods'             => \WP_REST_Server::EDITABLE,
+			'callback'            => [ $this, 'get_form' ],
 			'permission_callback' => 'is_user_logged_in',
 		] );
 	}
@@ -28,7 +28,7 @@ class Api {
 		$attributes = $data['attributes'] ?? [];
 		$attributes = wp_unslash( $attributes );
 
-		// Because default value are MB parsed value so we neeed to 
+		// Because default value are MB parsed value so we neeed to
 		// remove default attributes so Meta Box can fill in the correct values
 		$block = mb_get_block( $data['block'] );
 
@@ -36,10 +36,10 @@ class Api {
 		$meta_box_id = str_replace( 'meta-box/', '', $data['block'] );
 		$meta_box    = rwmb_get_registry( 'meta_box' )->get( $meta_box_id );
 
-		if ( empty ( $meta_box ) || ! isset( $meta_box->meta_box['type'] ) || $meta_box->meta_box['type'] !== 'block' ) {
+		if ( empty( $meta_box ) || ! isset( $meta_box->meta_box['type'] ) || $meta_box->meta_box['type'] !== 'block' ) {
 			return new \WP_REST_Response( [ 'html' => '' ] );
 		}
-		
+
 		$meta_box->set_block_data( $attributes );
 
 		ob_start();

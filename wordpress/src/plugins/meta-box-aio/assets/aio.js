@@ -60,7 +60,11 @@
 		} ).forEach( hide );
 	}
 
-	document.querySelector( '.mbaio-filter' ).addEventListener( 'click', filter, false );
+	if ( document.querySelector( '.mbaio-extensions .mbaio-filter' ) === null ) {
+		// In case missing license, filter not showing
+		return;
+	}
+	document.querySelector( '.mbaio-extensions .mbaio-filter' ).addEventListener( 'click', filter );
 
 	if ( typeof tippy !== 'undefined' ) {
 		tippy( '.mbaio-tooltip', {
@@ -69,4 +73,37 @@
 			animation: 'fade'
 		} );
 	}
+
+	document.querySelectorAll( '.mbaio-extensions .rwmb-switch' ).forEach( el => {
+		el.addEventListener( 'change', function () {
+			const slug   = this.value;
+			const active = this.checked ? 1 : 0;
+
+			const formData = new FormData();
+			formData.append( 'action', 'mbaio_toggle_extension' );
+			formData.append( 'slug', slug );
+			formData.append( 'active', active );
+			formData.append( '_ajax_nonce', mbAioEtxs.nonce );
+
+			fetch( ajaxurl, {
+				method: 'POST',
+				body: formData
+			})
+			.then( response => response.json() )
+			.then( data => {
+				if ( ! data.success ) {
+					return;
+				}
+
+				const ajaxMsg = document.querySelector( '.mbaio-extensions .mbaio-ajax' );
+				ajaxMsg.style.visibility = 'visible';
+				ajaxMsg.querySelector( '.message' ).innerHTML = data.data.message;
+
+				setTimeout( () => {
+					ajaxMsg.style.visibility = 'hidden';
+				}, 3000 );
+			} )
+		} );
+	} );
+
 } )( document );

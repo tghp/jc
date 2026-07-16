@@ -48,7 +48,7 @@ class TwigProxy {
 		if ( empty( $posts ) || ! is_array( $posts ) ) {
 			$posts = [];
 		}
-		$posts = array_map( function( $post ) {
+		$posts = array_map( function ( $post ) {
 			$post_object = new Renderer\Post( $this->meta_box_renderer );
 			$post_object->set_post( $post );
 			return $post_object;
@@ -62,7 +62,7 @@ class TwigProxy {
 		if ( empty( $terms ) || ! is_array( $terms ) ) {
 			$terms = [];
 		}
-		$terms = array_map( function( $term ) {
+		$terms = array_map( function ( $term ) {
 			$term_object = new Renderer\Term( $this->meta_box_renderer );
 			$term_object->set_term( $term );
 			return $term_object;
@@ -73,7 +73,7 @@ class TwigProxy {
 
 	public function get_users( $args ) {
 		$users = get_users( $args );
-		$users = array_map( function( $user ) {
+		$users = array_map( function ( $user ) {
 			$user_object = new Renderer\User( $this->meta_box_renderer );
 			$user_object->set_user_id( $user->ID );
 			return $user_object;
@@ -85,7 +85,72 @@ class TwigProxy {
 	public function map( $field_id, $width = '100%', $height = '480px', $zoom = 14, $marker_icon = '', $marker_title = '', $info_window = '' ) {
 		$args     = compact( 'width', 'height', 'zoom', 'marker_icon', 'marker_title', 'info_window' );
 		$field_id = str_replace( 'post.', '', $field_id );
+
+		// Settings page where settings page ID contains "-".
+		if ( str_starts_with( $field_id, 'group.' ) ) {
+			$field_id    = str_replace( 'group.', '', $field_id );
+			$option_name = $this->get_option_name( $this->get_site()->get_settings_pages(), $field_id );
+
+			if ( $option_name ) {
+				$args['object_type'] = 'setting';
+				return rwmb_the_value( $field_id, $args, $option_name, false );
+			}
+		}
+
+		// Settings page where settings page ID does not contain "-".
+		if ( str_starts_with( $field_id, 'site.' ) ) {
+			$args['object_type'] = 'setting';
+			$parts               = explode( '.', $field_id );
+			$option_name         = '';
+			if ( ! empty( $parts[2] ) ) {
+				$field_id    = $parts[2];
+				$option_name = $this->get_option_name( $this->get_site()->get_settings_pages(), $field_id );
+			}
+
+			if ( $option_name ) {
+				return rwmb_the_value( $field_id, $args, $option_name, false );
+			}
+		}
+
+		// Term meta.
+		if ( str_starts_with( $field_id, 'term.' ) ) {
+			$args['object_type'] = 'term';
+			$field_id            = str_replace( 'term.', '', $field_id );
+
+			return rwmb_the_value( $field_id, $args, get_queried_object_id(), false );
+		}
+
+		// User meta.
+		if ( str_starts_with( $field_id, 'user.' ) ) {
+			$args['object_type'] = 'user';
+			$field_id            = str_replace( 'user.', '', $field_id );
+
+			return rwmb_the_value( $field_id, $args, get_queried_object_id(), false );
+		}
+
+		// Author meta.
+		if ( str_starts_with( $field_id, 'author.' ) ) {
+			$args['object_type'] = 'user';
+			$field_id            = str_replace( 'author.', '', $field_id );
+
+			return rwmb_the_value( $field_id, $args, get_queried_object_id(), false );
+		}
+
+		// Post meta.
 		return rwmb_the_value( $field_id, $args, null, false );
+	}
+
+	private function get_site(): Renderer\Site {
+		return new Renderer\Site( $this->meta_box_renderer );
+	}
+
+	private function get_option_name( array $settings_pages, string $field_id ): string {
+		foreach ( $settings_pages as $settings_page ) {
+			if ( array_key_exists( $field_id, $settings_page ) ) {
+				return $settings_page['_option_name'];
+			}
+		}
+		return '';
 	}
 
 	public function checkbox( $value, $checked = '', $unchecked = '' ) {

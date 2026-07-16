@@ -45,7 +45,7 @@ if ( ! function_exists( 'mb_get_all_blocks' ) ) {
 	function mb_get_all_blocks(): array {
 		$all_blocks = \WP_Block_Type_Registry::get_instance()->get_all_registered();
 
-		return array_filter( $all_blocks, function ($block) {
+		return array_filter( $all_blocks, function ( $block ) {
 			return str_starts_with( $block->name, 'meta-box/' );
 		} );
 	}

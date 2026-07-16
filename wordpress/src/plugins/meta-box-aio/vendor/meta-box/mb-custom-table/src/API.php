@@ -5,33 +5,44 @@ class API {
 	/**
 	 * Create table, use dbDelta() function.
 	 *
-	 * @param string $table_name Table name without prefix.
-	 * @param array  $columns    Table columns, is an array with key is column name
-	 *                           and value is column structure.
-	 * @param array  $keys       Table keys, is a numeric array contain key name and
-	 *                           column. Example: post_name (post_name).
+	 * @param string $table_name     Table name without prefix.
+	 * @param array  $columns        Table columns, is an array with key is column name
+	 *                               and value is column structure.
+	 * @param array  $keys           Table keys, is a numeric array contain key name and
+	 *                               column. Example: post_name (post_name).
+	 * @param bool   $auto_increment Deprecated.
 	 */
-	public static function create( string $table_name, array $columns, array $keys = [], bool $auto_increment = false ) {
+	public static function create( string $table, array $columns, array $keys = [], bool $auto_increment = false ): void {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-		$table_name = str_replace( '-', '_', $table_name );
+		$table = str_replace( '-', '_', $table );
 
-		$sql = self::get_table_schema( $table_name, $columns, $keys, $auto_increment );
+		// Always auto add ID column.
+		$columns = [ 'ID' => 'bigint(20) unsigned NOT NULL' ] + $columns;
+
+		// Allow models to modify the table schema by:
+		// - setting ID column auto-increment
+		// - adding new columns for supports (author, published_date, modified_date)
+		// - adding new keys for supports (author)
+		// Use do_action_ref_array() to pass by reference and to be able to modify both columns and keys.
+		do_action_ref_array( 'mbct_table_schema', [ $table, &$columns, &$keys ] );
+
+		$sql = self::get_query( $table, $columns, $keys );
 		dbDelta( $sql );
 	}
 
 	/**
-	 * Get table schema.
+	 * Get table creation query.
 	 *
-	 * @param string $table_name Table name.
-	 * @param array  $columns    Table columns, is an array with key is column name
-	 *                           and value is column structure.
-	 * @param array  $keys       Table keys, is a numeric array contain key name and
-	 *                           column. Example: post_name (post_name).
+	 * @param string $table    Table name.
+	 * @param array  $columns  Table columns, is an array with key is column name
+	 *                         and value is column structure.
+	 * @param array  $keys     Table keys, is a numeric array contain key name and
+	 *                         column. Example: post_name (post_name).
 	 *
-	 * @return string
+	 * @return string  The SQL query to create the table.
 	 */
-	private static function get_table_schema( string $table_name, array $columns, array $keys = [], bool $auto_increment = false ): string {
+	private static function get_query( string $table, array $columns, array $keys = [] ): string {
 		if ( ! $columns ) {
 			return '';
 		}
@@ -40,8 +51,7 @@ class API {
 
 		$charset_collate = $wpdb->get_charset_collate();
 
-		$lines   = [];
-		$lines[] = '`ID` bigint(20) unsigned NOT NULL' . ( $auto_increment ? ' AUTO_INCREMENT' : '' );
+		$lines = [];
 		foreach ( $columns as $name => $value ) {
 			$lines[] = "`$name` $value";
 		}
@@ -54,7 +64,7 @@ class API {
 		$lines = implode( ",\n", $lines );
 
 		$sql = "
-			CREATE TABLE $table_name (
+			CREATE TABLE $table (
 				$lines
 			) $charset_collate;
 		";
