@@ -24,6 +24,9 @@ module.exports = {
       resolve: 'gatsby-source-wordpress',
       options: {
         url: process.env.WP_GRAPHQL_URL,
+        schema: {
+          requestConcurrency: 5,
+        },
         html: {
           createStaticFiles: false,
           useGatsbyImage: false,
