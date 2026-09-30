@@ -6,7 +6,7 @@
  * @subpackage MB Frontend Submission
  */
 
-$request = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+$request = ! wp_doing_ajax() && isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
 ?>
 <div class="rwmb-confirmation"><?= esc_html( $data->confirmation ); ?></div>
 <?php if ( 'true' === $data->show_add_more ) : ?>

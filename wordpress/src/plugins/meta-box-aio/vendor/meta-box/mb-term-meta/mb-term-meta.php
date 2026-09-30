@@ -3,7 +3,7 @@
  * Plugin Name: MB Term Meta
  * Plugin URI:  https://metabox.io/plugins/mb-term-meta/
  * Description: Add custom fields (meta data) for terms.
- * Version:     1.2.11
+ * Version:     1.3.0
  * Author:      MetaBox.io
  * Author URI:  https://metabox.io
  * License:     GPL2+
@@ -35,6 +35,15 @@ if ( ! function_exists( 'mb_term_meta_load' ) ) {
 	function mb_term_meta_load() {
 		if ( ! defined( 'RWMB_VER' ) ) {
 			return;
+		}
+
+		list( , $url ) = \RWMB_Loader::get_path( __DIR__ );
+		define( 'MBTM_DIR', __DIR__ . '/' );
+		define( 'MBTM_URL', $url );
+
+		// Register before Meta Box's BlockBindings\Loader::register on init (priority 10).
+		if ( class_exists( \MetaBox\Integrations\BlockBindings\Source::class ) ) {
+			rwmb_get_registry( 'block_bindings' )->add( new MBTM\Integrations\BlockBindings\Term() );
 		}
 
 		new MBTM\Loader;

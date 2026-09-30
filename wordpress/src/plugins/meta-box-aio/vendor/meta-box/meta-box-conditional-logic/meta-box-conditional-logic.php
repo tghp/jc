@@ -3,7 +3,7 @@
  * Plugin Name: MB Conditional Logic
  * Plugin URI:  https://metabox.io/plugins/meta-box-conditional-logic/
  * Description: Control the visibility of field groups and fields or even HTML elements with ease.
- * Version:     1.6.29
+ * Version:     1.6.32
  * Author:      MetaBox.io
  * Author URI:  https://metabox.io
  * License:     GPL2+

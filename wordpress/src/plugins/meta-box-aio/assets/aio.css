@@ -60,6 +60,15 @@
 	width: 200px;
 }
 
+.mbaio-tools .select2-container {
+	--height: 40px;
+	--radius: 2px;
+
+	height: auto;
+	min-width: 160px;
+	max-width: 100%;
+}
+
 .mbaio-extensions .mb-box__body {
 	padding: 0;
 }
@@ -177,14 +186,12 @@ button.mbaio-tooltip {
 
 .mbaio-ajax {
 	position: fixed;
-	background: #000;
+	background: #0c0c0c;
 	color: #fff;
 	top: 60px;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	padding: 12px 20px;
-	width: 120px;
-	text-align: center;
 	border-radius: 3px;
 	z-index: 99;
 }

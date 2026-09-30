@@ -16,8 +16,9 @@ export default function Edit( { attributes, setAttributes } ) {
 		id,          // An array of field group IDs.
 		redirect,
 		form_id,
-		recaptcha_key,
-		recaptcha_secret,
+		captcha_provider,
+		captcha_key,
+		captcha_secret,
 		label_title,
 		label_username,
 		label_email,
@@ -36,12 +37,23 @@ export default function Edit( { attributes, setAttributes } ) {
 		show_if_user_can,
 		role,
 		append_role,
-		auto_login
+		auto_login,
+		recaptcha_key,    // @deprecated: use captcha_key instead.
+		recaptcha_secret  // @deprecated: use captcha_secret instead.
 	} = attributes;
 
-	if ( id.length === 0 && meta_box_id ) {
+	if ( 0 === id.length && meta_box_id ) {
 		id = meta_box_id.split( ',' );
 	}
+
+	if ( 0 === captcha_key.length && recaptcha_key.length ) {
+		captcha_key = recaptcha_key;
+	}
+
+	if ( 0 === captcha_secret.length && recaptcha_secret.length ) {
+		captcha_secret = recaptcha_secret;
+	}
+
 	// Remove invalid field group IDs.
 	id = id.filter( i => mbupRegisterData.field_groups.some( fg => fg.value === i ) );
 
@@ -195,16 +207,25 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ update( 'confirmation' ) }
 					/>
 				</PanelBody>
-				<PanelBody title={ __( 'Google reCaptcha (v3)', 'mb-user-profile' ) } initialOpen={ false }>
+				<PanelBody title={ __( 'Captcha', 'mb-user-profile' ) } initialOpen={ false }>
+					<SelectControl
+						label={ __( 'Captcha provider', 'mb-user-profile' ) }
+						value={ captcha_provider }
+						options={ [
+							{ label: __( 'Google reCaptcha (v3)', 'mb-user-profile' ), value: 'recaptcha' },
+							{ label: __( 'Cloudflare Turnstile', 'mb-user-profile' ), value: 'turnstile' }
+						] }
+						onChange={ update( 'captcha_provider' ) }
+					/>
 					<TextControl
 						label={ __( 'Site key', 'mb-user-profile' ) }
-						value={ recaptcha_key }
-						onChange={ update( 'recaptcha_key' ) }
+						value={ captcha_key }
+						onChange={ update( 'captcha_key' ) }
 					/>
 					<TextControl
 						label={ __( 'Secret key', 'mb-user-profile' ) }
-						value={ recaptcha_secret }
-						onChange={ update( 'recaptcha_secret' ) }
+						value={ captcha_secret }
+						onChange={ update( 'captcha_secret' ) }
 					/>
 				</PanelBody>
 			</InspectorControls>

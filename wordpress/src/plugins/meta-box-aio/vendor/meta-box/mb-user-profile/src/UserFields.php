@@ -59,10 +59,15 @@ class UserFields {
 		}
 	}
 
-	public function get_user_data() {
-		$data = [];
-		foreach ( $this->fields as $field ) {
+	public function get_user_data(): array {
+		$data   = [];
+		$fields = array_diff( $this->fields, [ 'role' ] );
+		foreach ( $fields as $field ) {
 			$data[ $field ] = (string) filter_input( INPUT_POST, $field );
+		}
+		// For admins to update user role.
+		if ( current_filter() === 'rwmb_profile_update_user_data' && current_user_can( 'edit_users' ) ) {
+			$data['role'] = (string) filter_input( INPUT_POST, 'role' );
 		}
 		return array_filter( $data );
 	}

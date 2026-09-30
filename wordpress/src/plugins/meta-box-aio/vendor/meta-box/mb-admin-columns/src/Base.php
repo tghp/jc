@@ -151,6 +151,13 @@ abstract class Base {
 			return;
 		}
 
+		// If target doesn't exist, we need to show it anyway
+		if ( '' !== $target && ! array_key_exists( $target, $columns ) ) {
+			$columns[ $id ] = $title;
+
+			return;
+		}
+
 		// Add new column in a specific position.
 		$new = [];
 		switch ( $position ) {

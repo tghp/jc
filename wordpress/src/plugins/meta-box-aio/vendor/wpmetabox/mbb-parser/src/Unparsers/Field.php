@@ -133,14 +133,11 @@ class Field extends Base {
 		return $this;
 	}
 
-	private function unparse_field_group() {
-		$this->default_state = 'expanded';
-
-		$keys = [ 'default_state', 'save_state', 'group_title' ];
-
-		foreach ( $keys as $key ) {
-			$this->$key = $this->$key ?? '';
-		}
+	private function unparse_field_group(): self {
+		$this->collapsible   = $this->collapsible ?? false;
+		$this->save_state    = $this->save_state ?? false;
+		$this->default_state = $this->default_state ?? 'expanded';
+		$this->group_title   = $this->group_title ?? '';
 
 		return $this;
 	}
@@ -214,26 +211,27 @@ class Field extends Base {
 
 	public function unparse_default_values() {
 		$this->id  = $this->id ?? uniqid();
-		$this->_id = $this->_id ?? $this->id;
+		$this->_id = $this->_id ?? ( $this->type ?? '' ) . '_' . uniqid();
 
 		$key_defaults = [
-			'id'                => $this->id,
-			'_id'               => $this->_id,
-			'save_field'        => true,
-			'label_description' => '',
-			'desc'              => '',
-			'size'              => '',
-			'hide_from_rest'    => false,
-			'hide_from_front'   => false,
-			'before'            => '',
-			'after'             => '',
-			'class'             => '',
-			'sanitize_callback' => '',
-			'required'          => false,
-			'disabled'          => false,
-			'readonly'          => false,
-			'prepend'           => '',
-			'append'            => '',
+			'id'                       => $this->id,
+			'_id'                      => $this->_id,
+			'save_field'               => true,
+			'label_description'        => '',
+			'desc'                     => '',
+			'size'                     => '',
+			'hide_from_rest'           => false,
+			'hide_from_front'          => false,
+			'hide_from_block_bindings' => false,
+			'before'                   => '',
+			'after'                    => '',
+			'class'                    => '',
+			'sanitize_callback'        => '',
+			'required'                 => false,
+			'disabled'                 => false,
+			'readonly'                 => false,
+			'prepend'                  => '',
+			'append'                   => '',
 		];
 
 		foreach ( $key_defaults as $key => $default ) {
@@ -253,7 +251,7 @@ class Field extends Base {
 		}
 
 		$lists  = \MBB\Helpers\AllowedBlockLists::get_lists();
-		$blocks = (array) $this->allowed_blocks;
+		$blocks = \MBB\Helpers\AllowedBlockLists::filter_valid_blocks( (array) $this->allowed_blocks );
 
 		// Check if a list with the same blocks already exists.
 		foreach ( $lists as $id => $list ) {

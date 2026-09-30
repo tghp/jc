@@ -134,7 +134,7 @@ class SubmissionForm extends \Elementor\Widget_Base {
 			'recaptcha',
 			[
 				'type'         => Controls_Manager::SWITCHER,
-				'label'        => esc_html__( 'Use Google reCaptcha', 'mb-frontend-submission' ),
+				'label'        => esc_html__( 'Use Captcha', 'mb-frontend-submission' ),
 				'label_on'     => esc_html__( 'True', 'mb-frontend-submission' ),
 				'label_off'    => esc_html__( 'False', 'mb-frontend-submission' ),
 				'return_value' => 'yes',
@@ -143,10 +143,26 @@ class SubmissionForm extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
-			'recaptcha_key',
+			'captcha_provider',
+			[
+				'type'      => Controls_Manager::SELECT,
+				'label'     => esc_html__( 'Captcha provider', 'mb-frontend-submission' ),
+				'options'   => [
+					'recaptcha' => esc_html__( 'Google reCaptcha (v3)', 'mb-frontend-submission' ),
+					'turnstile' => esc_html__( 'Cloudflare Turnstile', 'mb-frontend-submission' ),
+				],
+				'default'   => 'recaptcha',
+				'condition' => [
+					'recaptcha' => 'yes',
+				],
+			]
+		);
+
+		$this->add_control(
+			'captcha_key',
 			[
 				'type'               => Controls_Manager::TEXT,
-				'label'              => esc_html__( 'reCaptcha key', 'mb-frontend-submission' ),
+				'label'              => esc_html__( 'Captcha key', 'mb-frontend-submission' ),
 				'frontend_available' => true,
 				'condition'          => [
 					'recaptcha' => 'yes',
@@ -155,10 +171,10 @@ class SubmissionForm extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
-			'recaptcha_secret',
+			'captcha_secret',
 			[
 				'type'               => Controls_Manager::TEXT,
-				'label'              => esc_html__( 'reCaptcha secret', 'mb-frontend-submission' ),
+				'label'              => esc_html__( 'Captcha secret', 'mb-frontend-submission' ),
 				'frontend_available' => true,
 				'condition'          => [
 					'recaptcha' => 'yes',
@@ -221,9 +237,12 @@ class SubmissionForm extends \Elementor\Widget_Base {
 			$atts['confirmation'] = trim( $settings['confirmation'] );
 		}
 
-		if ( $settings['recaptcha'] === 'yes' && ! empty( $settings['recaptcha_key'] ) && ! empty( $settings['recaptcha_secret'] ) ) {
-			$atts['recaptcha_key']    = $settings['recaptcha_key'];
-			$atts['recaptcha_secret'] = $settings['recaptcha_secret'];
+		$captcha_key    = ( $settings['captcha_key'] ?? '' ) ?: ( $settings['recaptcha_key'] ?? '' );
+		$captcha_secret = ( $settings['captcha_secret'] ?? '' ) ?: ( $settings['recaptcha_secret'] ?? '' );
+		if ( $settings['recaptcha'] === 'yes' && ! empty( $captcha_key ) && ! empty( $captcha_secret ) ) {
+			$atts['captcha_provider'] = $settings['captcha_provider'] ?? 'recaptcha';
+			$atts['captcha_key']      = $captcha_key;
+			$atts['captcha_secret']   = $captcha_secret;
 		}
 
 		if ( ! empty( $settings['group_ids'] ) ) {

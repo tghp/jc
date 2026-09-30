@@ -1,4 +1,126 @@
-### 3.7.0 - 2026-04-22
+### 3.12.0 - 2026-09-17
+
+**Highlights:**
+
+This release lets you create **custom models** in the builder, instead of registering them in PHP with the MB Custom Table extension. Local JSON supports models as well.
+
+See our [blog post](https://metabox.io/create-custom-model-with-builder/) for an overview.
+
+**Other changes:**
+
+- Add a column schema editor for field group custom tables, with column types, indexes, and automatic columns for new fields
+- Include the WordPress table prefix by default for new custom tables
+- Transliterate accented characters in table names instead of dropping them
+- Report custom table create and update failures when saving, instead of reporting success
+- Report Local JSON sync failures when saving, and reject an ID that another JSON file already owns
+- Delete stale Local JSON files after renaming a field group
+- Update the existing object when importing a JSON file with the same ID, instead of creating a duplicate
+- Rebuild editor settings when importing settings pages and blocks, so icons and menu settings survive the round trip
+- Add authorization check in frontend's `Form::process()` to prevent unauthorized post edits
+- Fix multibyte IDs breaking meta box tooltips in WordPress 7.1
+- Fix admin column position suggestions missing the field ID prefix
+- Fix select advanced field preview not showing and not clearing
+- Fix error when trashing a post
+- Fix focus handling for hidden validation error elements
+- Fix image advanced in a cloneable group not displayed correctly in Elementor
+- Fix error with Slim SEO on All Pages screen when adding a view shortcode in a page
+
+## 3.11.0 - 2026-09-03
+
+**Highlights:**
+
+This version adds support for WooCommerce HPOS that allows you to use Meta Box fields to WooCommerce orders (with WooCommerce's High-Performance Order Storage (HPOS) feature). For more information, see our [blog post](https://metabox.io/hpos-support/).
+
+Also, frontend forms and user forms now support for Cloudflare Turnstile for captcha verification.
+
+**Other changes:**
+- Add info columns to post type and taxonomy list tables
+- Fix security bug with migration from CPT UI
+- Fix icon picker not showing for existing post types
+- Tighten security for Abilities: users now need the `edit_post` capability (or equivalent) to read custom field values, so sensitive data is only accessible to users who can edit content
+
+## 3.10.0 - 2026-07-30
+
+**Highlights:**
+
+This release introduces **Block Bindings** for Meta Box fields, allowing you to bind field values directly to blocks in the WordPress editor. Meta Box fields now appear as a source in the block bindings panel, making it easy to use custom field data inside blocks without shortcodes or PHP. See our [blog post](https://metabox.io/introducing-block-bindings/) for details.
+
+**Other changes:**
+
+- Fix password strength showing for login/forgot password forms
+- Update select2 library to fix missing placeholder
+- Fix `querySelector` errors with numeric IDs and missing DOM elements
+- Update description text for `max_clone` in relationship Fields tab for clarity
+- Update Twig to v3.11.3
+- Fix conflict style of the ajax message with WPEngine on Extensions page
+
+## 3.9.0 - 2026-07-17
+
+**Highlight:**
+
+Introducing `has_one_relationship` option — configure it per side (`from`/`to`) to limit an item to a connect to only one item on the other side. Combined on both sides it creates a one-to-one relationship; on one side only, it creates one-to-many without duplicates.
+
+Read more on [our blog](https://metabox.io/has-one-relationship) or [documentation](https://docs.metabox.io/extensions/mb-relationships/)
+
+**Other changes:**
+
+- Fix missing authorization check in `ajax_delete_file` for enhanced security
+- Allow HTML in switch on/off and button group labels (e.g., Dashicons)
+- Fix fatal error when post content (of mb-custom-post-type) contains invalid JSON
+- Fix not displaying term meta in the Elementor taxonomy loop
+- Fix deprecated notice in GroupField in Elementor
+- Fix missing authorization on frontend post delete.
+- Disable autoload for form config options to reduce alloptions bloat.
+
+## 3.8.0 - 2026-07-07
+
+**Highlights:**
+
+This release introduces **Abilities**, enabling you to manage custom post types and taxonomies, as well as create, retrieve, update, and delete posts and terms.
+
+See our [blog post](https://metabox.io/introducing-abilities/) for an overview or the [documentation](https://docs.metabox.io/abilities/) for usage details.
+
+**Other changes:**
+
+- Fix stale block lists when switching between block editor fields (#195)
+- Fix conflict with `tax_query` in `each_connected` for relationships
+- Fix unable to scroll in full screen mode for the `block_editor` field (#1689)
+- Use `WP_Query`'s `search_columns` instead of custom `search_by_title` filter
+- Fix autocomplete dropdown z-index in map/osm field inside MB Blocks
+- Fix image fields not displaying in Divi blurb and image fields
+
+## 3.7.2 - 2026-06-16
+
+- Update style to match WordPress 7
+- Improve admin menu width detection
+- Add support for Divi 5
+- Improve check for creating relationships table
+- Make conditional logic work for Meta Box blocks added in block_editor field
+- Add conditional logic support for media modal
+- Improve conditional logic check for blocks in normal mode
+- Update translations
+- Fix missing Pods Migration extension
+- Fix error when taxonomies contain null or empty values for term meta boxes
+- Fix showing block json path in admin columns when it's not enabled
+- Fix prefix in field ids when importing
+- Fix error when creating block with block.json and render_callback
+- Fix missing tabs, sub-groups, default_state when importing
+
+## 3.7.1 - 2026-05-13
+
+- Show Cmd+S/Ctrl+S shortcut in the Save button in the builder
+- Remove cache for block rendering
+- Fix conditional logic not working if switching between Post and Block panels and the dependent field is on the sidebar (#19)
+- Fix conditional logic detecting featured image in classic editor and block editor not working
+- Fix JS error if block icon is null
+- Fix nested same-type blocks all rendering first block's data
+- Fix InnerBlocks allowedBlocks/template not working
+- Fix mb.get_posts() in views not respecting relationship order
+- Fix text limiter not working with WYSIWYG fields on settings pages
+- Fix error in FieldKeys::all()
+- Fix reorder posts not clearing object cache
+
+## 3.7.0 - 2026-04-22
 
 - New field type `link` that allows you to add a link with native WordPress experience (similar to ACF)
 - Auto add child blocks for allowed blocks for the `block_editor` field
@@ -12,13 +134,13 @@
 - Fix missing `sprintf` import for date time field preview
 - Fix custom settings not available in the builder after import
 
-### 3.6.1 - 2026-03-30
+## 3.6.1 - 2026-03-30
 
 - Fix not loading block assets in iframed content and for `block_editor` field
 - Fix conditional logic not working for blocks with `normal` context
 - Fix file permission
 
-### 3.6.0 - 2026-03-26
+## 3.6.0 - 2026-03-26
 
 **Highlight:**
 
@@ -42,7 +164,7 @@ For more information, please see [the blog post](https://metabox.io/aio-3-6/)
 - Fix removed tabs but code generation still has code for tabs
 - Fix geolocation not working with conditional logic
 
-### 3.5.1 - 2026-03-09
+## 3.5.1 - 2026-03-09
 
 **Improvements for the block editor field:**
 
@@ -63,7 +185,7 @@ For more information, please see [the blog post](https://metabox.io/aio-3-6/)
 - Fix undefined `post_fields` in Bricks
 - Update `pt_BR` translations
 
-### 3.5.0 - 2026-02-03
+## 3.5.0 - 2026-02-03
 
 **Improvements for the block editor field:**
 
@@ -86,7 +208,7 @@ For more information, please see [the blog post](https://metabox.io/aio-3-6/)
 - Fix an issue where `{{ post.* }}` variables failed to display data from the current post inside the Query Loop block.
 - Fix cannot create new terms with required date/time fields
 
-### 3.4.0 - 2026-01-15
+## 3.4.0 - 2026-01-15
 
 **Highlights:**
 
@@ -100,16 +222,16 @@ Add new field type: `block_editor`. See more details on our [blog post](https://
 - Clarify table name restriction
 - Update built-in user profile blocks to use API version 3
 
-### 3.3.5 - 2025-12-04
+## 3.3.5 - 2025-12-04
 
 - Fix text limiter not working if a field has prepend value
 - Fix `sprintf` not imported, causing "Something is wrong" error
 
-### 3.3.4 - 2025-11-24
+## 3.3.4 - 2025-11-24
 
 - Fix the `use` statement with non-compound name has no effect
 
-### 3.3.3 - 2025-11-24
+## 3.3.3 - 2025-11-24
 
 - Add filters for reordering post types and taxonomies, allowing built-in or other post types/taxonomies can be reordered. See [docs for usage](https://docs.metabox.io/reorder-posts-terms/).
 - Change icon for required/cloneable badge to avoid UX confusion

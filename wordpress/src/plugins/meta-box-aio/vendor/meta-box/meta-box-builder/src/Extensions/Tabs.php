@@ -1,6 +1,7 @@
 <?php
 namespace MBB\Extensions;
 
+use MBB\Assets;
 use MBB\Control;
 use MetaBox\Support\Arr;
 use MBB\Helpers\Data;
@@ -13,9 +14,10 @@ class Tabs {
 		}
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_font_awesome' ] );
 		add_filter( 'mbb_meta_box_settings', [ $this, 'parse_meta_box_settings' ] );
+		add_filter( 'mbb_field_keys', [ $this, 'add_field_key' ] );
 	}
 
-	public function add_field_type( $field_types ) {
+	public function add_field_type( array $field_types ): array {
 		$field_types['tab'] = [
 			'title'    => __( 'Tab', 'meta-box-builder' ),
 			'category' => 'layout',
@@ -60,7 +62,7 @@ class Tabs {
 
 	public function enqueue_font_awesome(): void {
 		if ( get_current_screen()->id === 'meta-box' ) {
-			wp_enqueue_style( 'font-awesome', 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css', [], ' 6.7.2' );
+			Assets::enqueue_font_awesome();
 		}
 	}
 
@@ -173,5 +175,9 @@ class Tabs {
 			return substr( $field_id, strlen( $prefix ) );
 		}
 		return $field_id;
+	}
+
+	public function add_field_key( array $keys ): array {
+		return array_merge( $keys, [ 'tab' ] );
 	}
 }

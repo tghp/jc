@@ -11,10 +11,10 @@ class Loader {
 	}
 
 	public function change_metadata( array $settings, array $metadata ): array {
-		return $this->is_block_supports_metabox( $metadata ) ? $this->prepare_block_data( $settings, $metadata ) : $settings;
+		return $this->is_meta_box_block( $metadata ) ? $this->prepare_block_data( $settings, $metadata ) : $settings;
 	}
 
-	private function is_block_supports_metabox( array $metadata ): bool {
+	private function is_meta_box_block( array $metadata ): bool {
 		return isset( $metadata['name'] ) && str_starts_with( $metadata['name'], 'meta-box/' );
 	}
 
@@ -22,8 +22,8 @@ class Loader {
 	 * Add meta box data to be available in block attributes when rendering with block.json.
 	 * Basically, we alter the block settings to include the meta box data.
 	 *
-	 * @param array $settings Block settings.
-	 * @param array $metadata Meta box settings.
+	 * @param array $settings Array of determined settings for registering a block type
+	 * @param array $metadata Metadata provided for registering a block type
 	 * @return array $settings
 	 */
 	private function prepare_block_data( array $settings, array $metadata ): array {
@@ -98,16 +98,6 @@ class Loader {
 	public static function prepare_render_callback_data( $attributes, $content, $block, $settings, $meta_box ) {
 		$is_editor = defined( 'REST_REQUEST' ) && REST_REQUEST && isset( $_GET['context'] ) && $_GET['context'] === 'edit';
 
-		// Generate cache key based on block ID and attributes for non-editor requests.
-		$cache_key = null;
-		if ( ! $is_editor ) {
-			$cache_key = 'mbb_render_' . $meta_box->id . '_' . md5( wp_json_encode( $attributes['data'] ?? [] ) );
-			$cached    = wp_cache_get( $cache_key, 'mb-blocks' );
-			if ( $cached !== false ) {
-				return $cached;
-			}
-		}
-
 		// $attributes['data'] contains raw data from the block.
 		// We loop through the key and get the value from the db
 		// And set it to $attributes[$key]
@@ -115,20 +105,27 @@ class Loader {
 		// Before we do that, we need to set the block data to the meta box
 		$meta_box->set_block_data( $attributes );
 
+		$filters_to_remove = [];
 		foreach ( $attributes['data'] as $key => $value ) {
 			// If no value is set, we feed the default value so mb_get_block_field can return the same result with
 			// $attributes[$key].
 			if ( ! $value ) {
-				add_filter( 'rwmb_get_value', function ( $v, $field ) use ( $key, $value, $attributes ) {
+				$filter = function ( $v, $field ) use ( $key, $value, $attributes ) {
 					if ( isset( $field['id'] ) && $field['id'] !== $key ) {
 						return $v;
 					}
 
 					return $attributes[ $key ] ?? $v;
-				}, 10, 4 );
+				};
+				add_filter( 'rwmb_get_value', $filter, 10, 4 );
+				$filters_to_remove[] = $filter;
 			}
 
 			$attributes[ $key ] = mb_get_block_field( $key );
+		}
+
+		foreach ( $filters_to_remove as $filter ) {
+			remove_filter( 'rwmb_get_value', $filter, 10 );
 		}
 
 		// Prepare value for mb_views if it's installed
@@ -164,7 +161,6 @@ class Loader {
 		preg_match( '#<InnerBlocks(.*?)\/>#s', $rendered, $matches );
 
 		if ( empty( $matches ) ) {
-			wp_cache_set( $cache_key, $rendered, 'mb-blocks', 300 );
 			return $rendered;
 		}
 
@@ -181,8 +177,6 @@ class Loader {
 		}
 
 		$rendered = str_replace( $inner_blocks, $content, $rendered );
-
-		wp_cache_set( $cache_key, $rendered, 'mb-blocks', 300 );
 
 		return $rendered;
 	}

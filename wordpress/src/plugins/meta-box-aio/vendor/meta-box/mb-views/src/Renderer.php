@@ -121,6 +121,19 @@ class Renderer {
 		if ( empty( $posts ) || ! is_array( $posts ) ) {
 			$posts = [];
 		}
+
+		$posts = array_filter( array_map( function( $p ) {
+			if ( $p instanceof WP_Post ) {
+				return $p;
+			}
+
+			if ( is_object( $p ) && isset( $p->ID ) ) {
+				return get_post( $p->ID );
+			}
+
+			return null;
+		}, $posts ) );
+
 		$posts = array_map( [ $this, 'create_post_object' ], $posts );
 
 		$data = [

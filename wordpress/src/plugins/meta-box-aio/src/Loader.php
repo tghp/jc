@@ -1,6 +1,8 @@
 <?php
 namespace MBAIO;
 
+use MetaBox\Updater\Option;
+
 class Loader {
 	public function __construct() {
 		// Use 'init' hook to make the filter 'mb_aio_extensions' can be used in themes or other plugins that loaded after this plugin.
@@ -9,12 +11,31 @@ class Loader {
 	}
 
 	public function load_extensions( $extensions = [] ): void {
+		// Do not load extensions when the license is refunded.
+		if ( $this->is_license_refunded() ) {
+			return;
+		}
+
 		$extensions = empty( $extensions ) ? $this->get_enabled_extensions() : $extensions;
 		$files      = array_map( [ $this, 'get_extension_file' ], $extensions );
 		$files      = array_filter( $files );
 		foreach ( $files as $file ) {
 			require_once $file;
 		}
+	}
+
+	private function is_license_refunded(): bool {
+		return 'refunded' === $this->get_updater()->get_license_status();
+	}
+
+	private function get_updater(): Option {
+		static $updater;
+
+		if ( ! $updater ) {
+			$updater = new Option();
+		}
+
+		return $updater;
 	}
 
 	private function get_enabled_extensions() {

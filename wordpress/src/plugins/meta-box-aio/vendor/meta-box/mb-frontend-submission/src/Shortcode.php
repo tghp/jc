@@ -91,6 +91,10 @@ class Shortcode {
 
 		$this->form->delete();
 
+		if ( $this->form->error->has_errors() ) {
+			$this->send_error_message( $this->form->error->get_error_message() );
+		}
+
 		$this->send_success_message( $this->config['delete_confirmation'] );
 
 		$redirect = empty( $this->config['redirect'] ) ? add_query_arg( 'rwmb-form-deleted', $this->key ) : $this->config['redirect'];
@@ -108,38 +112,45 @@ class Shortcode {
 			$this->send_error_message( __( 'Invalid request. Please try again.', 'mb-frontend-submission' ) );
 		}
 
-		$this->check_ajax();
-		$this->check_recaptcha( $this->config );
+		$this->check_nonce();
+
+		$this->check_captcha( $this->config );
 
 		$this->form = FormFactory::make( $this->config );
 	}
 
-	private function check_ajax() {
-		if ( $this->is_ajax() && ! check_ajax_referer( 'ajax_nonce' ) ) {
-			$this->send_error_message( __( 'Invalid ajax request. Please try again.', 'mb-frontend-submission' ) );
+	private function check_nonce() {
+		if ( ! check_ajax_referer( 'ajax_nonce', false, false ) ) {
+			$this->send_error_message( __( 'Invalid request. Please try again.', 'mb-frontend-submission' ) );
 		}
 	}
 
-	private function check_recaptcha( $config ) {
-		if ( ! $config['recaptcha_secret'] ) {
+	private function check_captcha( $config ) {
+		if ( ! $config['captcha_secret'] ) {
 			return;
 		}
 
-		$token = (string) rwmb_request()->post( 'mbfs_recaptcha_token' );
+		$token = (string) rwmb_request()->post( 'mbfs_captcha_token' );
+
 		if ( ! $token ) {
 			$this->send_error_message( __( 'Invalid captcha token.', 'mb-frontend-submission' ) );
 		}
 
-		$url = 'https://www.google.com/recaptcha/api/siteverify';
-		$url = add_query_arg( [
-			'secret'   => $config['recaptcha_secret'],
-			'response' => $token,
-		], $url );
+		$url     = 'turnstile' === $config['captcha_provider'] ? 'https://challenges.cloudflare.com/turnstile/v0/siteverify' : 'https://www.google.com/recaptcha/api/siteverify';
+		$request = wp_remote_post( $url, [
+			'body' => [
+				'secret'   => $config['captcha_secret'],
+				'response' => $token,
+			],
+		] );
 
-		$response = wp_remote_retrieve_body( wp_remote_get( $url ) );
-		$response = json_decode( $response, true );
+		if ( is_wp_error( $request ) ) {
+			$this->send_error_message( __( 'Captcha verification failed. Please try again.', 'mb-frontend-submission' ) );
+		}
 
-		if ( empty( $response['action'] ) || 'mbfs' !== $response['action'] ) {
+		$response = json_decode( wp_remote_retrieve_body( $request ), true );
+
+		if ( empty( $response['success'] ) || 'mbfs' !== ( $response['action'] ?? '' ) ) {
 			$this->send_error_message( __( 'Invalid captcha token.', 'mb-frontend-submission' ) );
 		}
 	}

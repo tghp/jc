@@ -1,6 +1,8 @@
 <?php
 namespace MBViews;
 
+use WP_Query;
+
 /**
  * Make all functions available via function mb.function.
  *
@@ -44,7 +46,9 @@ class TwigProxy {
 	}
 
 	public function get_posts( $args ) {
-		$posts = get_posts( $args );
+		$query = new WP_Query( $args );
+		$posts = $query->posts;
+
 		if ( empty( $posts ) || ! is_array( $posts ) ) {
 			$posts = [];
 		}

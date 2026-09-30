@@ -5,6 +5,9 @@ use MetaBox\UserProfile\ConfigStorage;
 use WP_Error;
 
 abstract class Base {
+	const SCRIPT_TURNSTILE = 'cloudflare-turnstile';
+	const SCRIPT_RECAPTCHA = 'google-recaptcha';
+
 	public $config;
 	public $error;
 	public $meta_boxes;
@@ -27,8 +30,8 @@ abstract class Base {
 			return;
 		}
 
-		$this->enqueue();
 		$this->enqueue_recaptcha();
+		$this->enqueue();		
 		$this->localize();
 
 		if ( $this->is_processed() ) {
@@ -61,6 +64,8 @@ abstract class Base {
 			$meta_box->enqueue();
 			$meta_box->show();
 		}
+
+		$this->render_turnstile();
 
 		wp_localize_jquery_ui_datepicker();
 
@@ -136,7 +141,14 @@ abstract class Base {
 		if ( ! isset( $this->config['password_strength'] ) || 'false' === $this->config['password_strength'] ) {
 			return;
 		}
-		wp_enqueue_script( 'mbup', MBUP_URL . 'assets/user-profile.js', [ 'jquery', 'password-strength-meter' ], MBUP_VER, true );
+
+		$dependencies = [ 'jquery', 'password-strength-meter' ];
+
+		if ( $this->config['captcha_key'] ) {
+			$dependencies[] = 'turnstile' === $this->config['captcha_provider'] ? self::SCRIPT_TURNSTILE : self::SCRIPT_RECAPTCHA;
+		}
+
+		wp_enqueue_script( 'mbup', MBUP_URL . 'assets/user-profile.js', $dependencies, MBUP_VER, true );
 
 		$this->localize_data = array_merge( $this->localize_data, [
 			'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
@@ -157,15 +169,23 @@ abstract class Base {
 	}
 
 	protected function enqueue_recaptcha() {
-		if ( ! $this->config['recaptcha_key'] ) {
+		if ( ! $this->config['captcha_key'] ) {
 			return;
 		}
 
-		wp_enqueue_script( 'mbup', MBUP_URL . 'assets/user-profile.js', [ 'jquery', 'password-strength-meter' ], MBUP_VER, true );
-		wp_enqueue_script( 'google-recaptcha', 'https://www.google.com/recaptcha/api.js?render=' . $this->config['recaptcha_key'], [], '3', true );
+		if ( 'turnstile' === $this->config['captcha_provider'] ) {
+			wp_enqueue_script( self::SCRIPT_TURNSTILE, 'https://challenges.cloudflare.com/turnstile/v0/api.js', [], '0', true );
+		} else {
+			wp_enqueue_script( self::SCRIPT_RECAPTCHA, 'https://www.google.com/recaptcha/api.js?render=' . $this->config['captcha_key'], [], '3', true );
+		}
+
+		wp_enqueue_script( 'mbup', MBUP_URL . 'assets/user-profile.js', [ 'jquery', 'password-strength-meter', 'turnstile' === $this->config['captcha_provider'] ? self::SCRIPT_TURNSTILE : self::SCRIPT_RECAPTCHA ], MBUP_VER, true );
 
 		$this->localize_data = array_merge( $this->localize_data, [
-			'recaptchaKey'        => $this->config['recaptcha_key'],
+			'ajaxUrl'             => admin_url( 'admin-ajax.php' ),
+			'captchaProvider'     => $this->config['captcha_provider'],
+			'captchaKey'          => $this->config['captcha_key'],
+			'captchaRequired'     => __( 'Please complete the captcha.', 'mb-user-profile' ),
 			'captchaExecuteError' => __( 'Error trying to execute grecaptcha.', 'mb-user-profile' ),
 		] );
 	}
@@ -180,31 +200,45 @@ abstract class Base {
 		echo '<input type="hidden" name="mbup_key" value="', esc_attr( $key ), '">';
 		echo '<input type="hidden" name="mbup_type" value="', esc_attr( $this->type ), '">';
 
-		if ( $this->config['recaptcha_key'] ) {
-			echo '<input type="hidden" name="mbup_recaptcha_token" value="">';
+		if ( $this->config['captcha_key'] ) {
+			echo '<input type="hidden" name="mbup_captcha_token" value="">';
 		}
 	}
 
-	protected function check_recaptcha() {
-		if ( ! $this->config['recaptcha_secret'] ) {
+	private function render_turnstile() {
+		if ( 'turnstile' !== $this->config['captcha_provider'] ) {
 			return;
 		}
 
-		$token = (string) rwmb_request()->post( 'mbup_recaptcha_token' );
+		echo '<div class="mbup-turnstile" data-form-id="' . esc_attr( $this->config['form_id'] ) . '"></div>';
+	}
+
+	protected function check_recaptcha() {
+		if ( ! $this->config['captcha_secret'] ) {
+			return;
+		}
+
+		$token = (string) rwmb_request()->post( 'mbup_captcha_token' );
+
 		if ( ! $token ) {
 			wp_die( esc_html__( 'Invalid captcha token', 'mb-user-profile' ) );
 		}
 
-		$url = 'https://www.google.com/recaptcha/api/siteverify';
-		$url = add_query_arg( [
-			'secret'   => $this->config['recaptcha_secret'],
-			'response' => $token,
-		], $url );
+		$url     = 'turnstile' === $this->config['captcha_provider'] ? 'https://challenges.cloudflare.com/turnstile/v0/siteverify' : 'https://www.google.com/recaptcha/api/siteverify';
+		$request = wp_remote_post( $url, [
+			'body' => [
+				'secret'   => $this->config['captcha_secret'],
+				'response' => $token,
+			],
+		] );
 
-		$response = wp_remote_retrieve_body( wp_remote_get( $url ) );
-		$response = json_decode( $response, true );
+		if ( is_wp_error( $request ) ) {
+			wp_die( esc_html__( 'Captcha verification failed. Please try again.', 'mb-user-profile' ) );
+		}
 
-		if ( empty( $response['success'] ) || empty( $response['action'] ) || 'mbup' !== $response['action'] ) {
+		$response = json_decode( wp_remote_retrieve_body( $request ), true );
+
+		if ( empty( $response['success'] ) || 'mbup' !== ( $response['action'] ?? '' ) ) {
 			wp_die( esc_html__( 'Cannot verify captcha', 'mb-user-profile' ) );
 		}
 	}

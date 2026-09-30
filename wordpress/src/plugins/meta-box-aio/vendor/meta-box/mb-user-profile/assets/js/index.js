@@ -1,11 +1,12 @@
-import { checkRecaptcha } from './helpers.js';
+import { checkRecaptcha, checkTurnstile, initTurnstile } from './helpers.js';
 
 const $ = jQuery;
 const disableButtons = $btn => $btn.prop( 'disabled', true );
 const enableButtons = $btn => $btn.prop( 'disabled', false );
 
 function processForm() {
-	const $form = $( this ),
+	const form = this;
+	const $form = $( form ),
 		key = 'MBUP_Data_' + $form.find( '[name^="mbup_key"]' ).val(),
 		i18n = window[ key ];
 
@@ -18,6 +19,9 @@ function processForm() {
 		window.ajaxurl = i18n.ajaxUrl;
 	}
 
+	// Initialize turnstile widget if needed.
+	initTurnstile( form );
+
 	const $submitBtn = $form.find( '[name^="rwmb_profile_submit"]' );
 	const validate = () => {
 		$( '#rwmb-validation-message' ).remove(); // Remove all previous validation message.
@@ -25,10 +29,10 @@ function processForm() {
 	};
 
 	// Native form submit. Can't use form.submit() because form.submit is the submit button, not a function.
-	const submitCallback = () => HTMLFormElement.prototype.submit.call( $form[ 0 ] );
+	const submitCallback = () => HTMLFormElement.prototype.submit.call( form );
 
 	function handleSubmitClick( e ) {
-		if ( i18n.recaptchaKey ) {
+		if ( i18n.captchaKey ) {
 			e.preventDefault();
 		}
 
@@ -39,14 +43,19 @@ function processForm() {
 
 		disableButtons( $submitBtn );
 
-		if ( i18n.recaptchaKey ) {
-			checkRecaptcha( {
-				key: i18n.recaptchaKey,
+		if ( i18n.captchaKey ) {
+			const checkCaptcha = 'turnstile' === i18n.captchaProvider ? checkTurnstile : checkRecaptcha;
+
+			checkCaptcha( {
+				form,
 				success: token => {
-					$form.find( 'input[name="mbup_recaptcha_token"]' ).val( token );
+					$form.find( 'input[name="mbup_captcha_token"]' ).val( token );
 					submitCallback();
 				},
-				error: () => alert( i18n.captchaExecuteError )
+				error: () => {
+					alert( 'turnstile' === i18n.captchaProvider ? i18n.captchaRequired : i18n.captchaExecuteError );
+					enableButtons( $submitBtn );
+				}
 			} );
 		} else {
 			submitCallback();

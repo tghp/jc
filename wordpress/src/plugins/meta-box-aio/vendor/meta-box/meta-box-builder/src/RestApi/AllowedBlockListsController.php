@@ -6,6 +6,7 @@ use WP_REST_Server;
 use WP_REST_Request;
 use WP_Error;
 use WP_Block_Type_Registry;
+use WP_Query;
 
 class AllowedBlockListsController {
 	public function __construct() {
@@ -18,12 +19,14 @@ class AllowedBlockListsController {
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_items' ],
 				'permission_callback' => [ $this, 'has_permission' ],
+				'show_in_index'       => false,
 			],
 			[
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'update_item' ],
 				'permission_callback' => [ $this, 'has_permission' ],
 				'args'                => $this->get_schema(),
+				'show_in_index'       => false,
 			],
 		] );
 
@@ -32,6 +35,7 @@ class AllowedBlockListsController {
 				'methods'             => WP_REST_Server::DELETABLE,
 				'callback'            => [ $this, 'delete_item' ],
 				'permission_callback' => [ $this, 'has_permission' ],
+				'show_in_index'       => false,
 			],
 		] );
 
@@ -40,6 +44,7 @@ class AllowedBlockListsController {
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'import_items' ],
 				'permission_callback' => [ $this, 'has_permission' ],
+				'show_in_index'       => false,
 			],
 		] );
 
@@ -48,6 +53,7 @@ class AllowedBlockListsController {
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'export_items' ],
 				'permission_callback' => [ $this, 'has_permission' ],
+				'show_in_index'       => false,
 			],
 		] );
 
@@ -55,6 +61,7 @@ class AllowedBlockListsController {
 			'methods'             => WP_REST_Server::READABLE,
 			'callback'            => [ $this, 'get_blocks' ],
 			'permission_callback' => [ $this, 'has_permission' ],
+			'show_in_index'       => false,
 		] );
 	}
 
@@ -110,7 +117,7 @@ class AllowedBlockListsController {
 	public function delete_item( WP_REST_Request $request ): array {
 		$id = sanitize_key( $request->get_param( 'id' ) );
 
-		$query = new \WP_Query( [
+		$query = new WP_Query( [
 			'post_type'              => 'meta-box',
 			'post_status'            => 'publish',
 			'posts_per_page'         => -1,

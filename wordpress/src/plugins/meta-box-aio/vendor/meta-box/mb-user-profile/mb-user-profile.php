@@ -3,7 +3,7 @@
  * Plugin Name: MB User Profile
  * Plugin URI:  https://metabox.io/plugins/mb-user-profile/
  * Description: Register, edit user profiles with custom fields on the front end.
- * Version:     2.5.13
+ * Version:     2.6.0
  * Author:      MetaBox.io
  * Author URI:  https://metabox.io
  * License:     GPL2+
@@ -53,9 +53,9 @@ if ( ! function_exists( 'mb_user_profile_load' ) ) {
 
 		list( , $url ) = RWMB_Loader::get_path( __DIR__ );
 		define( 'MBUP_URL', $url );
-		define( 'MBUP_VER', '2.5.13' );
+		define( 'MBUP_VER', '2.6.0' );
 		define( 'MBUP_DIR', __DIR__ );
-		define( 'MBUP_DB_VER', 2 );
+		define( 'MBUP_DB_VER', 3 );
 
 		load_plugin_textdomain( 'mb-user-profile', false, plugin_basename( __DIR__ ) . '/languages/' );
 

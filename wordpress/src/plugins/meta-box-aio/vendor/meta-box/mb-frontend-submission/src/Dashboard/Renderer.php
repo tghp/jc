@@ -210,15 +210,15 @@ class Renderer {
 		<table class="mbfs-posts">
 			<tr>
 				<?php foreach ( Arr::from_csv( $columns ) as $column ) : ?>
-					<th><?= esc_html( $column ); ?></th>
+					<th><?php echo esc_html( $column ); ?></th>
 				<?php endforeach; ?>
-				<th><?= esc_html( $atts['label_actions'] ); ?></th>
+				<th><?php echo esc_html( $atts['label_actions'] ); ?></th>
 			</tr>
 
 			<?php foreach ( $this->model_result_set['results'] as $model ) : ?>
 				<tr>
 					<?php foreach ( Arr::from_csv( $columns ) as $column ) : ?>
-						<td><?= esc_html( $model->$column ?? '' ); ?></td>
+						<td><?php echo esc_html( $model->$column ?? '' ); ?></td>
 					<?php endforeach; ?>
 					<td align="center" class="mbfs-actions">
 						<?php
@@ -272,7 +272,7 @@ class Renderer {
 					echo '<th>', esc_html( $atts['label_status'] ), '</th>';
 				}
 				?>
-				<th><?= esc_html( $atts['label_actions'] ); ?></th>
+				<th><?php echo esc_html( $atts['label_actions'] ); ?></th>
 			</tr>
 			<?php
 			while ( $this->query->have_posts() ) :

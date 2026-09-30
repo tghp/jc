@@ -19,8 +19,9 @@ class LoginForm {
 		$form = Factory::make( [
 			'redirect'            => $attributes['redirect'],
 			'form_id'             => $attributes['form_id'],
-			'recaptcha_key'       => $attributes['recaptcha_key'],
-			'recaptcha_secret'    => $attributes['recaptcha_secret'],
+			'captcha_provider'    => $attributes['captcha_provider'] ?? 'recaptcha',
+			'captcha_key'         => $attributes['captcha_key'] ?: ( $attributes['recaptcha_key'] ?? '' ),
+			'captcha_secret'      => $attributes['captcha_secret'] ?: ( $attributes['recaptcha_secret'] ?? '' ),
 			'label_title'         => $attributes['label_title'],
 			'label_username'      => $attributes['label_username'],
 			'label_password'      => $attributes['label_password'],

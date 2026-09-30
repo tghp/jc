@@ -3,7 +3,7 @@
  * Plugin Name: MB User Meta
  * Plugin URI:  https://metabox.io/plugins/mb-user-meta/
  * Description: Add custom fields (meta data) for users.
- * Version:     1.2.10
+ * Version:     1.3.0
  * Author:      MetaBox.io
  * Author URI:  https://metabox.io
  * License:     GPL2+
@@ -39,5 +39,10 @@ if ( ! function_exists( 'mb_user_meta_load' ) ) {
 
 		new MBUM\Loader;
 		new MBUM\DuplicatedFields;
+
+		// Register before Meta Box's BlockBindings\Loader::register on init (priority 10).
+		if ( class_exists( \MetaBox\Integrations\BlockBindings\Source::class ) ) {
+			rwmb_get_registry( 'block_bindings' )->add( new MBUM\Integrations\BlockBindings\Author() );
+		}
 	}
 }

@@ -210,20 +210,31 @@ class SubmissionForm extends \Bricks\Element {
 			'description' => esc_html__( 'The text for the confirmation message when the post is deleted.', 'mb-frontend-submission' ),
 		];
 
-		$this->controls['recaptcha_key'] = [
-			'tab'         => 'content',
-			'label'       => esc_html__( 'Recaptcha key', 'mb-frontend-submission' ),
-			'type'        => 'text',
-			'default'     => '',
-			'description' => esc_html__( 'Google reCaptcha site key (version 3).', 'mb-frontend-submission' ),
+		$this->controls['captcha_provider'] = [
+			'tab'     => 'content',
+			'label'   => esc_html__( 'Captcha provider', 'mb-frontend-submission' ),
+			'type'    => 'select',
+			'options' => [
+				'recaptcha' => esc_html__( 'Google reCaptcha (v3)', 'mb-frontend-submission' ),
+				'turnstile' => esc_html__( 'Cloudflare Turnstile', 'mb-frontend-submission' ),
+			],
+			'default' => 'recaptcha',
 		];
 
-		$this->controls['recaptcha_secret'] = [
+		$this->controls['captcha_key'] = [
 			'tab'         => 'content',
-			'label'       => esc_html__( 'Recaptcha secret', 'mb-frontend-submission' ),
+			'label'       => esc_html__( 'Captcha key', 'mb-frontend-submission' ),
 			'type'        => 'text',
 			'default'     => '',
-			'description' => esc_html__( 'Google reCaptcha secret key (version 3).', 'mb-frontend-submission' ),
+			'description' => esc_html__( 'Site key for Google reCaptcha v3 or Cloudflare Turnstile.', 'mb-frontend-submission' ),
+		];
+
+		$this->controls['captcha_secret'] = [
+			'tab'         => 'content',
+			'label'       => esc_html__( 'Captcha secret', 'mb-frontend-submission' ),
+			'type'        => 'text',
+			'default'     => '',
+			'description' => esc_html__( 'Secret key for Google reCaptcha v3 or Cloudflare Turnstile.', 'mb-frontend-submission' ),
 		];
 	}
 
@@ -250,7 +261,7 @@ class SubmissionForm extends \Bricks\Element {
 			'post_id'             => $settings['post_id'] ?? '',
 			'object_id'           => $settings['object_id'] ?? '',
 			'post_status'         => $settings['post_status'] ?? 'publish',
-			'post_fields'         => implode( ',', $settings['post_fields'] ?? ['title', 'content'] ),
+			'post_fields'         => implode( ',', $settings['post_fields'] ?? [ 'title', 'content' ] ),
 			'label_title'         => $settings['label_title'] ?? __( 'Title', 'mb-frontend-submission' ),
 			'label_content'       => $settings['label_content'] ?? __( 'Content', 'mb-frontend-submission' ),
 			'label_excerpt'       => $settings['label_excerpt'] ?? __( 'Excerpt', 'mb-frontend-submission' ),
@@ -262,8 +273,9 @@ class SubmissionForm extends \Bricks\Element {
 			'redirect'            => $settings['redirect'] ?? '',
 			'confirmation'        => $settings['confirmation'] ?? __( 'Your post has been successfully submitted. Thank you.', 'mb-frontend-submission' ),
 			'delete_confirmation' => $settings['delete_confirmation'] ?? __( 'Your post has been successfully deleted.', 'mb-frontend-submission' ),
-			'recaptcha_key'       => $settings['recaptcha_key'] ?? '',
-			'recaptcha_secret'    => $settings['recaptcha_secret'] ?? '',
+			'captcha_provider'    => $settings['captcha_provider'] ?? 'recaptcha',
+			'captcha_key'         => ( $settings['captcha_key'] ?? '' ) ?: ( $settings['recaptcha_key'] ?? '' ),
+			'captcha_secret'      => ( $settings['captcha_secret'] ?? '' ) ?: ( $settings['recaptcha_secret'] ?? '' ),
 		] );
 		if ( empty( $form ) || ( empty( $form->config['id'] ) && empty( $form->config['post_fields'] ) ) ) {
 			echo '';

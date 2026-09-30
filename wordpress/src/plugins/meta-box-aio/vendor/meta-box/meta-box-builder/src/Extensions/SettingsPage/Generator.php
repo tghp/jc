@@ -1,6 +1,7 @@
 <?php
 namespace MBB\Extensions\SettingsPage;
 
+use MBB\Helpers\Id;
 use WP_REST_Server;
 use WP_REST_Request;
 
@@ -14,6 +15,7 @@ class Generator {
 			'methods'             => WP_REST_Server::CREATABLE,
 			'callback'            => [ $this, 'generate' ],
 			'permission_callback' => [ $this, 'has_permission' ],
+			'show_in_index'       => false,
 		] );
 	}
 
@@ -28,7 +30,7 @@ class Generator {
 		}
 
 		$settings  = $request->get_param( 'settings' );
-		$post_name = sanitize_title( empty( $settings['id'] ) ? $post_title : $settings['id'] );
+		$post_name = Id::sanitize( empty( $settings['id'] ) ? $post_title : $settings['id'], $post_title );
 
 		$settings['menu_title'] = $post_title;
 		$settings['id']         = $post_name;

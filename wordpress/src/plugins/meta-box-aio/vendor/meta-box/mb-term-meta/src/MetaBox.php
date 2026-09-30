@@ -1,11 +1,9 @@
 <?php
 namespace MBTM;
 
-use RWMB_Loader;
-
 class MetaBox extends \RW_Meta_Box {
 	public function __construct( $meta_box ) {
-		$meta_box['taxonomies'] = (array) $meta_box['taxonomies'];
+		$meta_box['taxonomies'] = array_filter( (array) $meta_box['taxonomies'] );
 		$this->object_type      = 'term';
 		parent::__construct( $meta_box );
 	}
@@ -51,8 +49,7 @@ class MetaBox extends \RW_Meta_Box {
 
 		parent::enqueue();
 
-		list( , $url ) = RWMB_Loader::get_path( dirname( __DIR__ ) );
-		wp_enqueue_style( 'mb-term-meta', $url . 'assets/term-meta.css', '', '1.2.8' );
+		wp_enqueue_style( 'mb-term-meta', MBTM_URL . 'assets/term-meta.css', '', filemtime( MBTM_DIR . 'assets/term-meta.css' ) );
 
 		// Only load these scripts on add term page.
 		$screen = get_current_screen();
@@ -60,7 +57,7 @@ class MetaBox extends \RW_Meta_Box {
 			return;
 		}
 
-		wp_enqueue_script( 'mb-term-meta', $url . 'assets/term-meta.js', array( 'jquery' ), '1.2.8', true );
+		wp_enqueue_script( 'mb-term-meta', MBTM_URL . 'assets/term-meta.js', array( 'jquery' ), filemtime( MBTM_DIR . 'assets/term-meta.js' ), true );
 		wp_localize_script( 'mb-term-meta', 'MBTermMeta', array(
 			'addedMessage' => __( 'Term added.', 'mb-term-meta' ),
 		) );

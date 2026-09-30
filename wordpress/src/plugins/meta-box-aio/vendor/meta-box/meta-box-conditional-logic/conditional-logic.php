@@ -10,19 +10,23 @@ class MB_Conditional_Logic {
 		add_action( 'rwmb_after', [ $this, 'enqueue_in_footer' ] );
 
 		add_action( 'rwmb_enqueue_scripts', [ $this, 'enqueue_in_customizer_gutenberg' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
+
+		// Always enqueue for `block_editor` field to make it work for Meta Box blocks
+		add_action( 'rwmb_enqueue_block_editor_assets', [ $this, 'enqueue' ] );
 	}
 
-	public function insert_meta_box_conditions( $obj ) {
+	public function insert_meta_box_conditions( $obj ): void {
 		echo $this->get_conditions_html( $obj->meta_box );
 	}
 
-	public function insert_toggle_type( $obj ) {
+	public function insert_toggle_type( $obj ): void {
 		if ( $obj->toggle_type ) {
 			echo '<template class="mbc-toggle-type" data-toggle_type="' . esc_attr( $obj->toggle_type ) . '"></template>';
 		}
 	}
 
-	public function insert_field_conditions( $begin, $field ) {
+	public function insert_field_conditions( $begin, $field ): string {
 		return $begin . $this->get_conditions_html( $field );
 	}
 
@@ -43,7 +47,7 @@ class MB_Conditional_Logic {
 		return '<template class="mbc-conditions" data-conditions="' . esc_attr( wp_json_encode( $conditions ) ) . '"></template>';
 	}
 
-	public function enqueue_in_footer() {
+	public function enqueue_in_footer(): void {
 		// Bypass if no meta box/field/outside conditions.
 		if ( ! $this->has_conditions && ! $this->get_outside_conditions() ) {
 			return;
@@ -55,30 +59,39 @@ class MB_Conditional_Logic {
 		$this->has_conditions = false;
 	}
 
-	public function enqueue_in_customizer_gutenberg() {
+	public function enqueue_in_customizer_gutenberg(): void {
 		// In Customizer (for Settings Page extension), meta boxes are loaded via JavaScript.
 		// We can't enqueue with "rwmb_after", and must use "rwmb_enqueue_scripts".
 		if ( is_customize_preview() ) {
 			$this->enqueue();
 		}
+	}
 
-		// Always enqueue for Gutenberg, to make it work inside dynamic blocks (created with MB Blocks).
-		if ( ! is_admin() ) {
+	public function admin_enqueue_scripts(): void {
+		$screen = get_current_screen();
+		if ( ! $screen ) {
 			return;
 		}
-		$screen = get_current_screen();
-		if ( $screen && method_exists( $screen, 'is_block_editor' ) && $screen->is_block_editor() ) {
+
+		// Always enqueue for the block editor to make it work for Meta Box blocks.
+		if ( $screen->is_block_editor() ) {
+			$this->enqueue();
+		}
+
+		// Always enqueue for Media (attachment) screen, to make it work for media modal.
+		if ( $screen->id === 'upload' ) {
 			$this->enqueue();
 		}
 	}
 
-	public function enqueue() {
+	public function enqueue(): void {
 		list( , $url ) = RWMB_Loader::get_path( __DIR__ );
+		wp_enqueue_script( 'rwmb', RWMB_JS_URL . 'script.js', [ 'jquery' ], RWMB_VER, true );
 		wp_enqueue_script( 'mb-conditional-logic', $url . 'conditional-logic.js', [ 'underscore', 'rwmb' ], filemtime( __DIR__ . '/conditional-logic.js' ), true );
 		\RWMB_Helpers_Field::localize_script_once( 'mb-conditional-logic', 'conditions', $this->get_outside_conditions() );
 	}
 
-	private function get_outside_conditions() {
+	private function get_outside_conditions(): array {
 		if ( null !== $this->outside_conditions ) {
 			return $this->outside_conditions;
 		}
@@ -114,7 +127,7 @@ class MB_Conditional_Logic {
 		return compact( 'when', 'relation' );
 	}
 
-	private function get_normalized_criteria( $condition ) {
+	private function get_normalized_criteria( $condition ): array {
 		$normalized = [];
 
 		foreach ( $condition as $criteria ) {
@@ -129,7 +142,7 @@ class MB_Conditional_Logic {
 		return $normalized;
 	}
 
-	private function normalize_criteria( $criteria ) {
+	private function normalize_criteria( array $criteria ): array {
 		$criteria_length = count( $criteria );
 
 		if ( 1 === $criteria_length ) {
@@ -142,7 +155,7 @@ class MB_Conditional_Logic {
 
 		// Convert slug to id if conditional logic defined using slug for terms.
 		if ( strrpos( $criteria[0], 'slug:', - strlen( $criteria[0] ) ) !== false ) {
-			$criteria[0] = ltrim( $criteria[0], 'slug:' );
+			$criteria[0] = substr( $criteria[0], 5 );
 
 			$criteria[2] = $this->slug_to_id( $criteria[2] );
 		}
@@ -150,7 +163,7 @@ class MB_Conditional_Logic {
 		return $criteria;
 	}
 
-	private function slug_to_id( $slugs ) {
+	private function slug_to_id( $slugs ): array {
 		global $wpdb;
 
 		$slugs    = (array) $slugs;

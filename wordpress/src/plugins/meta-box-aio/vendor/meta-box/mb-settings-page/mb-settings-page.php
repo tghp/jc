@@ -3,7 +3,7 @@
  * Plugin Name: MB Settings Page
  * Plugin URI:  https://metabox.io/plugins/mb-settings-page/
  * Description: Add-on for meta box plugin which helps you create settings pages easily.
- * Version:     2.2.1
+ * Version:     2.3.0
  * Author:      MetaBox.io
  * Author URI:  https://metabox.io
  * License:     GPL2+
@@ -56,6 +56,11 @@ if ( ! function_exists( 'mb_settings_page_load' ) ) {
 		new MBSP\Integrations\WPML;
 		new MBSP\Loader;
 		new MBSP\Customizer\Manager;
+
+		// Register before Meta Box's BlockBindings\Loader::register on init (priority 10).
+		if ( class_exists( \MetaBox\Integrations\BlockBindings\Source::class ) ) {
+			rwmb_get_registry( 'block_bindings' )->add( new \MBSP\Integrations\BlockBindings\Setting() );
+		}
 
 		load_plugin_textdomain( 'mb-settings-page', false, plugin_basename( __DIR__ ) . '/languages/' );
 	}

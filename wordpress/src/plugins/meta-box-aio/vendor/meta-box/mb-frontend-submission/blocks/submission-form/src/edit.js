@@ -42,10 +42,13 @@ export default function Edit( { attributes, setAttributes } ) {
 		redirect,
 		confirmation,
 		delete_confirmation,
-		recaptcha_key,
-		recaptcha_secret,
+		captcha_provider,
+		captcha_key,
+		captcha_secret,
+		recaptcha_key,    // @deprecated: use captcha_key instead.
+		recaptcha_secret  // @deprecated: use captcha_secret instead.
 	} = attributes;
-
+	
 	const post_statuses = Object.keys( mbfsData.post_statuses ).map( post_status => ( {
 		label: post_status,
 		value: post_status
@@ -53,9 +56,18 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const update = key => value => setAttributes( { [ key ]: value } );
 
-	if ( id.length === 0 && meta_box_id ) {
+	if ( 0 === id.length && meta_box_id ) {
 		id = meta_box_id.split( ',' );
 	}
+
+	if ( 0 === captcha_key.length && recaptcha_key.length ) {
+		captcha_key = recaptcha_key;
+	}
+
+	if ( 0 === captcha_secret.length && recaptcha_secret.length ) {
+		captcha_secret = recaptcha_secret;
+	}
+
 	// Remove invalid field group IDs.
 	id = id.filter( i => mbfsData.field_groups.some( fg => fg.value === i ) );
 
@@ -308,16 +320,25 @@ export default function Edit( { attributes, setAttributes } ) {
 						</PanelBody>
 					)
 				}
-				<PanelBody title={ __( 'Google reCaptcha (v3)', 'mb-frontend-submission' ) } initialOpen={ false }>
+				<PanelBody title={ __( 'Captcha', 'mb-frontend-submission' ) } initialOpen={ false }>
+					<SelectControl
+						label={ __( 'Captcha provider', 'mb-frontend-submission' ) }
+						value={ captcha_provider }
+						options={ [
+							{ label: __( 'Google reCaptcha (v3)', 'mb-frontend-submission' ), value: 'recaptcha' },
+							{ label: __( 'Cloudflare Turnstile', 'mb-frontend-submission' ), value: 'turnstile' },
+						] }
+						onChange={ update( 'captcha_provider' ) }
+					/>
 					<TextControl
 						label={ __( 'Site key', 'mb-frontend-submission' ) }
-						value={ recaptcha_key }
-						onChange={ update( 'recaptcha_key' ) }
+						value={ captcha_key }
+						onChange={ update( 'captcha_key' ) }
 					/>
 					<TextControl
 						label={ __( 'Secret key', 'mb-frontend-submission' ) }
-						value={ recaptcha_secret }
-						onChange={ update( 'recaptcha_secret' ) }
+						value={ captcha_secret }
+						onChange={ update( 'captcha_secret' ) }
 					/>
 				</PanelBody>
 			</InspectorControls>

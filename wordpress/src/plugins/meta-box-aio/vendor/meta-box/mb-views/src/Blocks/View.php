@@ -25,6 +25,7 @@ class View {
 			'method'              => WP_REST_Server::READABLE,
 			'permission_callback' => [ $this, 'has_permission' ],
 			'callback'            => [ $this, 'get_views' ],
+			'show_in_index'        => false,
 		] );
 	}
 

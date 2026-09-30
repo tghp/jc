@@ -2,7 +2,10 @@
 namespace MBB\RestApi;
 
 use WP_REST_Server;
+use WP_REST_Request;
+use WP_REST_Response;
 use ReflectionMethod;
+use RWMB_Post_Field;
 use RWMB_Taxonomy_Field;
 use RWMB_User_Field;
 use MBB\Helpers\Data;
@@ -29,6 +32,7 @@ class Base {
 			'methods'             => WP_REST_Server::ALLMETHODS,
 			'callback'            => [ $this, $method ],
 			'permission_callback' => $permission_callback,
+			'show_in_index'       => false,
 		] );
 	}
 
@@ -53,19 +57,22 @@ class Base {
 	protected function get_posts( $s, $name = '', $post_types = '' ): array {
 		$post_types = Arr::from_csv( $post_types );
 
-		global $wpdb;
-		$sql   = "SELECT ID, post_title FROM $wpdb->posts WHERE post_type IN ('" . implode( "','", $post_types ) . "') AND post_title LIKE '%%" . esc_sql( $s ) . "%%' ORDER BY post_title ASC LIMIT 10";
-		$posts = $wpdb->get_results( $sql );
+		$field = [
+			'id'         => 'mbb_api_post',
+			'type'       => 'post',
+			'clone'      => false,
+			'query_args' => [
+				's'              => $s,
+				'post_type'      => $post_types,
+				'post_status'    => 'publish',
+				'posts_per_page' => 10,
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+			],
+		];
 
-		$options = [];
-		foreach ( $posts as $post ) {
-			$options[] = [
-				'value' => $post->ID,
-				'label' => $post->post_title,
-			];
-		}
-
-		return $options;
+		$data = RWMB_Post_Field::query( null, $field );
+		return array_values( $data );
 	}
 
 	protected function get_terms( $s, $taxonomy ) {
@@ -159,14 +166,14 @@ class Base {
 	 *
 	 * @return array
 	 */
-	public function get_json_data( \WP_REST_Request $request ): array {
+	public function get_json_data( WP_REST_Request $request ): array {
 		$params = $request->get_params();
 		$json   = JsonService::get_json( $params );
 
 		return $json;
 	}
 
-	public function get_redirection_url( \WP_REST_Request $request ) {
+	public function get_redirection_url( WP_REST_Request $request ) {
 		$params = $request->get_params();
 
 		$slug = $params['slug'] ?? '';
@@ -184,12 +191,12 @@ class Base {
 		exit;
 	}
 
-	public function set_json_data( \WP_REST_Request $request ): \WP_REST_Response {
+	public function set_json_data( WP_REST_Request $request ): WP_REST_Response {
 		$params = $request->get_params();
 
 		foreach ( [ 'id', 'use' ] as $param ) {
 			if ( ! isset( $params[ $param ] ) ) {
-				return new \WP_REST_Response( [
+				return new WP_REST_Response( [
 					'success' => false,
 					// Translators: %s - The parameter name.
 					'message' => sprintf( __( '%s is required', 'meta-box-builder' ), ucfirst( $param ) ),
@@ -207,7 +214,7 @@ class Base {
 			]
 		);
 
-		return new \WP_REST_Response( [
+		return new WP_REST_Response( [
 			'success' => (bool) $res,
 		], 200 );
 	}

@@ -7,7 +7,7 @@
 class RWMB_Loader {
 	protected function constants() {
 		// Script version, used to add version for scripts and styles.
-		define( 'RWMB_VER', '5.12.0' );
+		define( 'RWMB_VER', '5.15.1' );
 
 		list( $path, $url ) = self::get_path( dirname( __DIR__ ) );
 
@@ -19,6 +19,7 @@ class RWMB_Loader {
 		// Plugin paths, for including files.
 		define( 'RWMB_DIR', $path );
 		define( 'RWMB_INC_DIR', trailingslashit( RWMB_DIR . 'inc' ) );
+		define( 'RWMB_JS_DIR', trailingslashit( RWMB_DIR . 'js' ) );
 		define( 'RWMB_CSS_DIR', trailingslashit( RWMB_DIR . 'css' ) );
 	}
 
@@ -112,18 +113,26 @@ class RWMB_Loader {
 		// WPML Compatibility.
 		new \MetaBox\Integrations\WPML();
 
+		// Abilities API integration (WordPress 6.9+). Bails silently on older versions.
+		$abilities = new \MetaBox\Abilities();
+		$abilities->init();
+
 		// Register categories for page builders.
 		new \MetaBox\Integrations\Block();
 		new \MetaBox\Integrations\Bricks();
 		new \MetaBox\Integrations\Elementor();
 		new \MetaBox\Integrations\Oxygen();
+		new \MetaBox\Integrations\WooCommerce\HPOS\Manager();
 
 		if ( is_admin() ) {
 			new \MetaBox\Dashboard\Dashboard( $update_checker, $update_option );
-			new \MetaBox\FeaturedPlugins();
 		}
 
 		// Public functions.
 		require_once RWMB_INC_DIR . 'functions.php';
+
+		// Block bindings (needs rwmb_get_registry from functions.php).
+		rwmb_get_registry( 'block_bindings' )->add( new \MetaBox\Integrations\BlockBindings\Post() );
+		new \MetaBox\Integrations\BlockBindings\Loader();
 	}
 }

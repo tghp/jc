@@ -1,8 +1,6 @@
 <?php
 namespace MetaBox\CustomTable;
 
-use MetaBox\CustomTable\Utils\Helpers;
-
 class Loader {
 	public function __construct() {
 		add_filter( 'rwmb_meta_box_class_name', [ $this, 'meta_box_class_name' ], 10, 2 );
@@ -13,6 +11,10 @@ class Loader {
 		add_action( 'deleted_user', [ $this, 'delete_object_data' ] );
 		add_action( 'delete_term', [ $this, 'delete_term_data' ], 10, 3 );
 		add_action( 'rwmb_flush_data', [ $this, 'flush_data' ], 10, 3 );
+
+		// Prevent fatal when a string field holds a serialized PHP string:
+		// Storage::get() maybe_unserialize()s it to an array, then esc_textarea() crashes.
+		add_filter( 'rwmb_raw_meta', [ $this, 'stringify_unserialized_meta' ], 10, 2 );
 	}
 
 	/**
@@ -155,6 +157,37 @@ class Loader {
 		return is_array( $data ) ? serialize( $data ) : $data;
 	}
 
+	/**
+	 * Re-serialize array/object values for non-clone string fields in custom tables.
+	 *
+	 * Does not change how data is stored — only how it is passed to field HTML
+	 * (e.g. textarea → esc_textarea() requires a string).
+	 *
+	 * @param mixed $value Field value from storage.
+	 * @param array $field Field settings.
+	 * @return mixed
+	 */
+	public function stringify_unserialized_meta( $value, $field ) {
+		if ( empty( $field['storage'] ) || ! $field['storage'] instanceof Storage ) {
+			return $value;
+		}
+
+		if ( ! empty( $field['clone'] ) || ! empty( $field['multiple'] ) ) {
+			return $value;
+		}
+
+		// Only free-form text fields where serialized/custom code is plausible.
+		if ( ! in_array( $field['type'] ?? '', [ 'text', 'textarea' ], true ) ) {
+			return $value;
+		}
+
+		if ( is_array( $value ) || is_object( $value ) ) {
+			return serialize( $value );
+		}
+
+		return $value;
+	}
+
 	public function delete_object_data( $object_id ) {
 		$object_type = $this->get_deleted_object_type();
 		$meta_boxes  = $this->get_meta_boxes_for( $object_type, $object_id );
@@ -269,6 +302,11 @@ class Loader {
 				$type = get_post_type( $object_id );
 				if ( 'revision' === $type ) {
 					return;
+				}
+				// With WooCommerce HPOS and data sync disabled: orders have a placeholder post type => resolve the real order type.
+				if ( 'shop_order_placehold' === $type && function_exists( 'wc_get_order' ) ) {
+					$order = wc_get_order( $object_id );
+					$type  = $order ? $order->get_type() : $type;
 				}
 				$prop = 'post_types';
 				break;

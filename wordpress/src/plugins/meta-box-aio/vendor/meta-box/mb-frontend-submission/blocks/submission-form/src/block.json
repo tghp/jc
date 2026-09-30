@@ -118,6 +118,18 @@
             "type": "string",
             "default": ""
         },
+        "captcha_provider": {
+            "type": "string",
+            "default": "recaptcha"
+        },
+        "captcha_key": {
+            "type": "string",
+            "default": ""
+        },
+        "captcha_secret": {
+            "type": "string",
+            "default": ""
+        },
         "recaptcha_key": {
             "type": "string",
             "default": ""

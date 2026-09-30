@@ -57,13 +57,40 @@
 	}
 
 	function showValidateErrorFields() {
-		var inputSelectors = 'input[class*="rwmb-error"], textarea[class*="rwmb-error"], select[class*="rwmb-error"], button[class*="rwmb-error"]';
-		$( document ).on( 'after_validate', 'form', e => {
-			var $input = $( e.target ).find( inputSelectors ),
-				$panel = $input.closest( '.rwmb-tab-panel' );
-			if ( $panel.length ) {
-				showTab( $input.closest( '.rwmb-tabs' ).find( 'li[data-panel="' + $panel.data( 'panel' ) + '"] a' )[ 0 ] );
+		const inputSelectors = 'input[class*="rwmb-error"], textarea[class*="rwmb-error"], select[class*="rwmb-error"], button[class*="rwmb-error"]';
+
+		const focusInvalidField = ( $input ) => {
+			if ( ! $input.length ) {
+				return;
 			}
+
+			if ( $input.is( ':visible' ) ) {
+				$input.trigger( 'focus' ).trigger( 'focusin' );
+				return;
+			}
+
+			// Hidden inputs (e.g. file_upload): focus the error message so the browser scrolls to it.
+			const $error = $input.closest( '.rwmb-input' ).find( 'p.rwmb-error' ).first();
+			if ( $error.length && $error.is( ':visible' ) ) {
+				$error.attr( 'tabindex', '-1' ).trigger( 'focus' ).removeAttr( 'tabindex' );
+			}
+		};
+
+		$( document ).on( 'after_validate', 'form', e => {
+			const validator = $( e.target ).data( 'validator' );
+			const firstError = validator?.errorList?.[ 0 ]?.element;
+			const $input = firstError ? $( firstError ) : $( e.target ).find( inputSelectors ).first();
+			const $panel = $input.closest( '.rwmb-tab-panel' );
+
+			if ( $panel.length ) {
+				const $tabLink = $input.closest( '.rwmb-tabs' ).find( 'li[data-panel="' + $panel.data( 'panel' ) + '"] a' );
+				if ( $tabLink.length ) {
+					showTab( $tabLink[ 0 ] );
+				}
+			}
+
+			// showTab() shows the panel synchronously; focus immediately so the page scrolls to the error.
+			focusInvalidField( $input );
 		} );
 	}
 

@@ -3,7 +3,7 @@
  * Plugin Name: MB Template
  * Plugin URI:  http://metabox.io/plugins/meta-box-template/
  * Description: Configure field groups easily with YAML templates.
- * Version:     1.2.4
+ * Version:     1.2.5
  * Author:      MetaBox.io
  * Author URI:  https://metabox.io
  * License:     GPL2+

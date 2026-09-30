@@ -7,6 +7,9 @@ class Register extends Base {
 	protected $type = 'register';
 
 	public static function normalize( array $config ) : array {
+		Arr::change_key( $config, 'recaptcha_key', 'captcha_key' );
+		Arr::change_key( $config, 'recaptcha_secret', 'captcha_secret' );
+
 		$config = shortcode_atts( [
 			// Meta Box ID.
 			'id'                 => '',
@@ -14,9 +17,10 @@ class Register extends Base {
 			'redirect'           => '',
 			'form_id'            => 'register-form',
 
-			// Google reCaptcha v3
-			'recaptcha_key'      => '',
-			'recaptcha_secret'   => '',
+			// Captcha
+			'captcha_provider'   => 'recaptcha',
+			'captcha_key'        => '',
+			'captcha_secret'     => '',
 
 			// Appearance options.
 			'label_title'        => '',

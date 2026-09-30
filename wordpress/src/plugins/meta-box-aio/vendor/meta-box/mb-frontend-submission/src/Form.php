@@ -4,6 +4,9 @@ namespace MBFS;
 use WP_Error;
 
 class Form {
+	const SCRIPT_TURNSTILE = 'cloudflare-turnstile';
+	const SCRIPT_RECAPTCHA = 'google-recaptcha';
+
 	public $error;
 	public $config;
 	private $meta_boxes;
@@ -33,8 +36,8 @@ class Form {
 	 * Output the form.
 	 */
 	public function render() {
+		$this->enqueue_captcha();
 		$this->enqueue();
-		$this->enqueue_recaptcha();
 		$this->localize();
 
 		if ( $this->is_deleted() ) {
@@ -58,7 +61,7 @@ class Form {
 		}
 
 		do_action( 'rwmb_frontend_before_form', $this->config );
-		echo '<form class="rwmb-form mbfs-form" id="' . esc_attr( $this->config['id'] ) . '" method="post" enctype="multipart/form-data">';
+		echo '<form class="rwmb-form mbfs-form" id="' . esc_attr( $this->get_html_id() ) . '" method="post" enctype="multipart/form-data">';
 		$this->render_hidden_fields();
 
 		// Register wp color picker scripts for frontend.
@@ -94,6 +97,8 @@ class Form {
 				$meta_box->show();
 			}
 
+			$this->render_turnstile();
+
 			do_action( 'rwmb_frontend_before_submit_button', $this->config );
 
 			echo '<div class="rwmb-field rwmb-button-wrapper rwmb-form-submit"><div class="rwmb-input">';
@@ -108,7 +113,10 @@ class Form {
 
 			do_action( 'rwmb_frontend_after_submit_button', $this->config );
 		} else {
+			$this->render_turnstile();
+
 			do_action( 'rwmb_frontend_before_submit_button', $this->config );
+
 			echo '<div class="rwmb-field rwmb-button-wrapper rwmb-form-submit"><div class="rwmb-input">
 					' . $delete_button . '
 				</div></div>';
@@ -151,6 +159,10 @@ class Form {
 		return current_user_can( $model->capability );
 	}
 
+	private function get_html_id(): string {
+		return str_replace( ',', '-', $this->config['id'] );
+	}
+
 	/**
 	 * Check if a meta box is visible.
 	 *
@@ -176,6 +188,11 @@ class Form {
 	 */
 	public function process() {
 		global $wpdb;
+
+		if ( ! $this->user_can_edit() ) {
+			$this->error->add( 'unauthorized', __( 'You are not allowed to edit this post.', 'mb-frontend-submission' ) );
+			return null;
+		}
 
 		$validate = true;
 		foreach ( $this->meta_boxes as $meta_box ) {
@@ -218,6 +235,11 @@ class Form {
 	 */
 	public function delete() {
 		if ( empty( $this->config['object_id'] ) ) {
+			return;
+		}
+
+		if ( ! $this->user_can_edit() ) {
+			$this->error->add( 'unauthorized', __( 'You are not allowed to delete this post.', 'mb-frontend-submission' ) );
 			return;
 		}
 
@@ -266,7 +288,14 @@ class Form {
 
 	private function enqueue() {
 		wp_enqueue_style( 'mbfs-form', MBFS_URL . 'assets/form.css', [], MBFS_VER );
-		wp_enqueue_script( 'mbfs', MBFS_URL . 'assets/frontend-submission.js', [ 'jquery' ], MBFS_VER, true );
+
+		$dependencies = [ 'jquery' ];
+
+		if ( $this->config['captcha_key'] ) {
+			$dependencies[] = 'turnstile' === $this->config['captcha_provider'] ? self::SCRIPT_TURNSTILE : self::SCRIPT_RECAPTCHA;
+		}
+
+		wp_enqueue_script( 'mbfs', MBFS_URL . 'assets/frontend-submission.js', $dependencies, MBFS_VER, true );
 
 		$this->localize_data = array_merge( $this->localize_data, [
 			'ajaxUrl'        => admin_url( 'admin-ajax.php' ),
@@ -277,33 +306,48 @@ class Form {
 		] );
 	}
 
-	private function enqueue_recaptcha() {
-		if ( ! $this->config['recaptcha_key'] ) {
+	private function enqueue_captcha() {
+		if ( ! $this->config['captcha_key'] ) {
 			return;
 		}
-		wp_enqueue_script( 'google-recaptcha', 'https://www.google.com/recaptcha/api.js?render=' . $this->config['recaptcha_key'], [], '3', true );
 
-		$this->localize_data = array_merge(
-			$this->localize_data,
-			[
-				'recaptchaKey'        => $this->config['recaptcha_key'],
-				'captchaExecuteError' => __( 'Error trying to execute grecaptcha.', 'mb-frontend-submission' ),
-			]
-		);
+		if ( 'turnstile' === $this->config['captcha_provider'] ) {
+			wp_enqueue_script( self::SCRIPT_TURNSTILE, 'https://challenges.cloudflare.com/turnstile/v0/api.js', [], '0', true );
+		} else {
+			wp_enqueue_script( self::SCRIPT_RECAPTCHA, 'https://www.google.com/recaptcha/api.js?render=' . $this->config['captcha_key'], [], '3', true );
+		}
+
+		$this->localize_data = array_merge( $this->localize_data, [
+			'captchaProvider'     => $this->config['captcha_provider'],
+			'captchaKey'          => $this->config['captcha_key'],
+			'captchaRequired'     => __( 'Please complete the captcha.', 'mb-frontend-submission' ),
+			'captchaExecuteError' => __( 'Error trying to execute grecaptcha.', 'mb-frontend-submission' ),
+		] );
 	}
 
 	private function localize() {
-		wp_localize_script( 'mbfs', 'mbFrontendForm', $this->localize_data );
+		$key = ConfigStorage::store( $this->config );
+
+		wp_localize_script( 'mbfs', 'MBFS_Data_' . $key, $this->localize_data );
+	}
+
+	private function render_turnstile() {
+		if ( 'turnstile' !== $this->config['captcha_provider'] ) {
+			return;
+		}
+
+		echo '<div class="mbfs-turnstile" data-form-id="' . esc_attr( $this->get_html_id() ) . '"></div>';
 	}
 
 	private function render_hidden_fields() {
 		$key = ConfigStorage::store( $this->config );
 		echo '<input type="hidden" name="mbfs_key" value="', esc_attr( $key ), '">';
 		echo '<input type="hidden" name="action" value="mbfs_submit">';
+		echo '<input type="hidden" name="_ajax_nonce" value="', esc_attr( wp_create_nonce( 'ajax_nonce' ) ), '">';
 
-		// Add hidden input if has recaptcha v3
-		if ( $this->config['recaptcha_key'] ) {
-			echo '<input type="hidden" name="mbfs_recaptcha_token" value="">';
+		// Add hidden input for captcha token.
+		if ( $this->config['captcha_key'] ) {
+			echo '<input type="hidden" name="mbfs_captcha_token" value="">';
 		}
 	}
 

@@ -44,6 +44,7 @@ class RWMB_Walker_Input_List extends RWMB_Walker_Base {
 			RWMB_Field::render_attributes( $attributes ),
 			// phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 			checked( in_array( $object->value, $this->meta ), true, false ),
+			// phpcs:ignore Allow to use HTML in labels (like Dashicons for button group)
 			$object->label
 		);
 	}

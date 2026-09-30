@@ -58,7 +58,7 @@ class Settings {
 		add_action( 'admin_menu', [ $this, 'add_settings_page' ] );
 	}
 
-	public function add_settings_page() {
+	public function add_settings_page(): void {
 		$page_hook = add_submenu_page(
 			'meta-box',
 			esc_html__( 'Extensions', 'meta-box-aio' ),
@@ -92,7 +92,6 @@ class Settings {
 		] );
 	}
 
-
 	public function render(): void {
 		if ( ! $this->is_license_active() ) {
 			$this->show_license_warning();
@@ -108,10 +107,8 @@ class Settings {
 		<div class="wrap mbaio-extensions">
 			<?php $this->get_header(); ?>
 			<div class="mb-body">
-				<div class="mbaio-ajax" style="visibility: hidden;">
-					<!-- For displaying ajax message -->
-					<div class="message"></div>
-				</div>
+				<!-- For displaying ajax message -->
+				<div class="mbaio-ajax" style="visibility: hidden;"></div>
 				<div class="mb-body__inner">
 					<div class="mb-main">
 						<div class="mb-box">
@@ -197,13 +194,15 @@ class Settings {
 		$status   = $this->get_updater()->get_license_status();
 		$messages = [
 			// Translators: %1$s - URL to the settings page.
-			'no_key'  => __( 'You have not set your Meta Box license key yet. Please <a href="%1$s">enter your license key</a> to continue.', 'meta-box-aio' ),
+			'no_key'   => __( 'You have not set your Meta Box license key yet. Please <a href="%1$s">enter your license key</a> to continue.', 'meta-box-aio' ),
 			// Translators: %1$s - URL to the settings page.
-			'invalid' => __( 'Your license key for Meta Box is <b>invalid</b>. Please <a href="%1$s">update your license key</a> to continue.', 'meta-box-aio' ),
+			'invalid'  => __( 'Your license key for Meta Box is <b>invalid</b>. Please <a href="%1$s">update your license key</a> to continue.', 'meta-box-aio' ),
 			// Translators: %1$s - URL to the settings page.
-			'error'   => __( 'Your license key for Meta Box is <b>invalid</b>. Please <a href="%1$s">update your license key</a> to continue.', 'meta-box-aio' ),
-			// Translators: %2$s - URL to the My Account page.
-			'expired' => __( 'Your license key for Meta Box is <b>expired</b>. Please <a href="%2$s" target="_blank">renew your license</a> to continue.', 'meta-box-aio' ),
+			'error'    => __( 'Your license key for Meta Box is <b>invalid</b>. Please <a href="%1$s">update your license key</a> to continue.', 'meta-box-aio' ),
+			// Translators: %2$s - URL to the pricing page.
+			'expired'  => __( 'Your license key for Meta Box is <b>expired</b>. Please <a href="%2$s" target="_blank">renew your license</a> to continue.', 'meta-box-aio' ),
+			// Translators: %2$s - URL to the pricing page.
+			'refunded' => __( 'Your license has been <b>refunded</b>. Please <a href="%2$s" target="_blank">purchase a new license</a> to enable premium features.', 'meta-box' ),
 		];
 
 		?>
@@ -218,7 +217,7 @@ class Settings {
 									<span class="dashicons dashicons-warning"></span>
 									<?php esc_html_e( 'License Warning', 'meta-box-aio' ) ?>
 								</h2>
-								<?php echo wp_kses_post( sprintf( $messages[ $status ], $settings_page, 'https://elu.to/aiosa' ) ); ?>
+								<?php echo wp_kses_post( sprintf( $messages[ $status ], $settings_page, 'https://elu.to/aiosp' ) ); ?>
 							</div>
 						</div>
 					</div>
@@ -266,7 +265,7 @@ class Settings {
 							<path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
 						</svg>
 					</a>
-					<a href="#" class="mb-dashboard__tooltip" data-tooltip="<?php esc_attr_e( 'My Account', 'meta-box-aio' ); ?>" data-position="bottom-right">
+					<a href="https://metabox.io/my-account/" target="_blank" class="mb-dashboard__tooltip" data-tooltip="<?php esc_attr_e( 'My Account', 'meta-box-aio' ); ?>" data-position="bottom-right">
 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
 							<circle class="cls-1" cx="12" cy="7.25" r="5.73"/><path class="cls-1" d="M1.5,23.48l.37-2.05A10.3,10.3,0,0,1,12,13h0a10.3,10.3,0,0,1,10.13,8.45l.37,2.05"/>
 						</svg>
@@ -316,15 +315,37 @@ class Settings {
 				'desc'  => __( 'Display custom fields in table columns in admin screens for All Posts (types).', 'meta-box-aio' ),
 			],
 			[
+				'slug'   => 'meta-box-beaver-themer-integrator',
+				'title'  => 'MB Beaver Builder Integration',
+				'docs'   => false,
+				'desc'   => __( 'Select and show custom fields created by the Meta Box plugin in the Beaver Themer field connection.', 'meta-box-aio' ),
+				'plugin' => 'Beaver Themer',
+			],
+			[
 				'slug'  => 'mb-blocks',
 				'title' => 'MB Blocks',
 				'desc'  => __( 'Creating custom Gutenberg blocks with PHP. No React, Webpack or Babel. Beautiful syntax, powerful features.', 'meta-box-aio' ),
+			],
+			[
+				'slug'  => 'meta-box-builder',
+				'title' => 'MB Builder',
+				'desc'  => __( 'Drag and drop your custom fields into place without a single line of code.', 'meta-box-aio' ),
+			],
+			[
+				'slug'  => 'meta-box-columns',
+				'title' => 'MB Columns',
+				'desc'  => __( 'Display fields more beautiful by putting them into 12-columns grid.', 'meta-box-aio' ),
 			],
 			[
 				'slug'  => 'mb-comment-meta',
 				'title' => 'MB Comment Meta',
 				'docs'  => false,
 				'desc'  => __( 'Add custom fields to comments in WordPress. Support all field types and options.', 'meta-box-aio' ),
+			],
+			[
+				'slug'  => 'meta-box-conditional-logic',
+				'title' => 'MB Conditional Logic',
+				'desc'  => __( 'Control when and where meta boxes, fields and HTML elements appear.', 'meta-box-aio' ),
 			],
 			[
 				'slug'  => 'mb-custom-post-type',
@@ -345,9 +366,44 @@ class Settings {
 				'plugin' => 'Divi',
 			],
 			[
+				'slug'   => 'mb-elementor-integrator',
+				'title'  => 'MB Elementor Integration',
+				'docs'   => false,
+				'desc'   => __( 'Connect and display custom fields created by the Meta Box plugin in the Elementor\'s dynamic tags.', 'meta-box-aio' ),
+				'plugin' => 'Elementor Pro',
+			],
+			[
+				'slug'   => 'meta-box-facetwp-integrator',
+				'title'  => 'MB FacetWP Integration',
+				'docs'   => false,
+				'desc'   => __( 'Integrates Meta Box and FacetWP, makes custom fields searchable and filterable in the frontend.', 'meta-box-aio' ),
+				'plugin' => 'FacetWP',
+			],
+			[
 				'slug'  => 'mb-frontend-submission',
 				'title' => 'MB Frontend Submission',
 				'desc'  => __( 'Create editorial forms so users can submit blog posts on the front end.', 'meta-box-aio' ),
+			],
+			[
+				'slug'  => 'meta-box-geolocation',
+				'title' => 'MB Geolocation',
+				'desc'  => __( 'Automatically and instantly populate location data with the power of Google Maps Geolocation API.', 'meta-box-aio' ),
+			],
+			[
+				'slug'  => 'meta-box-group',
+				'title' => 'MB Group',
+				'desc'  => __( 'Organize custom fields into robust and intensely user-friendly groups.', 'meta-box-aio' ),
+			],
+			[
+				'slug'  => 'meta-box-include-exclude',
+				'title' => 'MB Include Exclude',
+				'desc'  => __( 'Show or hide meta boxes whenever and for whomever you choose.', 'meta-box-aio' ),
+			],
+			[
+				'slug'   => 'mb-pods-migration',
+				'title'  => 'MB Pods Migration',
+				'desc'   => __( 'Migrate field groups and custom fields from Pods to Meta Box', 'meta-box-aio' ),
+				'plugin' => 'Pods',
 			],
 			[
 				'slug'   => 'mb-rank-math',
@@ -376,83 +432,6 @@ class Settings {
 				'desc'  => __( 'Create impressive and robust custom settings pages in a few clicks.', 'meta-box-aio' ),
 			],
 			[
-				'slug'  => 'mb-term-meta',
-				'title' => 'MB Term Meta',
-				'desc'  => __( 'Easily add custom fields to categories, tags or any custom taxonomy.', 'meta-box-aio' ),
-			],
-			[
-				'slug'   => 'mb-toolset-migration',
-				'title'  => 'MB Toolset Migration',
-				'desc'   => __( 'Migrate post types, field groups, custom fields and relationships from Toolset to Meta Box', 'meta-box-aio' ),
-				'plugin' => 'Toolset',
-			],
-			[
-				'slug'  => 'mb-user-meta',
-				'title' => 'MB User Meta',
-				'desc'  => __( 'Add custom fields to user profile (user meta) quickly with simple syntax.', 'meta-box-aio' ),
-			],
-			[
-				'slug'  => 'mb-user-profile',
-				'title' => 'MB User Profile',
-				'desc'  => __( 'Create register, login and edit user profile forms in the frontend. Embed everywhere with shortcodes.', 'meta-box-aio' ),
-			],
-			[
-				'slug'  => 'mb-views',
-				'title' => 'MB Views',
-				'desc'  => __( 'Build front-end templates for WordPress without touching theme files. Support Twig and all field types.', 'meta-box-aio' ),
-			],
-			[
-				'slug'   => 'meta-box-beaver-themer-integrator',
-				'title'  => 'MB Beaver Builder Integration',
-				'docs'   => false,
-				'desc'   => __( 'Select and show custom fields created by the Meta Box plugin in the Beaver Themer field connection.', 'meta-box-aio' ),
-				'plugin' => 'Beaver Themer',
-			],
-			[
-				'slug'  => 'meta-box-builder',
-				'title' => 'MB Builder',
-				'desc'  => __( 'Drag and drop your custom fields into place without a single line of code.', 'meta-box-aio' ),
-			],
-			[
-				'slug'  => 'meta-box-columns',
-				'title' => 'MB Columns',
-				'desc'  => __( 'Display fields more beautiful by putting them into 12-columns grid.', 'meta-box-aio' ),
-			],
-			[
-				'slug'  => 'meta-box-conditional-logic',
-				'title' => 'MB Conditional Logic',
-				'desc'  => __( 'Control when and where meta boxes, fields and HTML elements appear.', 'meta-box-aio' ),
-			],
-			[
-				'slug'   => 'mb-elementor-integrator',
-				'title'  => 'MB Elementor Integration',
-				'docs'   => false,
-				'desc'   => __( 'Connect and display custom fields created by the Meta Box plugin in the Elementor\'s dynamic tags.', 'meta-box-aio' ),
-				'plugin' => 'Elementor Pro',
-			],
-			[
-				'slug'   => 'meta-box-facetwp-integrator',
-				'title'  => 'MB FacetWP Integration',
-				'docs'   => false,
-				'desc'   => __( 'Integrates Meta Box and FacetWP, makes custom fields searchable and filterable in the frontend.', 'meta-box-aio' ),
-				'plugin' => 'FacetWP',
-			],
-			[
-				'slug'  => 'meta-box-geolocation',
-				'title' => 'MB Geolocation',
-				'desc'  => __( 'Automatically and instantly populate location data with the power of Google Maps Geolocation API.', 'meta-box-aio' ),
-			],
-			[
-				'slug'  => 'meta-box-group',
-				'title' => 'MB Group',
-				'desc'  => __( 'Organize custom fields into robust and intensely user-friendly groups.', 'meta-box-aio' ),
-			],
-			[
-				'slug'  => 'meta-box-include-exclude',
-				'title' => 'MB Include Exclude',
-				'desc'  => __( 'Show or hide meta boxes whenever and for whomever you choose.', 'meta-box-aio' ),
-			],
-			[
 				'slug'  => 'meta-box-show-hide',
 				'title' => 'MB Show Hide',
 				'desc'  => __( 'Toggle meta boxes by page template, post format or taxonomy using JS.', 'meta-box-aio' ),
@@ -468,15 +447,41 @@ class Settings {
 				'desc'  => __( 'Define custom meta boxes and custom fields easier with templates.', 'meta-box-aio' ),
 			],
 			[
+				'slug'  => 'mb-term-meta',
+				'title' => 'MB Term Meta',
+				'desc'  => __( 'Easily add custom fields to categories, tags or any custom taxonomy.', 'meta-box-aio' ),
+			],
+			[
 				'slug'  => 'meta-box-text-limiter',
 				'title' => 'MB Text Limiter',
 				'docs'  => false,
 				'desc'  => __( 'Limit the number of characters or words entered for text and textarea fields.', 'meta-box-aio' ),
 			],
 			[
+				'slug'   => 'mb-toolset-migration',
+				'title'  => 'MB Toolset Migration',
+				'desc'   => __( 'Migrate post types, field groups, custom fields and relationships from Toolset to Meta Box', 'meta-box-aio' ),
+				'plugin' => 'Toolset',
+			],
+			[
 				'slug'  => 'meta-box-tooltip',
 				'title' => 'MB Tooltip',
 				'desc'  => __( 'Display help information for fields using beautiful tooltips.', 'meta-box-aio' ),
+			],
+			[
+				'slug'  => 'mb-user-meta',
+				'title' => 'MB User Meta',
+				'desc'  => __( 'Add custom fields to user profile (user meta) quickly with simple syntax.', 'meta-box-aio' ),
+			],
+			[
+				'slug'  => 'mb-user-profile',
+				'title' => 'MB User Profile',
+				'desc'  => __( 'Create register, login and edit user profile forms in the frontend. Embed everywhere with shortcodes.', 'meta-box-aio' ),
+			],
+			[
+				'slug'  => 'mb-views',
+				'title' => 'MB Views',
+				'desc'  => __( 'Build front-end templates for WordPress without touching theme files. Support Twig and all field types.', 'meta-box-aio' ),
 			],
 			[
 				'slug'   => 'meta-box-yoast-seo',

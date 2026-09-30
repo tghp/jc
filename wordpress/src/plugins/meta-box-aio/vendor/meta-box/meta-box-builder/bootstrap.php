@@ -16,6 +16,7 @@ new Register();
 new RestApi\Generator();
 new RestApi\Save();
 new RestApi\ThemeCode\ThemeCode();
+new Abilities();
 
 $fields_api = new RestApi\Fields( new Registry() );
 Helpers\FieldKeys::init( $fields_api );
@@ -47,6 +48,7 @@ if ( Helpers\Data::is_extension_active( 'mb-relationships' ) ) {
 
 if ( Helpers\Data::is_extension_active( 'mb-custom-table' ) ) {
 	new Extensions\CustomTable();
+	new Extensions\CustomModel\Manager();
 }
 
 new Extensions\AdminColumns();

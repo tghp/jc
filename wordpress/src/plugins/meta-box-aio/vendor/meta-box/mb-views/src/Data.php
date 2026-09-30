@@ -10,10 +10,11 @@ class Data {
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
 	}
 
-	public function register_routes() {
+	public function register_routes(): void {
 		$params = [
 			'method'              => WP_REST_Server::READABLE,
 			'permission_callback' => [ $this, 'has_permission' ],
+			'show_in_index'       => false,
 		];
 		register_rest_route( 'mbv', 'meta-boxes', array_merge( $params, [
 			'callback' => [ $this, 'get_meta_boxes' ],

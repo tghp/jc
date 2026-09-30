@@ -62,8 +62,9 @@ class SubmissionForm {
 			'redirect'            => $attributes['redirect'],
 			'confirmation'        => $attributes['confirmation'],
 			'delete_confirmation' => $attributes['delete_confirmation'],
-			'recaptcha_key'       => $attributes['recaptcha_key'],
-			'recaptcha_secret'    => $attributes['recaptcha_secret'],
+			'captcha_provider'    => $attributes['captcha_provider'] ?? 'recaptcha',
+			'captcha_key'         => ( $attributes['captcha_key'] ?? '' ) ?: ( $attributes['recaptcha_key'] ?? '' ),
+			'captcha_secret'      => ( $attributes['captcha_secret'] ?? '' ) ?: ( $attributes['recaptcha_secret'] ?? '' ),
 		] );
 
 		if ( empty( $form ) || ( empty( $form->config['id'] ) ) ) {

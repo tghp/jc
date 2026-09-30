@@ -3,7 +3,7 @@
  * Plugin Name: MB Tabs
  * Plugin URI:  https://metabox.io/plugins/meta-box-tabs/
  * Description: Create tabs for meta boxes easily. Support 3 WordPress-native tab styles.
- * Version:     1.2.1
+ * Version:     1.2.2
  * Author:      MetaBox.io
  * Author URI:  https://metabox.io
  * License:     GPL2+

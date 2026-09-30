@@ -15,14 +15,17 @@ class Login extends Base {
 		Arr::change_key( $config, 'remember', 'label_remember' );
 		Arr::change_key( $config, 'lost_pass', 'label_lost_password' );
 		Arr::change_key( $config, 'submit_button', 'label_submit' );
+		Arr::change_key( $config, 'recaptcha_key', 'captcha_key' );
+		Arr::change_key( $config, 'recaptcha_secret', 'captcha_secret' );
 
 		$config = shortcode_atts( [
 			'redirect'            => '',
 			'form_id'             => 'login-form',
 
-			// Google reCaptcha v3
-			'recaptcha_key'       => '',
-			'recaptcha_secret'    => '',
+			// Captcha
+			'captcha_provider'    => 'recaptcha',
+			'captcha_key'         => '',
+			'captcha_secret'      => '',
 
 			// Appearance options.
 			'label_title'         => '',
@@ -44,7 +47,7 @@ class Login extends Base {
 
 			'confirmation'        => __( 'You are now logged in.', 'mb-user-profile' ),
 
-			'password_strength'   => 'weak',
+			'password_strength'   => 'false',
 		], $config );
 
 		return $config;

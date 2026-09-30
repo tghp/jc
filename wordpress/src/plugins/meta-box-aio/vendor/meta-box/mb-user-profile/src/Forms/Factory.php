@@ -86,6 +86,8 @@ class Factory {
 			return self::reset_password( $config );
 		}
 
+		$config['password_strength'] = 'false';
+
 		// Apply changes to appearance.
 		$base_meta_box = rwmb_get_registry( 'meta_box' )->get( 'rwmb-user-login' );
 		$appearance    = new Appearance( $base_meta_box );
@@ -113,12 +115,16 @@ class Factory {
 	}
 
 	private static function lost_password( $config ) {
+		$config['password_strength'] = 'false';
 		$meta_box = rwmb_get_registry( 'meta_box' )->get( 'rwmb-user-lost-password' );
 		return new Login( [ $meta_box ], null, $config );
 	}
 
 	private static function reset_password( $config ) {
 		$meta_box = rwmb_get_registry( 'meta_box' )->get( 'rwmb-user-reset-password' );
+		if ( 'false' === $config['password_strength'] ) {
+			$config['password_strength'] = 'strong';
+		}
 		return new Login( [ $meta_box ], null, $config );
 	}
 

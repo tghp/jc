@@ -5,20 +5,28 @@ class Loader {
 	/**
 	 * Add admin columns for posts.
 	 */
-	public function posts() {
-		$meta_boxes = rwmb_get_registry( 'meta_box' )->get_by( array(
-			'object_type' => 'post',
-		) );
+	public function posts(): void {
+		$meta_boxes = rwmb_get_registry( 'meta_box' )->get_by( [ 'object_type' => 'post' ] );
+
 		foreach ( $meta_boxes as $meta_box ) {
-			$fields = array_filter( $meta_box->fields, array( $this, 'has_admin_columns' ) );
+			$fields = array_filter( $meta_box->fields, [ $this, 'has_admin_columns' ] );
 			if ( empty( $fields ) ) {
 				continue;
+			}
+			$types = (array) $meta_box->post_types;
+			$class = Post::class;
+
+			// Support for WooCommerce HPOS.
+			$order_types = array_intersect( $types, [ 'shop_order', 'shop_subscription' ] );
+			if ( $order_types ) {
+				$types = $order_types;
+				$class = Order::class;
 			}
 
 			$table = isset( $meta_box->meta_box['table'] ) ? $meta_box->meta_box['table'] : '';
 
-			foreach ( $meta_box->post_types as $post_type ) {
-				new Post( $post_type, $fields, $table );
+			foreach ( $types as $post_type ) {
+				new $class( $post_type, $fields, $table );
 			}
 		}
 	}
@@ -26,12 +34,10 @@ class Loader {
 	/**
 	 * Add admin columns for terms.
 	 */
-	public function taxonomies() {
-		$meta_boxes = rwmb_get_registry( 'meta_box' )->get_by( array(
-			'object_type' => 'term',
-		) );
+	public function taxonomies(): void {
+		$meta_boxes = rwmb_get_registry( 'meta_box' )->get_by( [ 'object_type' => 'term' ] );
 		foreach ( $meta_boxes as $meta_box ) {
-			$fields = array_filter( $meta_box->fields, array( $this, 'has_admin_columns' ) );
+			$fields = array_filter( $meta_box->fields, [ $this, 'has_admin_columns' ] );
 			if ( empty( $fields ) ) {
 				continue;
 			}
@@ -45,12 +51,10 @@ class Loader {
 	/**
 	 * Add admin columns for users.
 	 */
-	public function users() {
-		$meta_boxes = rwmb_get_registry( 'meta_box' )->get_by( array(
-			'object_type' => 'user',
-		) );
+	public function users(): void {
+		$meta_boxes = rwmb_get_registry( 'meta_box' )->get_by( [ 'object_type' => 'user' ] );
 		foreach ( $meta_boxes as $meta_box ) {
-			$fields = array_filter( $meta_box->fields, array( $this, 'has_admin_columns' ) );
+			$fields = array_filter( $meta_box->fields, [ $this, 'has_admin_columns' ] );
 			if ( empty( $fields ) ) {
 				continue;
 			}
@@ -62,12 +66,10 @@ class Loader {
 	/**
 	 * Add admin columns for models.
 	 */
-	public function models() {
-		$meta_boxes = rwmb_get_registry( 'meta_box' )->get_by( array(
-			'object_type' => 'model',
-		) );
+	public function models(): void {
+		$meta_boxes = rwmb_get_registry( 'meta_box' )->get_by( [ 'object_type' => 'model' ] );
 		foreach ( $meta_boxes as $meta_box ) {
-			$fields = array_filter( $meta_box->fields, array( $this, 'has_admin_columns' ) );
+			$fields = array_filter( $meta_box->fields, [ $this, 'has_admin_columns' ] );
 			if ( empty( $fields ) ) {
 				continue;
 			}

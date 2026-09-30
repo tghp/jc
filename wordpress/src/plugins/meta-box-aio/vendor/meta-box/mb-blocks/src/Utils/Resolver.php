@@ -3,7 +3,7 @@
 namespace MBBlocks\Utils;
 
 /**
- * Resolve the callback paramters for class methods.
+ * Resolve the callback parameters for class methods.
  * This helps user define the callback closure regardless the position of arguments.
  *
  * @since 1.0
@@ -32,7 +32,7 @@ class Resolver {
 	/**
 	 * Resolve the closure and do the magic here
 	 *
-	 * @param Closure $closure
+	 * @param callable $closure
 	 *
 	 * @return mixed
 	 */

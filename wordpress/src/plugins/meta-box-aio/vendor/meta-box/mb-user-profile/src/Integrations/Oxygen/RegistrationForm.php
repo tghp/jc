@@ -244,10 +244,24 @@ class RegistrationForm extends \OxyEl {
 
 		$this->addOptionControl(
 			[
+				'type'        => 'dropdown',
+				'slug'        => 'captcha_provider',
+				'name'        => esc_html__( 'Captcha provider', 'mb-user-profile' ),
+				'value'       => [
+					'recaptcha' => 'Google reCAPTCHA (v3)',
+					'turnstile' => 'Cloudflare Turnstile',
+				],
+				'description' => esc_html__( 'Select captcha provider.', 'mb-user-profile' ),
+				'default'     => 'recaptcha',
+			]
+		);
+
+		$this->addOptionControl(
+			[
 				'type'        => 'textfield',
 				'slug'        => 'captcha_key',
-				'name'        => esc_html__( 'reCaptcha key', 'mb-user-profile' ),
-				'description' => esc_html__( 'Google reCaptcha site key (version 3). Optional.', 'mb-user-profile' ),
+				'name'        => esc_html__( 'Site key', 'mb-user-profile' ),
+				'description' => esc_html__( 'Site key for Google reCaptcha v3 or Cloudflare Turnstile.', 'mb-user-profile' ),
 			]
 		);
 
@@ -255,8 +269,8 @@ class RegistrationForm extends \OxyEl {
 			[
 				'type'        => 'textfield',
 				'slug'        => 'captcha_secret',
-				'name'        => esc_html__( 'reCaptcha secret', 'mb-user-profile' ),
-				'description' => esc_html__( 'Google reCaptcha secret key (version 3). Optional.', 'mb-user-profile' ),
+				'name'        => esc_html__( 'Secret key', 'mb-user-profile' ),
+				'description' => esc_html__( 'Secret key for Google reCaptcha v3 or Cloudflare Turnstile.', 'mb-user-profile' ),
 			]
 		);
 
@@ -267,8 +281,9 @@ class RegistrationForm extends \OxyEl {
 			'id'                 => $settings['meta_box_id'] ?? '',
 			'redirect'           => $settings['redirect'] ?? '',
 			'form_id'            => $settings['form_id'] ?? '',
-			'recaptcha_key'      => $settings['recaptcha_key'] ?? '',
-			'recaptcha_secret'   => $settings['recaptcha_secret'] ?? '',
+			'captcha_provider'   => $settings['captcha_provider'] ?? 'recaptcha',
+			'captcha_key'        => ( $settings['captcha_key'] ?? '' ) ?: ( $settings['recaptcha_key'] ?? '' ),
+			'captcha_secret'     => ( $settings['captcha_secret'] ?? '' ) ?: ( $settings['recaptcha_secret'] ?? '' ),
 			'label_title'        => $settings['name_title'] ?? '',
 			'label_username'     => $settings['name_username'] ?? '',
 			'label_email'        => $settings['name_email'] ?? '',

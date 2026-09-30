@@ -23,6 +23,18 @@
 			"type": "string",
 			"default": "login-form"
 		},
+		"captcha_provider": {
+			"type": "string",
+			"default": "recaptcha"
+		},
+		"captcha_key": {
+			"type": "string",
+			"default": ""
+		},
+		"captcha_secret": {
+			"type": "string",
+			"default": ""
+		},
 		"recaptcha_key": {
 			"type": "string",
 			"default": ""
@@ -85,7 +97,7 @@
 		},
 		"password_strength": {
 			"type": "string",
-			"default": "weak"
+			"default": "strong"
 		},
 		"className": {
 			"type": "string",

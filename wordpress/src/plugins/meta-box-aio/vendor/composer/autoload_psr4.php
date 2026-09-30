@@ -6,12 +6,14 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'eLightUp\\PluginSearch\\' => array($vendorDir . '/elightup/plugin-search/src'),
     'eLightUp\\' => array($vendorDir . '/elightup/twig'),
     'Riimu\\Kit\\PHPEncoder\\' => array($vendorDir . '/riimu/kit-phpencoder/src'),
     'MetaBox\\UserProfile\\' => array($vendorDir . '/meta-box/mb-user-profile/src'),
     'MetaBox\\TS\\' => array($vendorDir . '/meta-box/mb-toolset-migration/src'),
     'MetaBox\\Support\\' => array($vendorDir . '/wpmetabox/support'),
     'MetaBox\\RestApi\\' => array($vendorDir . '/meta-box/mb-rest-api/src'),
+    'MetaBox\\Pods\\' => array($vendorDir . '/meta-box/mb-pods-migration/src'),
     'MetaBox\\CustomTable\\' => array($vendorDir . '/meta-box/mb-custom-table/src'),
     'MetaBox\\Columns\\' => array($vendorDir . '/meta-box/meta-box-columns/src'),
     'MetaBox\\ACF\\' => array($vendorDir . '/meta-box/mb-acf-migration/src'),

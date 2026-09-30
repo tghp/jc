@@ -19,6 +19,9 @@ class FormFactory {
 	}
 
 	public static function normalize( $config, $shortcode = '' ): array {
+		Arr::change_key( $config, 'recaptcha_key', 'captcha_key' );
+		Arr::change_key( $config, 'recaptcha_secret', 'captcha_secret' );
+
 		$config = shortcode_atts( [
 			// Meta Box ID.
 			'id'                  => '',
@@ -39,9 +42,10 @@ class FormFactory {
 			// Redirect
 			'redirect'            => '',
 
-			// Google reCaptcha v3
-			'recaptcha_key'       => '',
-			'recaptcha_secret'    => '',
+			// Verification, default: Google reCaptcha v3
+			'captcha_provider'    => 'recaptcha',
+			'captcha_key'         => '',
+			'captcha_secret'      => '',
 
 			// Model config
 			'object_id'           => 0,

@@ -3,8 +3,8 @@
  * Plugin Name:       MB Views
  * Plugin URI:        https://metabox.io/plugins/mb-views/
  * Description:       Create views for Meta Box fields and content.
- * Version:           1.15.1
- * Requires at least: 6.2
+ * Version:     1.15.6
+ * Requires at least: 6.6
  * Requires PHP:      7.4
  * Author:            MetaBox.io
  * Author URI:        https://metabox.io
@@ -36,8 +36,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! function_exists( 'mb_views_load' ) ) {
 	if ( file_exists( __DIR__ . '/vendor' ) ) {
 		require __DIR__ . '/vendor/autoload.php';
-		require __DIR__ . '/vendor/meta-box/meta-box-conditional-logic/meta-box-conditional-logic.php';
-		require __DIR__ . '/vendor/meta-box/meta-box-tooltip/meta-box-tooltip.php';
+
+		add_action( 'plugins_loaded', function () {
+			if ( ! function_exists( 'mb_conditional_logic_load' ) ) {
+				require __DIR__ . '/vendor/meta-box/meta-box-conditional-logic/meta-box-conditional-logic.php';
+			}
+			if ( ! class_exists( 'MB_Tooltip' ) ) {
+				require __DIR__ . '/vendor/meta-box/meta-box-tooltip/meta-box-tooltip.php';
+			}
+		} );
 	}
 
 	add_action( 'init', 'mb_views_load', 5 );

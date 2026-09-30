@@ -1,6 +1,7 @@
 <?php
 namespace MBB\RestApi;
 
+use MBB\Helpers\Id;
 use MBBParser\Parsers\MetaBox as Parser;
 use MBBParser\Encoders\MetaBox as Encoder;
 use WP_REST_Server;
@@ -16,6 +17,7 @@ class Generator {
 			'methods'             => WP_REST_Server::CREATABLE,
 			'callback'            => [ $this, 'generate' ],
 			'permission_callback' => [ $this, 'has_permission' ],
+			'show_in_index'       => false,
 		] );
 	}
 
@@ -44,9 +46,7 @@ class Generator {
 			];
 		}
 
-		if ( ! $post_name ) {
-			$post_name = sanitize_title( $post_title );
-		}
+		$post_name = Id::sanitize( $post_name ?: $post_title, $post_title );
 
 		// Save fields, settings and data
 		$settings = apply_filters( 'mbb_save_settings', $settings, $request );

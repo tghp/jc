@@ -28,7 +28,7 @@ class MetaBox extends \RW_Meta_Box {
 			return;
 		}
 		list( , $url ) = RWMB_Loader::get_path( dirname( __DIR__ ) );
-		wp_enqueue_style( 'mb-user-meta', $url . 'css/user-meta.css', '', '1.2.8' );
+		wp_enqueue_style( 'mb-user-meta', $url . 'css/user-meta.css', '', '1.2.11' );
 	}
 
 	public function is_edit_screen( $screen = null ) {

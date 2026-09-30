@@ -58,6 +58,12 @@ class Block extends \RW_Meta_Box {
 		 */
 		add_action( 'rwmb_enqueue_block_editor_assets', [ $this, 'enqueue_block_assets' ] );
 		add_action( 'rwmb_enqueue_block_editor_assets', [ $this, 'enqueue_fontawesome' ] );
+
+		/**
+		 * Enqueue meta box & field assets for `block_editor` field.
+		 * Make `$this->is_edit_screen()` to return true.
+		 */
+		add_action( 'rwmb_enqueue_block_editor_assets', [ $this, 'enqueue' ] );
 	}
 
 	public function save_block(): void {
@@ -250,10 +256,21 @@ class Block extends \RW_Meta_Box {
 	}
 
 	public function is_edit_screen( $screen = null ) {
-		if ( ! ( $screen instanceof WP_Screen ) ) {
+		if ( ! ( $screen instanceof \WP_Screen ) ) {
 			$screen = get_current_screen();
 		}
-		return 'post' === $screen->base && use_block_editor_for_post_type( $screen->post_type );
+
+		// For edit post screen that uses the block editor.
+		if ( 'post' === $screen->base && use_block_editor_for_post_type( $screen->post_type ) ) {
+			return true;
+		}
+
+		// For `block_editor` field
+		if ( current_action() === 'rwmb_enqueue_block_editor_assets' ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

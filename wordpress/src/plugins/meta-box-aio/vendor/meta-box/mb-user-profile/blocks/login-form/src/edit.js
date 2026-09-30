@@ -1,6 +1,7 @@
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
 	PanelBody,
+	SelectControl,
 	TextControl,
 	ToggleControl
 } from '@wordpress/components';
@@ -9,11 +10,12 @@ import ServerSideRender from '@wordpress/server-side-render';
 import './editor.scss';
 
 export default function Edit( { attributes, setAttributes } ) {
-	const {
+	let {
 		redirect,
 		form_id,
-		recaptcha_key,
-		recaptcha_secret,
+		captcha_provider,
+		captcha_key,
+		captcha_secret,
 		label_title,
 		label_username,
 		label_password,
@@ -27,9 +29,19 @@ export default function Edit( { attributes, setAttributes } ) {
 		value_username,
 		value_remember,
 		confirmation,
+		recaptcha_key,   // @deprecated: use captcha_key instead.
+		recaptcha_secret // @deprecated: use captcha_secret instead.
 	} = attributes;
 
 	const update = key => value => setAttributes( { [ key ]: value } );
+
+	if ( 0 === captcha_key.length && recaptcha_key.length ) {
+		captcha_key = recaptcha_key;
+	}
+
+	if ( 0 === captcha_secret.length && recaptcha_secret.length ) {
+		captcha_secret = recaptcha_secret;
+	}
 
 	return (
 		<div { ...useBlockProps() }>
@@ -114,16 +126,25 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ update( 'value_username' ) }
 					/>
 				</PanelBody>
-				<PanelBody title={ __( 'Google reCaptcha (v3)', 'mb-user-profile' ) } initialOpen={ false }>
+				<PanelBody title={ __( 'Captcha', 'mb-user-profile' ) } initialOpen={ false }>
+					<SelectControl
+						label={ __( 'Captcha provider', 'mb-user-profile' ) }
+						value={ captcha_provider }
+						options={ [
+							{ label: __( 'Google reCaptcha (v3)', 'mb-user-profile' ), value: 'recaptcha' },
+							{ label: __( 'Cloudflare Turnstile', 'mb-user-profile' ), value: 'turnstile' }
+						] }
+						onChange={ update( 'captcha_provider' ) }
+					/>
 					<TextControl
 						label={ __( 'Site key', 'mb-user-profile' ) }
-						value={ recaptcha_key }
-						onChange={ update( 'recaptcha_key' ) }
+						value={ captcha_key }
+						onChange={ update( 'captcha_key' ) }
 					/>
 					<TextControl
 						label={ __( 'Secret key', 'mb-user-profile' ) }
-						value={ recaptcha_secret }
-						onChange={ update( 'recaptcha_secret' ) }
+						value={ captcha_secret }
+						onChange={ update( 'captcha_secret' ) }
 					/>
 				</PanelBody>
 			</InspectorControls>
